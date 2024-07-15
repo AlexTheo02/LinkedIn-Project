@@ -1,7 +1,7 @@
 import './App.css';
 
 import WelcomePage from "./Pages/WelcomePage/WelcomePage.js"
-// import HomePage from "./Pages/HomePage/HomePage.js"
+import HomePage from "./Pages/HomePage/HomePage.js"
 
 import {
   BrowserRouter,
@@ -18,9 +18,11 @@ function App() {
         {/* Welcome Route */}
         <Route path="/" element={<WelcomePage />} />
 
+        {/* Home Route */}
+        <Route path="/HomePage" element={<HomePage />} />
         
         
-        {/* Default redirect to home page*/}
+        {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
