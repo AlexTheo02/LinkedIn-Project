@@ -1,0 +1,51 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+.WelcomeNavBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  margin-right: auto; /* Pushes the logo to the left */
+}
+
+.button-field{
+  display: flex;
+  gap: 10px; /* Adds space between buttons */
+  align-items: center;
+  width: 20%;
+}
+
+.button-field button{
+  flex-basis: 45%;
+  background: #a02500;
+  color: #fff;
+  height: 45px;
+  border-radius: 25px;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transition: background 1s;
+}
+
+.button-field button.disabled{
+  background: #a8a4a4;
+  color: #611801;
+}
+
+.button-field button.disabled:hover{
+  background: #a02500;
+  color: #fff;
+  opacity: 0.4;
+}
