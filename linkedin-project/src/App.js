@@ -1,7 +1,7 @@
 import './App.css';
 
-import WelcomePage from "./Pages/WelcomePage/WelcomePage.js"
-import HomePage from "./Pages/HomePage/HomePage.js"
+import WelcomePage from "./Pages/WelcomePage/WelcomePage.js";
+import HomePage from "./Pages/HomePage/HomePage.js";
 
 import {
   BrowserRouter,
@@ -16,7 +16,7 @@ function App() {
       <Routes>
 
         {/* Welcome Route */}
-        <Route path="/" element={<WelcomePage />} />
+        <Route path="/" element={<HomePage />} />
 
         {/* Home Route */}
         <Route path="/HomePage" element={<HomePage />} />

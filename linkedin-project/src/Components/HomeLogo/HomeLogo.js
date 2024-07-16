@@ -1,5 +1,5 @@
-import logoImage from "../../Images/logo.png"
-import "./HomeLogoStyle.css"
+import logoImage from "../../Images/logo.png";
+import "./HomeLogoStyle.css";
 import {useNavigate} from "react-router-dom";
 
 function HomeLogo(){
