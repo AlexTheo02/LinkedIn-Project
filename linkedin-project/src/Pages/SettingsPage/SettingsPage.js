@@ -1,4 +1,4 @@
-import "./SettingsPageStyle.css";
+import "./SettingsPageStyle.module.css";
 
 function SettingsPage(){
     return(

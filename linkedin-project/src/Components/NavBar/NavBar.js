@@ -1,16 +1,16 @@
-import './NavBarStyle.css';
+import s from './NavBarStyle.module.css';
 import HomeLogo from "../HomeLogo/HomeLogo.js"
 import NavBarNavigateButton from './NavbarCategories.js';
 
 function NavBar(){
   return (
-    <div className="navbar">
+    <div className={s.navbar}>
 
-        <div className="navbar-left">
+        <div className={s.navbar_left}>
         <HomeLogo isWelcome={false}/>
         </div>
 
-        <div className="navbar-center">
+        <div className={s.navbar_center}>
             <ul>
                 <li>
                 <NavBarNavigateButton toRoute="Network"/>
@@ -41,7 +41,7 @@ function NavBar(){
             
         </div>
 
-        <div className="navbar-right">
+        <div className={s.navbar_right}>
             navbar-right
         </div>
 

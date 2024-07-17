@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Καταλαμβάνει όλο το ύψος του παραθύρου */
+}
+
+.link_up_requests_field, .interest_notes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1; /* Ίση κατανομή ύψους */
+    padding: 20px;
+}
+
+.link_up_requests_field {
+    background-color: #aaa; /* Χρώμα για τον επάνω container */
+}
+
+.interest_notes {
+    background-color: #e0e0e0; /* Χρώμα για τον κάτω container */
+}

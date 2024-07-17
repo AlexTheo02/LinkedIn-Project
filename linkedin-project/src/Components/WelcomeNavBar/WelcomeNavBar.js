@@ -1,18 +1,17 @@
 import React from 'react';
-import './WelcomeNavBarStyle.css';
+import s from './WelcomeNavBarStyle.module.css';
+import HomeLogo from '../HomeLogo/HomeLogo';
 
 const WelcomeNavBar = ({ onModeSwitch, isRegistering }) => {
   return (
-    <div className="WelcomeNavBar">
-      <div className="logo">
-        <button>Replace with the logo!!!</button>
-      </div>
-      <div className="button-field">
+    <div className={s.WelcomeNavBar}>
+      <HomeLogo isWelcome={true}/>
+      <div className={s.button_field}>
         <button
           type="button"
           id="registerButton"
           onClick={onModeSwitch}
-          className={isRegistering ? '' : 'disabled'}
+          className={isRegistering ? '' : s.disabled}
         >
           Register
         </button>
@@ -20,7 +19,7 @@ const WelcomeNavBar = ({ onModeSwitch, isRegistering }) => {
           type="button"
           id="loginButton"
           onClick={onModeSwitch}
-          className={isRegistering ? 'disabled' : ''}
+          className={isRegistering ? s.disabled : ''}
         >
           Log in
         </button>

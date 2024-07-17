@@ -1,5 +1,6 @@
 .navbar{
     background-color: rgb(237, 244, 255);
+    background-color: #e2dada;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -8,20 +9,21 @@
     top: 0;
     z-index: 100;
     box-shadow: 0 5px 10px rgba(0,0,0, 0.1);
+    max-height: 60px;
 }
 
-.navbar-left{
+.navbar_left{
     margin-left: 0;
     justify-self: flex-start;
 }
 
-.navbar-center ul li{
+.navbar_center ul li{
     display: inline-block;
     list-style: none;
     margin-right: 20px;
 }
 
-.navbar-navigate-button{
+.navbar_navigate_button{
     border: none;
     width: 150px;
     height: 45px;
@@ -32,14 +34,14 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.navbar-navigate-button:hover{
+.navbar_navigate_button:hover{
     cursor: pointer;
     background: #a02500;
     
     background-color: #a0250066;
 }
 
-.navbar-navigate-button:active{
+.navbar_navigate_button:active{
     transition-duration: 0.2s;
     background-color: #a02500c0;
 }

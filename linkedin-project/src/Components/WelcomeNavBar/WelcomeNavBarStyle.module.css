@@ -9,25 +9,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  background: #e2dada;
   padding: 10px 20px;
   position: sticky;
   top: 0;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  max-height: 60px;
+  z-index: 100;
+  box-shadow: 0 5px 10px rgba(0,0,0, 0.1);
 }
 
 .logo {
   margin-right: auto; /* Pushes the logo to the left */
 }
 
-.button-field{
+.button_field{
   display: flex;
   gap: 10px; /* Adds space between buttons */
   align-items: center;
   width: 20%;
 }
 
-.button-field button{
+.button_field button{
   flex-basis: 45%;
   background: #a02500;
   color: #fff;
@@ -39,12 +41,12 @@
   transition: background 1s;
 }
 
-.button-field button.disabled{
+.button_field button.disabled{
   background: #a8a4a4;
   color: #611801;
 }
 
-.button-field button.disabled:hover{
+.button_field button.disabled:hover{
   background: #a02500;
   color: #fff;
   opacity: 0.4;

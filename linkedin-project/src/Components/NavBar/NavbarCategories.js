@@ -1,4 +1,4 @@
-import "./NavBarStyle.css"
+import s from "./NavBarStyle.module.css"
 import { useNavigate } from "react-router-dom";
 
 
@@ -11,7 +11,7 @@ function NavBarNavigateButton({toRoute}){
     };
     return(
         <button
-        className="navbar-navigate-button"
+        className={s.navbar_navigate_button}
         onClick={handleClick}
         >
             {toRoute}

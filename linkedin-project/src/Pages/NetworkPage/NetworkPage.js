@@ -1,4 +1,4 @@
-import "./NetworkPageStyle.css";
+import "./NetworkPageStyle.module.css";
 
 function NetworkPage(){
     return(

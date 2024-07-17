@@ -1,4 +1,4 @@
-import "./PostStyle.css";
+import s from "./PostStyle.module.css";
 import {
     InteractiveProfile,
     Timestamp,
@@ -20,9 +20,9 @@ function Post({
     isLiked
 }){
     return (
-        <div className="post">
+        <div className={s.post}>
             
-            <div className="post-header">
+            <div className={s.post_header}>
             <InteractiveProfile profilePicture={profilePicture} userName={userName}/>
             <Timestamp timestamp={timestamp}/>
             </div>
@@ -31,7 +31,7 @@ function Post({
             <PostCaption caption={caption}/>
             <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
-            <hr class="separator"/>
+            <hr class={s.separator}/>
             <PostInteractionBar isLiked={isLiked}/>
             {/* Comments */}
         </div>

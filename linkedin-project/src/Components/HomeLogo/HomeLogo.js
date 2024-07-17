@@ -1,20 +1,21 @@
 import logoImage from "../../Images/logo.png";
-import "./HomeLogoStyle.css";
+import s from "./HomeLogoStyle.module.css";
 import {useNavigate} from "react-router-dom";
 
 function HomeLogo({isWelcome}){
     const navigate = useNavigate();
 
     const handleLogoClick = () =>{
-        isWelcome ? navigate("/") : navigate("/Home")
+        isWelcome ? window.location.reload() : navigate("/Home")
     };
 
     return (
         <img 
         src={logoImage}
         alt="Logo"
-        className="logo"
+        className={s.logo}
         onClick={handleLogoClick}
+        title="Return to HomePage"
         />
     );
 }
