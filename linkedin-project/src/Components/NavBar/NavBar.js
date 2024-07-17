@@ -2,12 +2,12 @@ import s from './NavBarStyle.module.css';
 import HomeLogo from "../HomeLogo/HomeLogo.js"
 import NavBarNavigateButton from './NavbarCategories.js';
 
-function NavBar(){
+function NavBar({isHome}){
   return (
     <div className={s.navbar}>
 
         <div className={s.navbar_left}>
-        <HomeLogo isWelcome={false}/>
+        <HomeLogo isWelcome={false} isHome={isHome}/>
         </div>
 
         <div className={s.navbar_center}>

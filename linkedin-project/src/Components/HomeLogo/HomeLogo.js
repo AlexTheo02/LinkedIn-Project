@@ -2,11 +2,11 @@ import logoImage from "../../Images/logo.png";
 import s from "./HomeLogoStyle.module.css";
 import {useNavigate} from "react-router-dom";
 
-function HomeLogo({isWelcome}){
+function HomeLogo({isWelcome, isHome}){
     const navigate = useNavigate();
 
     const handleLogoClick = () =>{
-        isWelcome ? window.location.reload() : navigate("/Home")
+        isWelcome || isHome ? window.location.reload() : navigate("/Home")
     };
 
     return (

@@ -7,7 +7,7 @@ import malakes from "../../Images/ergasia_welcome_page_image.png"
 function HomePage() {
     return(
         <div className={s.home_page}>
-            <NavBar />
+            <NavBar isHome={true}/>
             {/* Insert timeline component */}
             <Post
              profilePicture={postPFP}
