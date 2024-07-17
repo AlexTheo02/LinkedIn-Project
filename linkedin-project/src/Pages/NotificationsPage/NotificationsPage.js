@@ -8,4 +8,4 @@ function NotificationsPage(){
     );
 }
 
-export default NotifcationsPage;
+export default NotificationsPage;
