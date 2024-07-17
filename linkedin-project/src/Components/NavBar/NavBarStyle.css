@@ -20,3 +20,26 @@
     list-style: none;
     margin-right: 20px;
 }
+
+.navbar-navigate-button{
+    border: none;
+    width: 150px;
+    height: 45px;
+    padding: 10px;
+    border-radius: 13px;
+    background: none;
+    font-size: medium;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.navbar-navigate-button:hover{
+    cursor: pointer;
+    background: #a02500;
+    
+    background-color: #a0250066;
+}
+
+.navbar-navigate-button:active{
+    transition-duration: 0.2s;
+    background-color: #a02500c0;
+}

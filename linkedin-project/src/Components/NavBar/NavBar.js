@@ -1,38 +1,39 @@
 import './NavBarStyle.css';
 import HomeLogo from "../HomeLogo/HomeLogo.js"
+import NavBarNavigateButton from './NavbarCategories.js';
 
 function NavBar(){
   return (
     <div className="navbar">
 
         <div className="navbar-left">
-        <HomeLogo />
+        <HomeLogo isWelcome={false}/>
         </div>
 
         <div className="navbar-center">
             <ul>
                 <li>
-                Network
+                <NavBarNavigateButton toRoute="Network"/>
                 </li>
 
                 <li>
-                Jobs
+                <NavBarNavigateButton toRoute="Jobs"/>
                 </li>
 
                 <li>
-                Conversations
+                <NavBarNavigateButton toRoute="Conversations"/>
                 </li>
 
                 <li>
-                Notifications
+                <NavBarNavigateButton toRoute="Notifications"/>
                 </li>
 
                 <li>
-                Personal Details
+                <NavBarNavigateButton toRoute="Personal Details"/>
                 </li>
 
                 <li>
-                Options
+                <NavBarNavigateButton toRoute="Settings"/>
                 </li>
 
 

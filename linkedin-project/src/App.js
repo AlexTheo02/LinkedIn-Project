@@ -40,7 +40,7 @@ function App() {
         <Route path="/Notifications" element={<NotificationsPage />} />
 
         {/* Personal Details Route */}
-        <Route path="/PersonalDetails" element={<PersonalDetailsPage />} />
+        <Route path="/Personal Details" element={<PersonalDetailsPage />} />
 
         {/* Settings Route */}
         <Route path="/Settings" element={<SettingsPage />} />
