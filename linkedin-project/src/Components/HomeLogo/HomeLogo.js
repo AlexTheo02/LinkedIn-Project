@@ -6,7 +6,7 @@ function HomeLogo(){
     const navigate = useNavigate();
 
     const handleLogoClick = () =>{
-        navigate("/")
+        navigate("/Home")
     };
 
     return (
