@@ -1,4 +1,4 @@
-import "./JobsPageStyleModule.css";
+import "./JobsPageStyle.module.css";
 
 function JobsPage(){
     return(
