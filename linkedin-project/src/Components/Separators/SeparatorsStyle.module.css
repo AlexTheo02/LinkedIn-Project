@@ -1,0 +1,11 @@
+.horizontal_separator {
+    border-top: 1px solid #ddd;
+    margin: 8px 0;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.vertical_separator {
+    border-left: 1px solid #ddd;
+    margin: 0 auto;
+}

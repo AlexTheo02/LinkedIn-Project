@@ -1,0 +1,20 @@
+.personal_details_panel{
+    background-color: #fff;
+    width: 20%;
+    height: auto;
+    padding: 10px;
+    margin: 0px 10px;
+    border-radius: 10px;
+    position: sticky;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    top: 70px;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: calc(100vh - 80px);
+}
+
+.options_bar{
+    display: flex;
+    justify-content: space-between;
+}

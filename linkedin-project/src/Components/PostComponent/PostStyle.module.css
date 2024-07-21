@@ -3,8 +3,7 @@
     border-radius: 8px;
     padding: 10px 0px;
     padding-bottom: 3px;
-    background-color: #fff;
-    width: 50%;
+    background-color: #fff; 
     max-height: auto;
     margin: 10px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -20,6 +19,7 @@
 
 .interactive_profile {
     display: flex;
+    width: fit-content;
 }
 
 .interactive_profile:hover{
@@ -30,6 +30,23 @@
     width: 40px;
     height: 40px;
     border-radius: 20%;
+    margin-right: 8px;
+}
+
+.alt_interactive_profile {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+}
+
+.alt_interactive_profile:hover{
+    cursor: pointer;
+}
+
+.alt_interactive_profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     margin-right: 8px;
 }
 
@@ -48,20 +65,22 @@
 
 .multimedia {
     margin-bottom: 3px;
-    max-width: 100%;
+    background-color: #e2dada;
+    display: flex;
+    justify-content: center;
+    margin: auto;
 }
 
 .multimedia img, .multimedia video, .multimedia audio {
-    max-width: 100%;
-    width: auto;
+    width: 100%;
     height: auto;
-    border-radius: 0%;
 }
 
 .post_info_bar, .interaction_bar {
     display: flex;
     justify-content: space-between;
     margin: auto;
+    margin-bottom: 3px;
     padding:2px 2.5%;
 }
 
@@ -83,8 +102,11 @@
 }
 
 .like_button{
+    padding: 3px;
     background-color: transparent;
     border: none;
+    width: 10vw;
+    border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
@@ -97,6 +119,10 @@
     border-radius: 0;
 }
 
+.like_button:hover{
+    background-color: #a0250066;
+}
+
 .like_button:active{
     opacity: 0.8;
 }
@@ -104,6 +130,8 @@
 .comment_button {
     background-color: transparent;
     border: none;
+    width: 10vw;
+    border-radius: 5px;
     color: #007bff;
     cursor: pointer;
     font-size: 14px;
@@ -111,12 +139,116 @@
 
 .comment_button:hover{
     text-decoration: underline;
+    background-color: #a0250066;
 }
 
-.separator {
+.post_preview_comments{
+    padding: 5px;
+}
+
+.comment{
+    background-color: #e2dada;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 0px 10px;
+    margin-bottom: 3px;
+}
+
+.comment_content{
+    background-color: #e2dada;
+
+    margin-left: 40px;
+}
+
+.show_comments_popup_button{
+    border-radius: 5px;
+    padding: 3px;
     border: none;
-    border-top: 1px solid #ddd; /* Subtle separator line */
-    margin: 8px 0; /* Adjust margin as needed */
-    width: 95%; /* Adjust width as needed */
-    margin: 0 auto; /* Center the separator */
+    background-color: #a02500;
+    color: #fff;
+    margin-top: 3px;
+    margin-left: 63vw;
+}
+
+.show_comments_popup_button:hover{
+    cursor: pointer;
+    background-color: #a02500a7;
+}
+
+.show_comments_popup_button:active{
+    background-color: #7f1e00;
+}
+
+.comments_popup_visible{
+    background-color: #fff;
+    border-radius: 10px;
+    position:fixed;
+    top:70px;
+    left: 10vh;
+    right: 10vh;
+    width: 90vw;
+    height: 85vh;
+    z-index: 100;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    transition: 0.15s ease-in-out;
+}
+
+.comments_popup_header{
+    display: flex;
+    width: 100%;
+    font-weight: bold;
+    font-size: large;
+    margin-bottom: 3px;
+}
+
+.comments_popup_container{
+    margin: 10px;
+    padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 10px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.hide_comments_popup_button{
+    display: flex;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: auto;
+    margin-bottom: 3px;
+    background-color: #a02500;
+    border-radius: 5px;
+    border: none;
+    padding: 3px;
+    color: #fff;
+}
+
+.hide_comments_popup_button:hover{
+    cursor: pointer;
+    background-color: #a02500a7;
+}
+
+.hide_comments_popup_button:active{
+    background-color: #7f1e00;
+}
+
+
+
+.comments_popup_invisible{
+    background-color: black;
+    visibility: hidden;
+    opacity: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    position:fixed;
+    top:70px;
+    left: 10vh;
+    right: 10vh;
+    transition: 0.15s ease-in-out;
 }
