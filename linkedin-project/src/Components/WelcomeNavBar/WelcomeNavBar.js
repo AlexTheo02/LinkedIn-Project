@@ -10,7 +10,7 @@ const WelcomeNavBar = ({ onModeSwitch, isRegistering }) => {
         <button
           type="button"
           id="registerButton"
-          onClick={onModeSwitch}
+          onClick={isRegistering ? () => {} : onModeSwitch}
           className={isRegistering ? '' : s.disabled}
         >
           Register
@@ -18,7 +18,7 @@ const WelcomeNavBar = ({ onModeSwitch, isRegistering }) => {
         <button
           type="button"
           id="loginButton"
-          onClick={onModeSwitch}
+          onClick={isRegistering ? onModeSwitch : () => {}}
           className={isRegistering ? s.disabled : ''}
         >
           Log in

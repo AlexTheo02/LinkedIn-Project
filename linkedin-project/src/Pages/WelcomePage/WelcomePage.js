@@ -26,47 +26,43 @@ function WelcomePage() {
           <h1 id="title">{isRegistering ? 'Register' : 'Log in'}</h1>
           <form>
             <div className={s.input_group}>
-              {isRegistering && (
-                <div className={s.profile_field} id="profileField" style={{ maxHeight: isRegistering ? '200px' : '0' }}>
-                  <img src={profilePic} alt="Profile Picture" id="profilePic" />
-                  <label htmlFor="inputImage">Upload a profile picture</label>
-                  <input
-                    type="file"
-                    className={s.picture_input}
-                    placeholder="Upload Photo"
-                    accept="image/jpeg, image/png, image/jpg"
-                    id="inputImage"
-                    onChange={handleImageChange}
-                    required
-                  />
-                </div>
-              )}
-              {isRegistering && (
-                <>
-                  <div className={s.input_field} id="nameInput" style={{ maxHeight: isRegistering ? '65px' : '0' }}>
-                    <input type="text" placeholder="Name" required />
-                  </div>
-                  <div className={s.input_field} id="surnameInput" style={{ maxHeight: isRegistering ? '65px' : '0' }}>
-                    <input type="text" placeholder="Surname" required />
-                  </div>
-                  <div className={s.input_field} id="phonenumberInput" style={{ maxHeight: isRegistering ? '65px' : '0' }}>
-                    <input type="tel" placeholder="Phone number" required />
-                  </div>
-                </>
-              )}
+              <div className={`${s.profile_field} ${isRegistering ? '' : s.hidden}`} id="profileField">
+                <img src={profilePic} alt="Profile Picture" id="profilePic" />
+                <label htmlFor="inputImage">Upload a profile picture</label>
+                <input
+                  type="file"
+                  className={s.picture_input}
+                  placeholder="Upload Photo"
+                  accept="image/jpeg, image/png, image/jpg"
+                  id="inputImage"
+                  onChange={handleImageChange}
+                  required={isRegistering}
+                />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="nameInput">
+                <input type="text" placeholder="Name" required={isRegistering} />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="surnameInput">
+                <input type="text" placeholder="Surname" required={isRegistering} />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="workingPositionInput">
+                <input type="text" placeholder="Working Position" required={isRegistering} />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="employmentOrganizationInput">
+                <input type="text" placeholder="Employment Organization" required={isRegistering} />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="phonenumberInput">
+                <input type="tel" placeholder="Phone number" required={isRegistering} />
+              </div>
               <div className={s.input_field}>
                 <input type="email" placeholder="Email" required />
               </div>
               <div className={s.input_field}>
                 <input type="password" placeholder="Password" required />
               </div>
-              {isRegistering && (
-                <>
-                  <div className={s.input_field} id="confirmpasswordInput" style={{ maxHeight: isRegistering ? '65px' : '0' }}>
-                    <input type="password" placeholder="Confirm Password" required/>
-                  </div>
-                </>
-              )}
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="confirmpasswordInput">
+                <input type="password" placeholder="Confirm Password" required={isRegistering}/>
+              </div>
             </div>
           </form>
         </div>
