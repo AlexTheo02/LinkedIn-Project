@@ -11,18 +11,42 @@
     height: 100vh; /* Καταλαμβάνει όλο το ύψος του παραθύρου */
 }
 
-.link_up_requests_field, .interest_notes {
+.link_up_requests_field, .post_notifications_field {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start; /* Ευθυγράμμιση στην αριστερή πλευρά */
+    justify-content: flex-start; /* Ευθυγράμμιση στην κορυφή */
     flex: 1; /* Ίση κατανομή ύψους */
     padding: 20px;
+    position: relative; /* Προσθήκη για τη διαχείριση θέσης */
 }
 
 .link_up_requests_field {
-    background-color: #aaa; /* Χρώμα για τον επάνω container */
+    background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/link_up_requests_background_ergasiaSite.png);
 }
 
-.interest_notes {
-    background-color: #e0e0e0; /* Χρώμα για τον κάτω container */
+.requests_header {
+    color: white;
+    margin-bottom: 10px; /* Μικρό διάστημα κάτω από το h2 */
+    margin-left: 30px;
+}
+
+.noRequestsMessage {
+    color: white;
+    margin-left: 30px; /* Διατήρηση της ευθυγράμμισης με το h2 */
+    align-self: center; /* Κεντραρισμένο */
+    margin-top: 50px; /* Προσθήκη διαστήματος από το h2 */
+}
+
+.post_notifications_field {
+    background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/post_notifications_background_ergasiaSite.png);
+    width: 100%;
+    padding-left: 50px;
+    overflow-y: auto; /* Κάθετη κύλιση αν τα στοιχεία δεν χωράνε */
+}
+
+.post_notifications_field h2 {
+    color: white;
+    align-self: flex-start; /* Στοίχιση στα αριστερά */
+    margin-bottom: 5px;
 }
