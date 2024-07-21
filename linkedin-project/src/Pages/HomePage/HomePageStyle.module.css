@@ -1,0 +1,13 @@
+
+.container{
+    display: flex;
+    justify-content: space-between;
+    position: sticky;
+}
+
+.timeline{
+    width: 80%;
+    margin-right: auto;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
