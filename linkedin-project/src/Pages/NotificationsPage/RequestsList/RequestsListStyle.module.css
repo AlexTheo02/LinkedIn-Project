@@ -1,0 +1,49 @@
+.requests_list_container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.requests_list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Οριζόντια κύλιση αν τα στοιχεία δεν χωράνε */
+    gap: 10px; /* Διάκενο μεταξύ των αιτήσεων */
+    width: calc(100% - 60px); /* Αφαιρούμε το πλάτος των εικονιδίων */
+    justify-content: start; /* Στοίχιση των στοιχείων στην αρχή */
+    padding-bottom: 10px; /* Διάκενο κάτω από τη λίστα */
+}
+
+.requests_list::-webkit-scrollbar {
+    height: 8px; /* Ύψος της οριζόντιας γραμμής κύλισης */
+}
+
+.requests_list::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.requests_list::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.angles {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    color: #a02500;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.angles:first-child {
+    left: 0;
+}
+
+.angles:last-child {
+    right: 0;
+}

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faToggleOn, faToggleOff, faUserGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
 import s from './PersonalDetailsPageStyle.module.css';
 
 import NavBar from './../../Components/NavBar/NavBar.js';
@@ -8,9 +10,16 @@ function PersonalDetails() {
     const [name, setName] = useState('Kostas');
     const [surname, setSurname] = useState('Loulos');
     const [phoneNumber, setPhoneNumber] = useState('123456');
+    const [workingPosition, setWorkingPosition] = useState('');
+    const [employmentOrganization, setEmploymentOrganization] = useState('');
     const [experience, setExperience] = useState('');
     const [education, setEducation] = useState('');
     const [skills, setSkills] = useState('');
+
+    const [isPhonePublic, setIsPhonePublic] = useState(false);
+    const [isExperiencePublic, setIsExperiencePublic] = useState(true);
+    const [isEducationPublic, setIsEducationPublic] = useState(true);
+    const [isSkillsPublic, setIsSkillsPublic] = useState(true);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -21,7 +30,7 @@ function PersonalDetails() {
 
     return (
         <div>
-            <NavBar></NavBar>
+            <NavBar />
             <div className={s.background_image}>
                 <div className={s.profile_container}>
                     <div className={s.profile_field} id="profileField">
@@ -55,7 +64,19 @@ function PersonalDetails() {
                         />
                     </div>
                     <div className={s.input_field}>
-                        <label htmlFor="phoneNumberInput">Phone Number</label>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="phoneNumberInput">Phone Number</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isPhonePublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsPhonePublic(!isPhonePublic)}
+                                    title= {isPhonePublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
                         <input
                             type="tel"
                             id="phoneNumberInput"
@@ -64,7 +85,37 @@ function PersonalDetails() {
                         />
                     </div>
                     <div className={s.input_field}>
-                        <label htmlFor="experienceInput">Professional Experience</label>
+                        <label htmlFor="workingPositionInput">Working Position</label>
+                        <input
+                            type="text"
+                            id="workingPositionInput"
+                            value={workingPosition}
+                            onChange={(e) => setWorkingPosition(e.target.value)}
+                        />
+                    </div>
+                    <div className={s.input_field}>
+                        <label htmlFor="employmentOrganizationInput">Employment Organization</label>
+                        <input
+                            type="text"
+                            id="employmentOrganizationInput"
+                            value={employmentOrganization}
+                            onChange={(e) => setEmploymentOrganization(e.target.value)}
+                        />
+                    </div>
+                    <div className={s.input_field}>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="experienceInput">Professional Experience</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isExperiencePublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsExperiencePublic(!isExperiencePublic)}
+                                    title= {isExperiencePublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
                         <textarea
                             id="experienceInput"
                             value={experience}
@@ -73,7 +124,19 @@ function PersonalDetails() {
                         />
                     </div>
                     <div className={s.input_field}>
-                        <label htmlFor="educationInput">Education</label>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="educationInput">Education</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isEducationPublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsEducationPublic(!isEducationPublic)}
+                                    title= {isEducationPublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
                         <textarea
                             id="educationInput"
                             value={education}
@@ -82,7 +145,19 @@ function PersonalDetails() {
                         />
                     </div>
                     <div className={s.input_field}>
-                        <label htmlFor="skillsInput">Skills</label>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="skillsInput">Skills</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isSkillsPublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsSkillsPublic(!isSkillsPublic)}
+                                    title= {isSkillsPublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
                         <textarea
                             id="skillsInput"
                             value={skills}

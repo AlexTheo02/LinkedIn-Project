@@ -1,0 +1,23 @@
+.notifications_list {
+    display: flex;
+    align-self: baseline;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    width: 80%;
+    justify-content: start; /* Στοίχιση των στοιχείων στην αρχή */
+    padding-right: 8px;
+}
+
+.notifications_list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notifications_list::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.notifications_list::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
