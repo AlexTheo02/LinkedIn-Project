@@ -15,7 +15,7 @@ function HomeLogo({isWelcome, isHome}){
         alt="Logo"
         className={s.logo}
         onClick={handleLogoClick}
-        title="Return to HomePage"
+        title={isWelcome ? undefined : "Home"}
         />
     );
 }

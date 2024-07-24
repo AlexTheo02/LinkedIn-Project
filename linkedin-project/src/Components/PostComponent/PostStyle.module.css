@@ -1,20 +1,25 @@
 .post {
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 10px 0px;
+    padding: 5px 0px;
     padding-bottom: 3px;
     background-color: #fff; 
     max-height: auto;
-    margin: 10px auto;
+    margin: 5px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .post_header {
     display: flex;
     align-items: top;
-    padding: 0px 12px;
+    padding: 0px 3px;
+    padding-bottom: 4px;
     justify-content: space-between;
+    margin-left: 3px;
+    margin-right: 3px;
     margin-bottom: 8px;
+    border-bottom: 1px solid;
+    border-color: #5555;
 }
 
 .interactive_profile {
@@ -31,6 +36,7 @@
     height: 40px;
     border-radius: 20%;
     margin-right: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .alt_interactive_profile {
@@ -48,6 +54,7 @@
     height: 30px;
     border-radius: 50%;
     margin-right: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .timestamp {

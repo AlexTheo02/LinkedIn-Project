@@ -25,7 +25,7 @@ function App() {
         <Route path="/" element={<WelcomePage />} />
 
         {/* Home Route */}
-        <Route path="/Home" element={<HomePage />} />
+        <Route path="/Home" element={<HomePage user_id={2}/>} />
 
         {/* Network Route */}
         <Route path="/Network" element={<NetworkPage />} />
@@ -43,7 +43,7 @@ function App() {
         <Route path="/Personal Details" element={<PersonalDetailsPage />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={<SettingsPage />} />
+        <Route path="/Settings" element={<SettingsPage user_id={3} />} />
         
         
         {/* Default redirect to welcome page*/}
