@@ -76,11 +76,11 @@ const SettingControlBar = ({settingName, settingHandler}) => {
     
     console.log(settingHandler);
 
-    const {initial, previous, setPrevious, current,setCurrent,isChanging,setIsChanging, isWrong, setIsWrong, onConfirm, onCancel} = settingHandler;
+    const {initial, previous, setPrevious, current,setCurrent, isChanging, setIsChanging, isWrong, setIsWrong, onConfirm, onCancel} = settingHandler;
     
     const handleSettingChange = () =>{
-        setCurrent("");
         setPrevious(current);
+        setCurrent("");
         setIsChanging(true);
         setIsWrong(false);
     };
@@ -106,7 +106,7 @@ const SettingControlBar = ({settingName, settingHandler}) => {
 }
 
 function SettingsPage({user_id}) {
-
+    
     const getProfilePicById = (user_id) => {
         if (user_id === 3)
             return tsipras
@@ -199,12 +199,15 @@ function SettingsPage({user_id}) {
 
     // If there is going to be a message display for errors, split these cases and use setPasswordErrorMessage()
     const confirmPasswordChange = () =>{
+        // Invalid password, not confirmed or same as previous
         if (currentConfirmPassword !== currentPassword || currentPassword === "" || !isStrongPassword(currentPassword) || currentPassword === previousPassword){
             setIsPasswordWrong(true);
         }
+        // Valid password + confirmed, continue
         else{
             setIsPasswordChanging(false);
             setPreviousPassword(currentPassword);
+            setCurrentConfirmPassword("");
         }
         
     };
@@ -235,14 +238,17 @@ function SettingsPage({user_id}) {
     const userName = getUserNameById(user_id);
 
     const handlePwdChange = (e) => {
+        setIsPasswordWrong(false);
         setCurrentPassword(e.target.value);
     };
 
     const handleConPwdChange = (e) => {
+        setIsPasswordWrong(false);
         setCurrentConfirmPassword(e.target.value);
     };
 
     const handleEmailChange = (e) => {
+        setIsEmailWrong(false);
         setCurrentEmail(e.target.value);
     }
 
@@ -321,7 +327,7 @@ function SettingsPage({user_id}) {
                                                 className={`${s.input_field} ${s.password_field} ${isPasswordWrong ? s.wrong_input : ""}`}
                                                 type={isPasswordVisible ? "text" : "password"}
                                                 id ="confirmPasswordInput"
-                                                placeholder={"Enter new password"}
+                                                placeholder={"Confirm new password"}
                                                 value={currentConfirmPassword}
                                                 onClick={handleConPwdChange}
                                                 onChange={handleConPwdChange}
