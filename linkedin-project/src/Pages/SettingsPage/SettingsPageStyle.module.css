@@ -78,7 +78,7 @@
 
 .setting_container input,
 .setting_container textarea {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -89,6 +89,7 @@
     resize: none;
 }
 
+
 .setting_container input:focus,
 .setting_container textarea:focus {
     border-color: #a02500;
@@ -98,8 +99,13 @@
 .password_field{
     display: flex;
     align-items: center;
-    gap: 1%;
+    gap: 2%;
 }
+
+.wrong_input{
+    border: 2px solid red !important;
+}
+
 .control_bar{
     /* background-color: aqua; */
     display: flex;
@@ -107,6 +113,7 @@
     /* justify-content: space-evenly; */
     gap: 5%;
     margin-left: auto;
+    margin-right: 5%;
 }
 
 .control_bar button{
@@ -121,6 +128,24 @@
     background-color: #a02500cc;
     cursor: pointer;
 }
+
+.confirm_password_button{
+    padding: 3px;
+    border-radius: 5px;
+    border: none;
+    background-color: #a02500;
+    color: #fff;
+    margin: auto;
+    margin-top: 5px;
+    margin-right:4%;
+    width: fit-content;
+}
+
+.confirm_password_button:hover{
+    background-color: #a02500cc;
+    cursor: pointer;
+}
+
 
 .password_visibility_icon{
     color: #a02500;

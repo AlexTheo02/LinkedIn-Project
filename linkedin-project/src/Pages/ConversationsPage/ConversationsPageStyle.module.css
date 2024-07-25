@@ -1,3 +1,16 @@
+::-webkit-scrollbar{
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+}
+
 .container{
     display: flex;
     justify-content: space-between;
@@ -37,8 +50,6 @@
     gap: 5px;
     border-radius: 5px;
     overflow-y: scroll;
-    scrollbar-width: thin;
-    /* Make scrollbar beautiful */
 }
 
 .recent_conversation{
@@ -121,8 +132,6 @@
     border-radius: 5px;
     padding: 3px 10px;
     overflow-y: scroll;
-    scrollbar-width: thin;
-    /* Make scrollbar beautiful */
     gap: 5px;
     flex-grow: 1;
 }

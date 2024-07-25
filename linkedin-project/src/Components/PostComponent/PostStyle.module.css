@@ -219,8 +219,21 @@
     justify-content: space-evenly;
     gap: 10px;
     overflow-y: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: rgba(0, 0, 0, 0.2) transparent; */
+}
+
+::-webkit-scrollbar{
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
 }
 
 .hide_comments_popup_button{
