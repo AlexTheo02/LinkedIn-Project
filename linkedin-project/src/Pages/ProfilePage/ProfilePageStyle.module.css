@@ -1,0 +1,217 @@
+.background_image {
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-position: center;
+    background-size: cover;
+    position: fixed;
+    background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/profilepage_background_ergasiaSite.jpg);
+    z-index: -1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.background_image::-webkit-scrollbar {
+    width: 8px;
+}
+
+.background_image::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.background_image::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 10px;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile_field img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile_field h1{
+    margin-bottom: 10px;
+}
+
+.profile_field b{
+    color: rgb(99, 99, 99);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.profile_field p{
+    font-style: italic;
+    color: rgb(77, 77, 77);
+}
+
+.operations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.buttons {
+    display: flex;
+}
+
+.buttons button {
+    margin-right: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.follow_button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+}
+
+.followed_button {
+    padding: 8px 16px;
+    background-color: white;
+    border: 2px solid #007bff;
+    color: #007bff;
+}
+
+.follow_button_icon{
+    margin-left: 3px;
+}
+
+.message_button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #a02500;
+    color: white;
+}
+
+.contact_info {
+    text-align: right;
+    flex: 1;
+}
+
+.container h3{
+    margin-bottom: 15px;
+}
+
+.expandable_text {
+    white-space: pre-line;
+}
+
+.show_more_button {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    padding: 0;
+    font-size: 1em;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.network {
+    margin: 10px;
+    max-width: 25%;
+}
+
+.network h2{
+    margin-bottom: 10px;
+    color: white;
+}
+
+.users_list {
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 87vh;
+    overflow-y: auto;
+}
+
+.users_list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.users_list::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.users_list::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.users_list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.users_list ul li {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.user_info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
+    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
+    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+}
+
+.user_info .position {
+    font-style: italic;
+    color: rgb(77, 77, 77);
+    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
+    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
+    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    max-width: 100%;
+}
+
+.users_list ul li:last-child {
+    border-bottom: none;
+}
+
+.users_list ul li:hover {
+    background: #d7e9ff;
+}
+
+.users_list img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 2px;
+    margin-right: 10px;
+    background: #a02500;
+}

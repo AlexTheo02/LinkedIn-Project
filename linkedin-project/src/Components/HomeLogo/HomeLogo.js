@@ -1,6 +1,7 @@
-import logoImage from "../../Images/logo.png";
 import s from "./HomeLogoStyle.module.css";
 import {useNavigate} from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 function HomeLogo({isWelcome, isHome}){
     const navigate = useNavigate();
@@ -10,12 +11,12 @@ function HomeLogo({isWelcome, isHome}){
     };
 
     return (
-        <img 
-        src={logoImage}
-        alt="Logo"
-        className={s.logo}
-        onClick={handleLogoClick}
-        title={isWelcome ? undefined : "Home"}
+        <FontAwesomeIcon 
+            icon={faLinkedin} 
+            className={s.logo} 
+            alt="Logo"
+            onClick={handleLogoClick}
+            title= {isWelcome ? "Return to Welcome Page" : "Return to Home Page"} 
         />
     );
 }

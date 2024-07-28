@@ -8,6 +8,7 @@ import ConversationsPage from "./Pages/ConversationsPage/ConversationsPage.js"
 import NotificationsPage from "./Pages/NotificationsPage/NotificationsPage.js"
 import PersonalDetailsPage from "./Pages/PersonalDetailsPage/PersonalDetailsPage.js"
 import SettingsPage from "./Pages/SettingsPage/SettingsPage.js"
+import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
 
 import {
   BrowserRouter,
@@ -43,8 +44,10 @@ function App() {
         <Route path="/Personal Details" element={<PersonalDetailsPage />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={<SettingsPage user_id={3} />} />
-        
+        <Route path="/Settings" element={<SettingsPage />} />
+          
+        {/* Profile Route */}
+        <Route path="/Profile" element={<ProfilePage />} />
         
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />
