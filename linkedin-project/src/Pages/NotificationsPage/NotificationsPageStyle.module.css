@@ -8,7 +8,24 @@
 .container {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Καταλαμβάνει όλο το ύψος του παραθύρου */
+}
+
+.split_screen{
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+.split_screen::-webkit-scrollbar {
+    width: 8px;
+}
+
+.split_screen::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.split_screen::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
 }
 
 .link_up_requests_field, .post_notifications_field {

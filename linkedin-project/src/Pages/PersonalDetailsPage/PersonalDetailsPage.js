@@ -12,11 +12,13 @@ function PersonalDetails() {
     const [phoneNumber, setPhoneNumber] = useState('123456');
     const [workingPosition, setWorkingPosition] = useState('');
     const [employmentOrganization, setEmploymentOrganization] = useState('');
+    const [location, setLocation] = useState('');
     const [experience, setExperience] = useState('');
     const [education, setEducation] = useState('');
     const [skills, setSkills] = useState('');
 
     const [isPhonePublic, setIsPhonePublic] = useState(false);
+    const [isLocationPublic, setIsLocationPublic] = useState(true);
     const [isExperiencePublic, setIsExperiencePublic] = useState(true);
     const [isEducationPublic, setIsEducationPublic] = useState(true);
     const [isSkillsPublic, setIsSkillsPublic] = useState(true);
@@ -34,7 +36,7 @@ function PersonalDetails() {
             <div className={s.background_image}>
                 <div className={s.profile_container}>
                     <div className={s.profile_field} id="profileField">
-                        <img src={profilePic} alt="Profile Picture" id="profilePic" />
+                        <img src={profilePic} alt="Profile" id="profilePic" />
                         <label htmlFor="inputImage">New profile picture</label>
                         <input
                             type="file"
@@ -100,6 +102,27 @@ function PersonalDetails() {
                             id="employmentOrganizationInput"
                             value={employmentOrganization}
                             onChange={(e) => setEmploymentOrganization(e.target.value)}
+                        />
+                    </div>
+                    <div className={s.input_field}>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="locationInput">Place Of Residence</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isLocationPublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsLocationPublic(!isLocationPublic)}
+                                    title= {isLocationPublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
+                        <textarea
+                            id="locationInput"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            rows="1"
                         />
                     </div>
                     <div className={s.input_field}>

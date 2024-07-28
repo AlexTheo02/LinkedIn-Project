@@ -1,0 +1,30 @@
+.profile_container {
+    background: #a02500;
+    text-align: center;
+    padding: 20px;
+    border-radius: 22px;
+    position: relative;
+    width: 100%; /* Αφήνουμε το πλάτος να είναι δυναμικό */
+    cursor: pointer;
+}
+
+.profile_container h3 {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.profile_container p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.profile_picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #eb4917;
+    padding: 6px;
+    object-fit: cover; /* Βοηθάει στην σωστή απεικόνιση της εικόνας */
+}
