@@ -16,6 +16,7 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
+import PostPage from './Pages/PostPage/PostPage.js';
 
 function App() {
   return (
@@ -48,6 +49,9 @@ function App() {
           
         {/* Profile Route */}
         <Route path="/Profile" element={<ProfilePage />} />
+
+        {/* Post Page Route */}
+        <Route path="/Post" element={<PostPage post_id={2}/>} />
         
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />

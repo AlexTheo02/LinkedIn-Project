@@ -145,7 +145,7 @@ function ShowAllCommentsButton({post_id, commentsPopupHandler}){
     );
 }
 
-function CommentsPopup({commentsPopupHandler}){
+function CommentsPopup({single,commentsPopupHandler}){
     // Fetch from database
     // const comments = commentsData[post_id] || [];
 
@@ -154,7 +154,7 @@ function CommentsPopup({commentsPopupHandler}){
     // MODIFY TO GET THE COMMENTS IN A LIST, AND RENDER THEM HERE (i think use .map, check)
     if (commentsPopupHandler.selectedPostId === 3)
         return(
-            <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
+            <div className={`${commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible} ${single ? s.single : ""}`}>
                 <div className={s.comments_popup_header}>
                     All Comments
                     <button className={s.hide_comments_popup_button} onClick={commentsPopupHandler.hideCommentsPopup}>
@@ -191,7 +191,7 @@ function CommentsPopup({commentsPopupHandler}){
         );
     else
         return(
-            <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
+            <div className={`${commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible} ${single ? s.single : ""}`}>
                 <div className={s.comments_popup_header}>
                     All Comments
                     <button className={s.hide_comments_popup_button} onClick={commentsPopupHandler.hideCommentsPopup}>

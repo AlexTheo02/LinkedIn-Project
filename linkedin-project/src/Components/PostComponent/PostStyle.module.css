@@ -272,3 +272,12 @@
     right: 10vh;
     transition: 0.15s ease-in-out;
 }
+
+.comments_popup_visible.single{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+}

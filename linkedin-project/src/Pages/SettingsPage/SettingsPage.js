@@ -61,7 +61,7 @@ const ConfirmPassword = ({correctPassword, IsConfirmingPassword, setIsConfirming
                 <FontAwesomeIcon
                     className={s.password_visibility_icon}
                     onClick={() => {setIsPasswordVisible(!isPasswordVisible)}}
-                    icon={isPasswordVisible ? faEye : faEyeSlash}
+                    icon={isPasswordVisible ? faEyeSlash : faEye}
                     title={isPasswordVisible ? "Hide Password" : "Show Password"}
                 />
             </div>
@@ -317,7 +317,7 @@ function SettingsPage({user_id}) {
                                     <FontAwesomeIcon
                                         className={s.password_visibility_icon}
                                         onClick={() => {setIsPasswordVisible(!isPasswordVisible)}}
-                                        icon={isPasswordVisible ? faEye : faEyeSlash}
+                                        icon={isPasswordVisible ? faEyeSlash : faEye}
                                         title={isPasswordVisible ? "Hide Password" : "Show Password"}
                                     />
                                 </div>
