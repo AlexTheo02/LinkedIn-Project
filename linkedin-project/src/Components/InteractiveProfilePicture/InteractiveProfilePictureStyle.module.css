@@ -1,0 +1,17 @@
+.interactive_pfp{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.interactive_pfp:hover{
+    cursor: pointer;
+}
+
+.interactive_pfp_noninter{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
