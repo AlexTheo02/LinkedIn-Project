@@ -1,13 +1,20 @@
 .jobs_page{
     display: flex;
     flex-direction: column;
+    overflow-y: hidden;
 }
 
 .jobs_page_content_container{
     display: flex;
     background-color: antiquewhite;
+    /* position: fixed; */
+    width: 100%;
+    height: calc(100vh - 60px);
+    padding: 30px 0px;
+    /* background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/ergasia_welcome_page_image.png); */
     overflow-x: hidden;
     overflow-y: scroll;
+    /* z-index: -1; */
 }
 
 .job_listing_info{

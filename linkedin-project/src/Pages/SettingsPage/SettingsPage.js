@@ -217,6 +217,7 @@ function SettingsPage({user_id}) {
         setIsPasswordWrong(false);
         setIsPasswordChanging(false);
         setCurrentPassword(previousPassword);
+        setCurrentConfirmPassword("");
     }
 
     // Struct for efficiency
@@ -297,8 +298,9 @@ function SettingsPage({user_id}) {
                                 />
                                 <SettingControlBar settingName="Email" settingHandler={emailHandler}/>
                             </div>
-
-                            <div className={s.setting_container}>
+                            
+                            {/* First password field */}
+                            <div className={`${s.setting_container} ${isPasswordChanging ? s.pwd_changing : ""}`}>
                                 <label>Password:</label>
                                 <div className={s.password_field}>
                                     <input 
@@ -319,26 +321,25 @@ function SettingsPage({user_id}) {
                                         title={isPasswordVisible ? "Hide Password" : "Show Password"}
                                     />
                                 </div>
-                                {isPasswordChanging ? (
-                                    <>
-                                        <label>Confirm Password:</label>
-                                        <div className={s.password_field}>
-                                            <input 
-                                                className={`${s.input_field} ${s.password_field} ${isPasswordWrong ? s.wrong_input : ""}`}
-                                                type={isPasswordVisible ? "text" : "password"}
-                                                id ="confirmPasswordInput"
-                                                placeholder={"Confirm new password"}
-                                                value={currentConfirmPassword}
-                                                onClick={handleConPwdChange}
-                                                onChange={handleConPwdChange}
-                                                onKeyDown={handleKeyDown}
-                                                disabled={!isPasswordChanging}
-                                            />
-                                        </div>
-                                    </>
-                                ) : <></>}
-                                <SettingControlBar settingName="Password" settingHandler={passwordHandler}/>
                             </div>
+                            {/* Confirm Password Field */}
+                            <div className={`${s.setting_container} ${s.confirm_password_container} ${isPasswordChanging ? "": s.hidden}`}>
+                                <label>Confirm Password:</label>
+                                <div className={s.password_field}>
+                                    <input 
+                                        className={`${s.input_field} ${s.password_field} ${isPasswordWrong ? s.wrong_input : ""}`}
+                                        type={isPasswordVisible ? "text" : "password"}
+                                        id ="confirmPasswordInput"
+                                        placeholder={"Confirm new password"}
+                                        value={currentConfirmPassword}
+                                        onClick={handleConPwdChange}
+                                        onChange={handleConPwdChange}
+                                        onKeyDown={handleKeyDown}
+                                        disabled={!isPasswordChanging}
+                                    />
+                                </div>
+                            </div>
+                            <SettingControlBar settingName="Password" settingHandler={passwordHandler}/>
                         </>
                         )}
                 </div>

@@ -8,12 +8,12 @@
     margin: 0px 10px;
     border-radius: 10px;
     position: sticky;
+    top: 0px;
     overflow-y: scroll;
     scrollbar-width: thin;
-    top: 67px;
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-height: calc(100vh - 75px);
+    height: calc(100vh - 65px);
 }
 
 .options_bar{

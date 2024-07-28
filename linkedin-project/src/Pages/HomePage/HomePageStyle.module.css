@@ -1,14 +1,27 @@
 .container{
     display: flex;
     justify-content: space-between;
-    position: sticky;
+    position: fixed;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+.container::-webkit-scrollbar{
+    width: 8px;
+}
+
+.container::-webkit-scrollbar-thumb:hover{
+    background: #555;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
 }
 
 .timeline{
     width: 80%;
     margin-right: auto;
-    overflow-y: auto;
-    scrollbar-width: none;
 }
 
 .create_post_container{
@@ -16,7 +29,7 @@
     display: flex;
     flex-direction: column;
     background-color: #e2dada;
-    max-width: 60%;
+    width: 50%;
     margin: auto;
     padding: 3px;
 }

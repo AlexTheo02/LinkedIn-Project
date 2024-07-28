@@ -74,15 +74,15 @@ function JobsPage(){
     return(
         <div className={s.jobs_page}>
             <NavBar />
+            <div className={s.jobs_page_content_container}>
             <button onClick={() => {setShowingMoreInfo(false); setSelectedJobListing(null);}}>
                 collapse
             </button>
-            <div className={s.jobs_page_content_container}>
                 <div className={`${s.jobs_timeline} ${showingMoreInfo ? s.jobs_timeline_expanded : undefined}`}>
                     Timeline
                     <CreateJobListing />
 
-                    {/* Use map of job listings list, jobListing_id and handleJob... id  MUST BE THE SAME */}
+                    {/* Use .map of job listings list, jobListing_id and handleJob... id  MUST BE THE SAME */}
                     <JobListing jobListing_id={jobListing_id} onClick={() => {handleJobClick(jobListing_id)}}/>
                     <JobListing jobListing_id={altJobListing_id} onClick={() => {handleJobClick(altJobListing_id)}}/>
                     <JobListing jobListing_id={jobListing_id} onClick={() => {handleJobClick(jobListing_id)}}/>
