@@ -1,6 +1,7 @@
 import s from "./PostPageStyle.module.css"
 import { useState } from "react";
 
+import NavBar from "../../Components/NavBar/NavBar.js"
 import Post from "../../Components/PostComponent/Post.js"
 import { CommentsPopup } from "../../Components/PostComponent/PostComponents.js";
 
@@ -30,8 +31,11 @@ function PostPage({post_id}) {
 
     return (
         <div className={s.post_page}>
-            <CommentsPopup single={true} commentsPopupHandler={commentsPopupHandler}/>
-            <Post post_id={post_id} commentsPopupHandler={commentsPopupHandler}/>
+            <NavBar />
+            <div className={s.post_page_contents_container}>
+                <CommentsPopup commentsPopupHandler={commentsPopupHandler}/>
+                <Post post_id={post_id} commentsPopupHandler={commentsPopupHandler}/>
+            </div>
         </div>
     );
 }

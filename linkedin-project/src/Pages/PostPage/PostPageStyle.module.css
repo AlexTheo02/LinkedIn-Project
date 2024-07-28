@@ -1,3 +1,5 @@
-.post_page{
-    padding: 0 10%;
+.post_page_contents_container{
+    padding: 1% 10%;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
 }
