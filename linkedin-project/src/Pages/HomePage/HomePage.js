@@ -167,19 +167,16 @@ function CreatePost({user_id}) {
                         <button className={`${s.create_post_button} ${s.add_image_button}`} onClick={handleAddImageButtonClick}>
                             <FontAwesomeIcon icon={faFileImage} />
                             Image
-                            {/* Maybe add fontawesome icon */}
                         </button>
 
                         <button className={`${s.create_post_button} ${s.add_video_button}`} onClick={handleAddVideoButtonClick}>
                             <FontAwesomeIcon icon={faFileVideo} />
                             Video
-                            {/* Maybe add fontawesome icon */}
                         </button>
 
                         <button className={`${s.create_post_button} ${s.add_audio_button}`} onClick={handleAddAudioButtonClick}>
                             <FontAwesomeIcon icon={faFileAudio} />
                             Audio
-                            {/* Maybe add fontawesome icon */}
                         </button>
                     </>
                 ) : null}
