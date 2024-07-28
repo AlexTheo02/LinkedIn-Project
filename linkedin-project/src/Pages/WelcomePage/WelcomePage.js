@@ -14,20 +14,20 @@ function WelcomePage() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-        setProfilePic(URL.createObjectURL(file));
+        setProfilePic(URL.createObjectURL(file)); /* Να το κρατησουμε καπου για database!!! */
     }
   };
 
   return (
     <div className={s.welcome_page}>
       <WelcomeNavBar onModeSwitch={handleModeSwitch} isRegistering={isRegistering} />
-      <div className={s.container}>
+      <div className={s.background_image}>
         <div className={s.form_box}>
           <h1 id="title">{isRegistering ? 'Register' : 'Log in'}</h1>
           <form>
             <div className={s.input_group}>
               <div className={`${s.profile_field} ${isRegistering ? '' : s.hidden}`} id="profileField">
-                <img src={profilePic} alt="Profile Picture" id="profilePic" />
+                <img src={profilePic} alt="Profile" id="profilePic" />
                 <label htmlFor="inputImage">Upload a profile picture</label>
                 <input
                   type="file"
@@ -39,19 +39,22 @@ function WelcomePage() {
                   required={isRegistering}
                 />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="nameInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="text" placeholder="Name" required={isRegistering} />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="surnameInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="text" placeholder="Surname" required={isRegistering} />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="workingPositionInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="text" placeholder="Working Position" required={isRegistering} />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="employmentOrganizationInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="text" placeholder="Employment Organization" required={isRegistering} />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="phonenumberInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
+                <input type="text" placeholder="Place of Residence" required={isRegistering} />
+              </div>
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="tel" placeholder="Phone number" required={isRegistering} />
               </div>
               <div className={s.input_field}>
@@ -60,11 +63,13 @@ function WelcomePage() {
               <div className={s.input_field}>
                 <input type="password" placeholder="Password" required />
               </div>
-              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`} id="confirmpasswordInput">
+              <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
                 <input type="password" placeholder="Confirm Password" required={isRegistering}/>
               </div>
             </div>
           </form>
+
+          <button>{isRegistering ? 'Register now' : 'Log in now'}</button>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
-import "./ConversationsPageStyle.css";
+import s from "./ConversationsPageStyle.module.css";
 
 function ConversationsPage(){
     return(
-        <div className="conversations-page">
+        <div className={s.conversations_page}>
             Conversations Page
         </div>
     );

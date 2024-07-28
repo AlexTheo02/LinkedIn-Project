@@ -1,3 +1,29 @@
-.network-page{
-    padding: 0px;
+.container{
+    background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/network_background_ergasiaSite.jpg);
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-position: center;
+    background-size: cover;
+    position: fixed;
+    z-index: -1;
+    overflow-y: auto;
+    padding-bottom: 70px;
+}
+
+.container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.container h2{
+    padding-left: 20px;
+    color: white;
 }

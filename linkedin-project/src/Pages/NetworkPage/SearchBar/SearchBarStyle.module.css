@@ -1,0 +1,99 @@
+.search_bar_no_results, .search_bar_with_results {
+    width: 500px;
+    background: white;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.search_bar_no_results{
+    border-radius: 10px;
+}
+
+.search_bar_with_results{
+    border-radius: 10px 10px 0 0;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+}
+
+.row input {
+    flex: 1;
+    height: 30px;
+    background: transparent;
+    font-size: 18px;
+    color: rgb(94, 94, 94);
+    border: none;
+    outline: none;
+}
+
+.row input::placeholder {
+    color: rgb(94, 94, 94);
+}
+
+.search_icon {
+    color: rgb(94, 94, 94);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.results_list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.results_list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results_list::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.results_list::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.results_list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.results_list ul li {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+}
+
+.results_list ul li:last-child {
+    border-bottom: none;
+}
+
+.results_list ul li:hover {
+    background: #d7e9ff;
+}
+
+.profile_pic {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    padding: 2px;
+    margin-right: 10px;
+    background: #a02500;
+}
