@@ -131,7 +131,11 @@
     padding: 0;
     font-size: 1em;
     margin-top: 5px;
+}
+
+.show_more_button:hover{
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .network {

@@ -218,6 +218,7 @@ function ConversationsPage({user_id}){
                 <VerticalSeparator />
                 <CurrentConversationPanel conversationHandler={conversationHandler}/>
             </div>
+            
         </div>
     );
 }

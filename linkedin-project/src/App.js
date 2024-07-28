@@ -44,7 +44,7 @@ function App() {
         <Route path="/Personal Details" element={<PersonalDetailsPage />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={<SettingsPage />} />
+        <Route path="/Settings" element={<SettingsPage user_id={3}/>} />
           
         {/* Profile Route */}
         <Route path="/Profile" element={<ProfilePage />} />
