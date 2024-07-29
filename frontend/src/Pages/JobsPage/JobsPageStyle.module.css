@@ -64,7 +64,7 @@
 }
 
 .job_listing{
-    background-color: #7fff00;
+    background-color: #fff;
     border-radius: 5px;
     padding: 3px;
     box-shadow: 0px 2px 4px rgb(0,0,0,0.4);
@@ -75,21 +75,43 @@
 }
 
 .job_listing_header{
-    background-color: #7fffaa;
+    /* background-color: #7fffaa; */
+    display: flex;
+    flex-direction: column;
+}
+
+.job_title{
+    width: fit-content;
+    color: blue;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.job_title:hover{
+    text-decoration: underline;
+}
+
+.employer{
+    font-size: large;
+    font-weight: 500;
 }
 
 .job_listing_main_body{
-    background-color: #7fffff;
+    /* background-color: #7fffff; */
+    color: #565656;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #a02500;
 }
 
 .job_listing_footer{
-    background-color: #ccff41;
+    display: flex;
+    justify-content: space-between;
 }
 
 .job_listing_info_bar{
-    background-color: #bbd476;
+    /* background-color: #bbd476; */
 }
 
 .job_listing_interaction_bar{
-    background-color: #eef6d8;
+    /* background-color: #eef6d8; */
 }

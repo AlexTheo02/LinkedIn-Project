@@ -14,13 +14,16 @@ const JobListingFooter = ({jobListing_id}) => {
 
     return (
         <div className={s.job_listing_footer}>
-            Footer
+            {/* Footer */}
             <div className={s.job_listing_info_bar}>
-                Info Bar
+                Number of applicants: 4
             </div>
 
             <div className={s.job_listing_interaction_bar}>
-                Interaction Bar
+                {/* Interaction Bar */}
+                <button className={s.job_listing_button}>
+                    Apply
+                </button>
             </div>
 
         </div>
@@ -30,15 +33,25 @@ const JobListingFooter = ({jobListing_id}) => {
 const JobListing = ({jobListing_id, onClick}) => {
     // Fetch data from db
 
+    const jobTitle = "Secretary"
+    const employer = "National and Kapodistrian University of Athens"
+    const location = "Athens, Greece (On-site)"
+
     return (
         <div className={s.job_listing} onClick={onClick}>
-            Job Listing
+            {/* Job Listing */}
             <div className={s.job_listing_header}>
-                Header
-            </div>
+                <div className={s.job_title}>
+                    {jobTitle}
+                </div>
 
+                <div className={s.employer}>
+                    {employer}
+                </div>
+
+            </div>
             <div className={s.job_listing_main_body}>
-                Main Body
+                {location}
             </div>
 
             <JobListingFooter jobListing_id={jobListing_id}/>

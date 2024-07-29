@@ -40,6 +40,10 @@
     cursor: pointer;
 }
 
+.learn_more_field:hover{
+    background: #d7e9ff;
+}
+
 .angle_down{
     font-size: 30px;
     color: #a02500;
@@ -59,13 +63,21 @@
 }
 
 .accept_button{
-    background: green;
+    background: rgb(0, 117, 0);
     box-shadow: 0 5px 10px rgba(6, 102, 2, 0.5);
     margin-right: 11px;
+}
+
+.accept_button:hover{
+    background: rgb(0, 134, 0);
 }
 
 .decline_button{
     background: rgb(161, 1, 1);
     box-shadow: 0 5px 10px rgba(245, 4, 4, 0.5);
     margin-left: 11px;
+}
+
+.decline_button:hover{
+    background: rgb(179, 0, 0);
 }
