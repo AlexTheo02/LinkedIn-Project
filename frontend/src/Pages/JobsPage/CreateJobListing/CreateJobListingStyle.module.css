@@ -41,6 +41,29 @@
     opacity: 1;
 }
 
+.create_job_listing{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    padding: 0.5vh;
+    overflow-y: auto;
+    margin-right: -15px;
+    padding-right: 15px;
+}
+
+.create_job_listing::-webkit-scrollbar {
+    width: 8px;
+}
+
+.create_job_listing::-webkit-scrollbar-thumb {
+    background: #888; /* Χρώμα της γραμμής κύλισης */
+    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+}
+
+.create_job_listing::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
 .create_job_listing_interaction_bar{
     display: flex;
     justify-content: space-between;
