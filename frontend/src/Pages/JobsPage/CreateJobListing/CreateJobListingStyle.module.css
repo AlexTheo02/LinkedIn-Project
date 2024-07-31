@@ -1,0 +1,154 @@
+.many_input_fields_container{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.many_fields_container{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.many_input_fields_interaction_bar{
+    display: flex;
+    gap: 1vw;
+    margin: auto;
+    margin-right: 0px;
+
+}
+
+.many_input_fields_interaction_bar button{
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 2vh;
+    border: 2.5px solid #a02500;
+    background-color: #fff;
+    color: #a02500;
+}
+
+.many_input_fields_interaction_bar button.main{
+    background-color: #a02500;
+    color: #fff;
+}
+
+.many_input_fields_interaction_bar button:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.many_input_fields_interaction_bar button:active{
+    opacity: 1;
+}
+
+.create_job_listing_interaction_bar{
+    display: flex;
+    justify-content: space-between;
+    width: fit-content;
+    margin: auto;
+    margin-top: 2vh;
+    gap: 2%;
+    margin-right: 0; 
+}
+
+.create_job_listing_interaction_bar button{
+    background-color: #a02500;
+    border-radius: 1vh;
+    border: 2.5px solid #a02500;
+    padding: 5px;
+    color: #fff;
+    font-weight: bold;
+    transition: border-radius 0.2s;
+}
+
+.create_job_listing_interaction_bar button.altern{
+    background-color: #fff;
+    color: #a02500;
+}
+
+.create_job_listing_interaction_bar button:hover{
+    cursor: pointer;
+    opacity: 0.8;
+    border-radius: 2vh;
+}
+
+.create_job_listing_interaction_bar button:active{
+    opacity: 1;
+}
+
+.text_area_input{
+    height: 15vh;
+}
+
+.job_field_container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1vh;
+}
+
+.job_field_container .text_input_label{
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.job_field_container .text_input,
+.job_field_container textarea{
+    width: 100%;
+    padding: 1vh;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.job_field_container textarea{
+    resize: none;
+}
+
+.job_field_container .text_input:focus,
+.job_field_container textarea:focus {
+    border-color: #a02500;
+    outline: none;
+}
+
+.dual_field{
+    display: flex;
+    margin-bottom: 1vh;
+    /* background-color: red; */
+}
+
+.working_arrangement{
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    /* margin: auto; */
+}
+
+.category_selection_button{
+    padding: 5px;
+    font-size: 2.5vh;
+    font-weight: bold;
+    border-radius: 2vh;
+    border: 2.5px solid #a02500;
+    background-color: #fff;
+    color: #a02500;
+}
+
+.selected{
+    background-color: #a02500;
+    color: #fff;
+}
+
+.category_selection_button:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.vertical_container{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    gap: .5vh;
+    /* margin: auto; */
+}
