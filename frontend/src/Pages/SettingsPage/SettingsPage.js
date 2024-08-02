@@ -268,7 +268,7 @@ function SettingsPage({user_id}) {
 
     return (
         <div>
-            <NavBar />
+            <NavBar currentPage={"Settings"}/>
             <div className={s.background_image}>
                 <div className={s.container}>
 

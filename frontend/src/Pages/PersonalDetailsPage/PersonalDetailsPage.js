@@ -32,7 +32,7 @@ function PersonalDetails() {
 
     return (
         <div>
-            <NavBar />
+            <NavBar currentPage={"Personal Details"}/>
             <div className={s.background_image}>
                 <div className={s.profile_container}>
                     <div className={s.profile_field} id="profileField">

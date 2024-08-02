@@ -1,5 +1,8 @@
 import { useState } from "react";
-import s from "./CreateJobListingStyle.module.css"
+import 'react-dropdown/style.css';
+import Dropdown from 'react-dropdown';
+import s from "./CreateJobListingStyle.module.css";
+import "./CustomDropdownStyle.css";
 
 const ManyInputFields = ({name, list, setList}) => {
 
@@ -73,6 +76,8 @@ const CreateJobListing = ({jobListingsHandler}) => {
     const [isFullTime, setIsFullTime] = useState(true);
     const [isPartTime, setIsPartTime] = useState(false);
 
+    const [employeesRange, setEmployeesRange] = useState("1-10");
+
     const [requirementsList, setRequirementsList] = useState([{value: ""},{value: ""},{value: ""}]);
 
     const [responsibilitiesList, setResponsibilitiesList] = useState([{value: ""},{value: ""},{value: ""}]);
@@ -113,8 +118,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
                 />
             </div>
             
-            {/* Working Arrangement and Working Hours */}
-            <div className={s.dual_field}>
+            {/* Working Arrangement and Working Hours and Number of employees range*/}
+            {/* dual field now contains 3 elements, but the style remains the same */}
+            <div className={s.dual_field}> 
 
                 {/* Working Arrangement */}
                 <div className={s.job_field_container}>
@@ -164,6 +170,19 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                     </div>
                 </div>
+
+                {/* Number of employees range */}
+                <div className={s.job_field_container}>
+                    <label className={s.text_input_label} htmlFor="employeesRange">Employees Range:</label>
+                    <Dropdown
+                        options={["1-10", "11-50", "51-100", "101-200", "201-500", "501-1000", "1001-2000", "2001-5000", "5001-10000", "10000+"]}
+                        value={employeesRange}
+                        onChange={(option) => {setEmployeesRange(option.value)}}
+                        placeholder={"Select Employee Number Range"}
+                    />
+
+                </div>
+                
             </div>
 
             {/* Description */}

@@ -227,7 +227,7 @@ function HomePage({user_id}) {
 
     return(
         <div className={s.home_page}>
-            <NavBar isHome={true}/>
+            <NavBar isHome={true} currentPage={"HomePage"}/>
             <container className={s.container}>
                 <PersonalDetailsPanel />
                 <CommentsPopup commentsPopupHandler={commentsPopupHandler}/>

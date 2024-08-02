@@ -1,5 +1,4 @@
-.navbar{
-    background-color: rgb(237, 244, 255);
+.navbar {
     background-color: #e2dada;
     display: flex;
     align-items: center;
@@ -8,40 +7,181 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 5px 10px rgba(0,0,0, 0.1);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     height: 60px;
 }
 
-.navbar_left{
-    margin-left: 0;
-    justify-self: flex-start;
+.navbar_center {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
 }
 
-.navbar_center ul li{
-    display: inline-block;
+.navbar_center ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar_center ul li {
+    display: flex;
     list-style: none;
-    margin-right: 20px;
+    margin: 5px;
 }
 
-.navbar_navigate_button{
+.navbar_navigate_button {
     border: none;
-    width: 150px;
-    height: 45px;
-    padding: 10px;
-    border-radius: 13px;
-    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    border-radius: 10px;
     font-size: medium;
+    background: none;
     transition: background-color 0.2s ease-in-out;
+    flex-grow: 1;
+    width: 140px;
+    position: relative;
 }
 
-.navbar_navigate_button:hover{
-    cursor: pointer;
+.navbar_navigate_button.active::after{
+    content: '';
+    width: 100%;
+    height: 2px;
     background: #a02500;
-    
-    background-color: #a0250066;
+    position: absolute;
+    bottom: -6px;
+    transition: width 0.3s;
 }
 
-.navbar_navigate_button:active{
-    transition-duration: 0.2s;
-    background-color: #a02500c0;
+.navbar_navigate_button::after {
+    content: '';
+    width: 0;
+    height: 2px;
+    background: #a02500;
+    position: absolute;
+    bottom: -6px;
+    transition: width 0.3s;
+}
+
+.navbar_navigate_button:hover {
+    cursor: pointer;
+}
+
+.navbar_navigate_button:hover::after {
+    width: 100%;
+}
+
+.navbar_right{
+    font-size: medium;
+}
+
+@media (max-width: 1175px) {
+
+    .navbar_center ul li {
+        margin: 4px;
+    }
+
+    .navbar_navigate_button {
+        font-size: small;
+        padding: 15px 6px;
+        width: 115px;
+    }
+
+    .navbar_right{
+        font-size: small;
+    }
+}
+
+@media (max-width: 965px) {
+
+    .navbar_center ul li {
+        margin: 2px;
+    }
+
+    .navbar_navigate_button {
+        font-size: smaller;
+        padding: 15px 1px;
+        width: 100px;
+    }
+
+    .navbar_right{
+        font-size: smaller;
+    }
+}
+
+@media (max-width: 840px) {
+
+    .navbar_center ul li {
+        margin: 1px;
+    }
+
+    .navbar_navigate_button {
+        font-size: 12px;
+        padding: 15px 1px;
+        width: 90px;
+    }
+
+    .navbar_right{
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 750px) {
+
+    .navbar_center ul li {
+        margin: 1px;
+    }
+
+    .navbar_navigate_button {
+        font-size: 10px;
+        padding: 15px 1px;
+        width: 80px;
+    }
+
+    .navbar_right{
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 670px) {
+
+    .navbar_center ul li {
+        margin: 1px;
+    }
+
+    .navbar_navigate_button {
+        font-size: 8px;
+        font-weight: 600;
+        padding: 15px 0;
+        width: 70px;
+    }
+
+    .navbar_right{
+        font-size: 8px;
+    }
+}
+
+@media (max-width: 590px) {
+
+    .navbar_center ul {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .navbar_center ul li {
+        margin: 1px;
+    }
+
+    .navbar_navigate_button {
+        font-size: 8px;
+        font-weight: 600;
+        padding: 15px 0;
+        width: 70px;
+    }
+
+    .navbar_right{
+        font-size: 8px;
+    }
 }

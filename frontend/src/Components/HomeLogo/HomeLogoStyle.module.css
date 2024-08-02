@@ -1,8 +1,13 @@
 .logo{
-    width: 35px;
-    height: 35px;
+    font-size: 35px;
     cursor: pointer;
     display: block;
     margin-right: 15px;
     border-radius: 5%;
+}
+
+@media (max-width: 1175px) {
+    .logo {
+        font-size: 30px;
+    }
 }

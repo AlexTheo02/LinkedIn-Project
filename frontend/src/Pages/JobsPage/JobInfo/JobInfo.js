@@ -13,7 +13,7 @@ const JobInfo = ({ job, isExpanded, onExit}) => {
                 onClick={onExit}
             />
             <h2 className={s.jobTitle}>{job.title}</h2>
-            <p className={s.companyName}>{job.company}</p>
+            <p className={s.companyName}>{job.employer}</p>
             <p className={s.location}>
                 <FontAwesomeIcon icon={faLocationDot} className={s.icon} />
                 {job.location}

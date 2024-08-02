@@ -204,7 +204,7 @@ function NetworkPage(){
 
     return(
         <div className={s.network_page}>
-            <NavBar />
+            <NavBar currentPage={"Network"}/>
             <div className={s.container}>
                 <SearchBar />
                 <h2>Connected with you:</h2>
