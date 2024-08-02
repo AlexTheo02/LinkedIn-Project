@@ -1,5 +1,7 @@
 const express = require("express")
 
+const User = require("../models/userModel.js")
+
 // Instance of the Router
 const router = express.Router()
 
@@ -14,8 +16,17 @@ router.get("/:id", (request, response) => {
 })
 
 // POST a new user
-router.post("/", (request, response) => {
-    response.json({message: "POST a new user"})
+router.post("/", async (request, response) => {
+    const {name, surname} = request.body;
+
+    try {
+        const user = await User.create({name, surname});
+        response.status(200).json(user)
+    } catch (error) {
+        response.status(400).json({error: error.message})
+    }
+
+    // response.json({message: "POST a new user"})
 })
 
 // DELETE a user
