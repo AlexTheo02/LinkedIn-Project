@@ -35,7 +35,7 @@ function NotificationsPage() {
 
     return (
         <div className={s.container}>
-            <NavBar />
+            <NavBar currentPage={"Notifications"}/>
             <div className={s.split_screen}>
                 <div className={s.link_up_requests_field}>
                     <h2 className={s.requests_header}>Connect Requests</h2>

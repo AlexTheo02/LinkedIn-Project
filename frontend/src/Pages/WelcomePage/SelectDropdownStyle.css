@@ -1,0 +1,26 @@
+.react-dropdown-select-dropdown{
+    border-radius: 7px;
+    border: 1px solid #a02500;
+}
+
+.react-dropdown-select-item{
+    /* border-radius: 20px; */
+}
+
+.react-dropdown-select-item:hover{
+    background: #a025007a;
+}
+
+.react-dropdown-select-item-selected{
+    background: #a02500 !important;
+}
+
+.react-dropdown-select{
+    border: 1px solid #a02500 !important; 
+    box-shadow: 0 4px 8px #a025004d !important;
+}
+
+.react-dropdown-select:hover{
+    border: 1px solid #a02500 !important;
+    box-shadow: 0 8px 12px #a727004d !important;
+}

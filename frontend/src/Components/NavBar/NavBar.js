@@ -2,38 +2,38 @@ import s from './NavBarStyle.module.css';
 import HomeLogo from "../HomeLogo/HomeLogo.js"
 import NavBarNavigateButton from './NavbarCategories.js';
 
-function NavBar({isHome}){
+function NavBar({isHome, currentPage}){
   return (
     <div className={s.navbar}>
 
         <div className={s.navbar_left}>
-        <HomeLogo isWelcome={false} isHome={isHome}/>
+          <HomeLogo isWelcome={false} isHome={isHome}/>
         </div>
 
         <div className={s.navbar_center}>
             <ul>
                 <li>
-                <NavBarNavigateButton toRoute="Network"/>
+                <NavBarNavigateButton toRoute="Network" currentPage={currentPage}/>
                 </li>
 
                 <li>
-                <NavBarNavigateButton toRoute="Jobs"/>
+                <NavBarNavigateButton toRoute="Jobs" currentPage={currentPage}/>
                 </li>
 
                 <li>
-                <NavBarNavigateButton toRoute="Conversations"/>
+                <NavBarNavigateButton toRoute="Conversations" currentPage={currentPage}/>
                 </li>
 
                 <li>
-                <NavBarNavigateButton toRoute="Notifications"/>
+                <NavBarNavigateButton toRoute="Notifications" currentPage={currentPage}/>
                 </li>
 
                 <li>
-                <NavBarNavigateButton toRoute="Personal Details"/>
+                <NavBarNavigateButton toRoute="Personal Details" currentPage={currentPage}/>
                 </li>
 
                 <li>
-                <NavBarNavigateButton toRoute="Settings"/>
+                <NavBarNavigateButton toRoute="Settings" currentPage={currentPage}/>
                 </li>
 
 

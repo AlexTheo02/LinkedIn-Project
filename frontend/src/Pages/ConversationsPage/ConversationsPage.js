@@ -212,7 +212,7 @@ function ConversationsPage({user_id}){
 
     return(
         <div className="conversations-page">
-            <NavBar />
+            <NavBar currentPage={"Conversations"}/>
             <div className={s.container}>
                 <RecentConversationsPanel conversationHandler={conversationHandler}/>
                 <VerticalSeparator />

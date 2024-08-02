@@ -1,0 +1,41 @@
+.Dropdown-root {
+    width: 60%;
+}
+
+.Dropdown-control {
+    background-color: #fff;
+    border: 2.5px solid #a02500;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.Dropdown-control:hover{
+    background-color: #e2dada;
+}
+
+.Dropdown-placeholder {
+    color: #666;
+}
+
+.Dropdown-menu {
+    background-color: #fff;
+    border: 2.5px solid #a02500;
+    border-radius: 5px;
+    margin-top: 3px;
+    z-index: 1000;
+}
+
+.Dropdown-option {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.Dropdown-option.is-selected{
+    background-color: #f9f1f1;
+}
+
+.Dropdown-option:hover {
+    background-color: #e2dada;
+}

@@ -70,7 +70,7 @@ function JobsPage(){
 
     const job1 = {
         title: "Software Engineer",
-        company: "TechCompany",
+        employer: "TechCompany",
         location: "New York, NY",
         description: "TechCompany is seeking a skilled Software Engineer to join our innovative and dynamic team in New York. The successful candidate will be responsible for developing and maintaining high-quality web applications using cutting-edge technologies. This is an exciting opportunity to work in a collaborative environment, where you will have the chance to shape the future of our product line and enhance your skills in a supportive setting.",
         requirements: [
@@ -104,7 +104,7 @@ function JobsPage(){
     
     const job2 = {
         title: "Product Manager",
-        company: "InnoTech Solutions",
+        employer: "InnoTech Solutions",
         location: "San Francisco, CA",
         description: "InnoTech Solutions is on the lookout for a highly motivated and experienced Product Manager to drive our product development efforts. As a key member of our leadership team, you will oversee the entire product lifecycle, from ideation through to launch and post-launch analysis. The ideal candidate will bring a strong understanding of market trends and customer needs, leveraging this knowledge to guide product strategy and development. This role requires a strategic thinker with excellent communication skills, capable of leading cross-functional teams to deliver innovative solutions that meet our business objectives.",
         requirements: [
@@ -168,17 +168,17 @@ function JobsPage(){
 
     return(
         <div className={s.jobs_page}>
-            <NavBar />
+            <NavBar currentPage={"Jobs"}/>
             <div className={s.jobs_page_content_container}>
                 <div className={`${s.jobs_timeline} ${showingMoreInfo ? s.jobs_timeline_expanded : undefined}`}>
                     <div className={s.jobs_timeline_header}>
                         {isCreatingJob ? 
                         <>
-                            Create Job Listing
+                            <h2>Create Job Listing</h2>
                         </> 
                         : 
                         <>
-                            Available Jobs
+                            <h2>Available Jobs</h2>
                             <button className={s.job_listing_button} onClick={handleCreateJobClick}>
                                 Create Job Listing
                             </button>

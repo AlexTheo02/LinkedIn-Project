@@ -5,16 +5,15 @@
 }
 
 .jobs_page_content_container{
-    display: flex;
-    background-color: antiquewhite;
-    /* position: fixed; */
     width: 100%;
     height: calc(100vh - 60px);
+    display: flex;
+    background-position: center;
+    background-size: cover;
     padding: 2.5vh 0px;
-    /* background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/ergasia_welcome_page_image.png); */
+    background-image: linear-gradient(rgba(0, 1, 50, 0.8), rgba(49, 50, 0, 0.8)), url(../../Images/jobs_background_ergasiaSite.jpg);
     overflow-x: hidden;
     overflow-y: auto;
-    /* z-index: -1; */
 }
 
 .jobs_timeline{
@@ -38,16 +37,15 @@
 .jobs_timeline_header{
     display: flex;
     justify-content: space-between;
-    align-items:end;
-    /* background-color: rgb(155, 227, 227); */
+    align-items: end;
     border-bottom: 2px solid #a02500;
-    padding: 10vh;
-    line-height: 5vh;
     max-height: 8vh;
     padding: 5px 0;
-    font-size: larger;
-    font-weight: bold;
-    z-index: 2;
+    margin-bottom: 7px;
+}
+
+.jobs_timeline_header h2{
+    margin-bottom: 0;
 }
 
 .jobs_timeline_expanded{
@@ -62,6 +60,7 @@
     overflow-y: auto;
     margin-right: -15px;
     padding-right: 15px;
+    padding-bottom: 10px;
 }
 
 .job_listings_container::-webkit-scrollbar {
@@ -125,11 +124,11 @@
 .job_listing_footer{
     display: flex;
     justify-content: space-between;
-    align-items: start;
-    font-size: 2.5vh;
+    align-items: center;
 }
 
 .job_listing_info_bar{
+    font-size: medium;
     color: #555;
 }
 
@@ -138,10 +137,10 @@
 }
 
 .job_listing_button{
-    padding: 5px;
-    font-size: 2.5vh;
+    padding: 7px 15px;
     font-weight: bold;
-    border-radius: 2vh;
+    font-size: medium;
+    border-radius: 30px;
     border: 2.5px solid #a02500;
     background-color: #a02500;
     color: #fff;
