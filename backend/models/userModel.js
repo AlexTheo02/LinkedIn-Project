@@ -18,7 +18,7 @@ const userSchema = new Schema({
 
     // profilePicture: {type: multimedia?, required: true},
 
-    residentialAddress: {type: String, required: true},
+    placeOfResidence: {type: String, required: true},
 
     workingPosition: {type: String, required: true},
 
