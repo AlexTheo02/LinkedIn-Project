@@ -9,6 +9,8 @@ import NotificationsPage from "./Pages/NotificationsPage/NotificationsPage.js"
 import PersonalDetailsPage from "./Pages/PersonalDetailsPage/PersonalDetailsPage.js"
 import SettingsPage from "./Pages/SettingsPage/SettingsPage.js"
 import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
+import PostPage from './Pages/PostPage/PostPage.js';
+import NavBar from './Components/NavBar/NavBar.js';
 
 import {
   BrowserRouter,
@@ -16,12 +18,13 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
-import PostPage from './Pages/PostPage/PostPage.js';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
+      {/* <NavBar /> */}
+      <div className='pages'>
+        <Routes>
 
         {/* Welcome Route */}
         <Route path="/" element={<WelcomePage />} />
@@ -52,11 +55,12 @@ function App() {
 
         {/* Post Page Route */}
         <Route path="/Post" element={<PostPage post_id={2}/>} />
-        
+
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />
 
-      </Routes>
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

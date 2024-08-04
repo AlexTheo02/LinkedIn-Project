@@ -8,7 +8,7 @@
 }
 
 .react-dropdown-select-item:hover{
-    background: #a025007a;
+    background: #a025007a !important;
 }
 
 .react-dropdown-select-item-selected{
