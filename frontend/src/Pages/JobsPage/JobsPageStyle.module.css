@@ -53,89 +53,6 @@
     margin-right: 1%;
 }
 
-.job_listings_container{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5vh;
-    overflow-y: auto;
-    margin-right: -15px;
-    padding-right: 15px;
-    padding-bottom: 10px;
-}
-
-.job_listings_container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.job_listings_container::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
-}
-
-.job_listings_containerjob_listings_container::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
-}
-
-.job_listing{
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 3px;
-    box-shadow: 0px 2px 4px rgb(0,0,0,0.4);
-}
-
-.job_listing:hover{
-    cursor: pointer;
-}
-
-.job_listing:hover .job_listing_header{
-    text-decoration: underline;
-    color: #a02500;
-}
-
-
-.job_listing_header{
-    /* background-color: #7fffaa; */
-    display: flex;
-    flex-direction: column;
-}
-
-.job_title{
-    width: fit-content;
-    color: #a02500;
-    font-size: larger;
-    font-weight: bold;
-}
-
-.job_title:hover{
-    text-shadow: 0px 1px 2px rgb(0,0,0,0.2);
-}
-
-.employer{
-    font-size: large;
-    font-weight: 500;
-}
-
-.job_listing_main_body{
-    color: #565656;
-    margin-bottom: 3px;
-    border-bottom: 1px solid #a02500;
-}
-
-.job_listing_footer{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.job_listing_info_bar{
-    font-size: medium;
-    color: #555;
-}
-
-.job_listing_interaction_bar{
-    display: flex;
-}
-
 .job_listing_button{
     padding: 7px 15px;
     font-weight: bold;
@@ -146,17 +63,8 @@
     color: #fff;
 }
 
-.applied{
-    background-color: #fff;
-    color: #a02500;
-}
-
 .job_listing_button:hover{
     background-color: #a02500a7;
     cursor: pointer;
-}
-
-.applied:hover{
-    background-color: #a0250077;
 }
 

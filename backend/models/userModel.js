@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    name: {type: String,required: true},
+    name: {type: String, required: [true, "Name is required"]},
 
     surname: {type: String, required: true},
 
@@ -16,7 +16,7 @@ const userSchema = new Schema({
 
     phoneNumber: {type: String, required: true, unique: true},
 
-    // profilePicture: {type: multimedia?, required: true},
+    // profilePicture: {type: String, required: false}, // Change to type: multimedia... required true
 
     placeOfResidence: {type: String, required: true},
 

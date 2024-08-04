@@ -3,13 +3,23 @@ import s from './WelcomePageStyle.module.css';
 import Select from "react-dropdown-select";
 import WelcomeNavBar from './../../Components/WelcomeNavBar/WelcomeNavBar.js';
 import "./SelectDropdownStyle.css"
+import { useNavigate } from 'react-router-dom';
 
 function WelcomePage() {
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
-
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [workingPosition, setWorkingPosition] = useState("");
+  const [employmentOrganization, setEmploymentOrganization] = useState("");
+  const [placeOfResidence, setPlaceOfResidence] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null);
+  
   const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
+  
   function createYearOptions(){
     const years = [];
     for (let year = 1900 ; year <= 2024 ; year++) {
@@ -21,15 +31,15 @@ function WelcomePage() {
       return 0;
     });
   }
-
+  
   const yearOptions = createYearOptions();
-
+  
   const [daysOptions, setDaysOptions] = useState(createRange(31));
   const [day, setDay] = useState(daysOptions[0]);
   const [month, setMonth] = useState(monthOptions[0]);
   const [year, setYear] = useState(yearOptions[0]);
-
-  const calculateDaysOptions = () => {
+  
+  function calculateDaysOptions(){
     if (month === "February"){
       if (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)){
         setDaysOptions(createRange(29));
@@ -45,6 +55,70 @@ function WelcomePage() {
       setDaysOptions(createRange(30));
     }
   }
+
+  const handleLoginClick = () => {
+    navigate("/Home");
+  }
+  
+  const handleRegisterClick = async () => {
+    // Check if email, password etc...
+    if (true){
+      // Create dummy user
+        const dateOfBirth = new Date(`${month} ${String(Number(day) + 1)}, ${year}`);
+        const user = { 
+          name,
+          surname,
+          dateOfBirth,
+          phoneNumber,
+          workingPosition,
+          employmentOrganization,
+          placeOfResidence,
+          email,
+          password,
+      }
+
+      const response = await fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(user),
+        headers: {
+            "Content-Type" : "application/json"
+        }
+      })
+      const json = await response.json();
+
+      // Error publishing user
+      if (!response.ok){
+          setError(json.error);
+      }
+      // User register completed
+      if (response.ok){
+
+          // Clear fields
+          setName("");
+          setSurname("");
+          setPhoneNumber("");
+          setWorkingPosition("");
+          setEmploymentOrganization("");
+          setPlaceOfResidence("");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setYear(yearOptions[0]);
+          setMonth(monthOptions[0]);
+          calculateDaysOptions();
+          setDay(daysOptions[0]);
+          
+          // Clear error mesasage
+          setError(null);
+
+          console.log("User published successfully", json);
+      }
+    }
+  }
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
+
+
 
   const handleModeSwitch = () => {
     setIsRegistering(!isRegistering);
@@ -83,10 +157,10 @@ function WelcomePage() {
                 />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="text" placeholder="Name" required={isRegistering} />
+                <input type="text" value={name} onChange={(e) => {setName(e.target.value)}} placeholder="Name" required={isRegistering} />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="text" placeholder="Surname" required={isRegistering} />
+                <input type="text" value={surname} onChange={(e) => {setSurname(e.target.value)}} placeholder="Surname" required={isRegistering} />
               </div>
               <div className={`${s.date_of_birth} ${isRegistering ? '' : s.hidden}`}>
                 <label className={s.text_input_label} htmlFor="day">Date Of Birth:</label>
@@ -126,29 +200,30 @@ function WelcomePage() {
                 </div>
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="tel" placeholder="Phone number" required={isRegistering} />
+                <input type="tel" value={phoneNumber} onChange={(e) => {setPhoneNumber(e.target.value)}} placeholder="Phone number" required={isRegistering} />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="text" placeholder="Working Position" required={isRegistering} />
+                <input type="text" value={workingPosition} onChange={(e) => {setWorkingPosition(e.target.value)}} placeholder="Working Position" required={isRegistering} />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="text" placeholder="Employment Organization" required={isRegistering} />
+                <input type="text" value={employmentOrganization} onChange={(e) => {setEmploymentOrganization(e.target.value)}} placeholder="Employment Organization" required={isRegistering} />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="text" placeholder="Place of Residence" required={isRegistering} />
+                <input type="text" value={placeOfResidence} onChange={(e) => {setPlaceOfResidence(e.target.value)}} placeholder="Place of Residence" required={isRegistering} />
               </div>
               <div className={s.input_field}>
-                <input type="email" placeholder="Email" required />
+                <input type="email" value={email} onChange={(e) => {setEmail(e.target.value)}} placeholder="Email" required />
               </div>
               <div className={s.input_field}>
-                <input type="password" placeholder="Password" required />
+                <input type="password" value={password} onChange={(e) => {setPassword(e.target.value)}} placeholder="Password" required />
               </div>
               <div className={`${s.input_field} ${isRegistering ? '' : s.hidden}`}>
-                <input type="password" placeholder="Confirm Password" required={isRegistering}/>
+                <input type="password" value={confirmPassword} onChange={(e) => {setConfirmPassword(e.target.value)}} placeholder="Confirm Password" required={isRegistering}/>
               </div>
             </div>
           </form>
-          <button>{isRegistering ? 'Register now' : 'Log in now'}</button>
+          <div className={s.error_messages}>Errors: Phone number, Email</div>
+          <button onClick={isRegistering ? handleRegisterClick : handleLoginClick}> {isRegistering ? 'Register now' : 'Log in now'}</button>
         </div>
       </div>
     </div>

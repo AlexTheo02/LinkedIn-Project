@@ -39,6 +39,7 @@ const createUser = async (request, response) => {
         email,
         password,
         phoneNumber,
+        // Profile Picture
         placeOfResidence,
         workingPosition,
         employmentOrganization,
@@ -65,6 +66,7 @@ const createUser = async (request, response) => {
             email,
             password,
             phoneNumber,
+            // Profile picture
             placeOfResidence,
             workingPosition,
             employmentOrganization,

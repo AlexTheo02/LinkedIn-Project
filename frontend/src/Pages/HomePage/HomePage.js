@@ -10,6 +10,7 @@ import tsipras from "../../Images/tsipras.jpg"
 import mitsotakis from "../../Images/mitsotakis.jpg"
 import TextAreaAutosize from "react-textarea-autosize"
 import { FileUploader } from "react-drag-drop-files";
+import TimelinePosts from "./TimelinePosts/TimelinePosts.js"
 
 function CreatePost({user_id}) {
 
@@ -38,7 +39,11 @@ function CreatePost({user_id}) {
     }
 
     // Caption control
+    const [author, setAuthor] = useState("3");
     const [caption, setCaption] = useState("");
+    const [commentsList, setCommentsList] = useState([]);
+    const [likesList, setLikesList] = useState([]);
+    const [error, setError] = useState(null);
 
     // Multimedia control
     const [multimediaType, setMultimediaType] = useState(null);
@@ -69,11 +74,47 @@ function CreatePost({user_id}) {
     }
 
     // Publish post
-    const handlePublisButtonClick = () => {
-        
+    const handlePublisButtonClick = async () => {
         // Check if post is not empty
-        if (caption !== "" && multimedia !== null){
-            // Add post to user's post list on database
+        if (caption !== ""){
+
+            // Create dummy post
+            const post = { 
+            author,
+            caption,
+            // multimedia,
+            commentsList,
+            likesList
+           }
+
+           const response = await fetch("/api/posts", {
+            method: "POST",
+            body: JSON.stringify(post),
+            headers: {
+                "Content-Type" : "application/json"
+            }
+           })
+           const json = await response.json();
+
+            // Error publishing post
+            if (!response.ok){
+                setError(json.error);
+            }
+            // Publish post completed successfully
+            if (response.ok){
+
+                // Clear fields
+                setAuthor('');
+                setCaption('');
+                // setMultimedia...
+                setCommentsList([]);
+                setLikesList([]);
+                
+                // Clear error mesasage
+                setError(null);
+
+                console.log("Post published successfully", json);
+            }
         }
     }
 
@@ -203,43 +244,41 @@ function CreatePost({user_id}) {
 
 function HomePage({user_id}) {
 
-        // Comments popup state
-        const [isPopupVisible, setIsPopupVisible] = useState(false);
-        const [selectedPostId, setSelectedPostId] = useState(null);
+    // Comments popup state
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [selectedPostId, setSelectedPostId] = useState(null);
+
+    const showCommentsPopup = (post_id) => {
+        setIsPopupVisible(true);
+        setSelectedPostId(post_id)
+    };
+
+    const hideCommentsPopup = () => {
+        setIsPopupVisible(false);
+        setSelectedPostId(null);            
+    };
     
-        const showCommentsPopup = (post_id) => {
-            setIsPopupVisible(true);
-            setSelectedPostId(post_id)
-        };
-    
-        const hideCommentsPopup = () => {
-            setIsPopupVisible(false);
-            setSelectedPostId(null);            
-        };
-        
-        // Struct for efficiency
-        const commentsPopupHandler = {
-            showCommentsPopup,
-            hideCommentsPopup,
-            isPopupVisible,
-            selectedPostId
-        }
+    // Struct for efficiency
+    const commentsPopupHandler = {
+        showCommentsPopup,
+        hideCommentsPopup,
+        isPopupVisible,
+        selectedPostId
+    }
 
     return(
         <div className={s.home_page}>
             <NavBar isHome={true} currentPage={"HomePage"}/>
-            <container className={s.container}>
+            <div className={s.container}>
                 <PersonalDetailsPanel />
                 <CommentsPopup commentsPopupHandler={commentsPopupHandler}/>
-                <timeline className={s.timeline}>
+                <div className={s.timeline}>
                     <CreatePost user_id={user_id}/>
                     {/* Replase Posts with map of TimelineList (fetched from database) */}
-                    <Post post_id={3} commentsPopupHandler={commentsPopupHandler}/>
-                    <Post post_id={2} commentsPopupHandler={commentsPopupHandler}/>
-                    <Post post_id={3} commentsPopupHandler={commentsPopupHandler}/>
-                </timeline>
+                    <TimelinePosts commentsPopupHandler={commentsPopupHandler}/>
+                </div>
                 
-            </container>
+            </div>
             
         </div>
     );

@@ -1,0 +1,22 @@
+.jobs{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    overflow-y: auto;
+    margin-right: -15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+}
+
+.jobs::-webkit-scrollbar {
+    width: 8px;
+}
+
+.jobs::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.jobs::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

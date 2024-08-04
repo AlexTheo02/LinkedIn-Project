@@ -52,61 +52,61 @@ function getPostById(pid){
     )
 }
 
-function Post({post_id, commentsPopupHandler}){
+function Post({post, commentsPopupHandler}){
 
 
     // Fetch from database
-    const {
-        user_id,
-        timestamp,
-        caption,
-        multimedia,
-        multimediaType,
-        likeCount,
-        commentCount,
-        isLiked
-    } = getPostById(post_id);
+    // const {
+    //     user_id,
+    //     timestamp,
+    //     caption,
+    //     multimedia,
+    //     multimediaType,
+    //     likeCount,
+    //     commentCount,
+    //     isLiked
+    // } = getPostById(post_id);
     
 
     // Then create components
 
-    if (commentCount > 0)
-        return (
-            <div className={s.post}>
+    // if (commentCount > 0)
+    //     return (
+    //         <div className={s.post}>
                 
-                <div className={s.post_header}>
-                <InteractiveProfile user_id={user_id}/>
-                <Timestamp timestamp={timestamp}/>
-                </div>
+    //             <div className={s.post_header}>
+    //             <InteractiveProfile user_id={user_id}/>
+    //             <Timestamp timestamp={timestamp}/>
+    //             </div>
                 
                 
-                <PostCaption caption={caption}/>
-                <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
-                <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
-                <HorizontalSeparator/>
-                <PostInteractionBar isLiked={isLiked}/>
+    //             <PostCaption caption={caption}/>
+    //             <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
+    //             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
+    //             <HorizontalSeparator/>
+    //             <PostInteractionBar isLiked={isLiked}/>
 
-                {/* If comments_num > 0, then render these, else, render none */}
-                <HorizontalSeparator/>
-                {/* Comments */}
-                <PostPreviewComments post_id={post_id} commentsPopupHandler={commentsPopupHandler} />
-            </div>
-        );
+    //             If comments_num > 0, then render these, else, render none
+    //             <HorizontalSeparator/>
+    //             Comments
+    //             <PostPreviewComments post_id={post_id} commentsPopupHandler={commentsPopupHandler} />
+    //         </div>
+    //     );
 
     return (
         <div className={s.post}>
             
-            <div className={s.post_header}>
+            {/* <div className={s.post_header}>
             <InteractiveProfile user_id={user_id}/>
             <Timestamp timestamp={timestamp}/>
-            </div>
+            </div> */}
             
             
-            <PostCaption caption={caption}/>
-            <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
+            <PostCaption caption={post.caption}/>
+            {/* <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
             <HorizontalSeparator/>
-            <PostInteractionBar isLiked={isLiked}/>
+            <PostInteractionBar isLiked={isLiked}/> */}
         </div>
     );
 }

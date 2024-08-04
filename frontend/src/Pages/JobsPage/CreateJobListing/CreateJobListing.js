@@ -4,6 +4,8 @@ import Dropdown from 'react-dropdown';
 import s from "./CreateJobListingStyle.module.css";
 import "./CustomDropdownStyle.css";
 
+// Changed dropdown value/labels, removed author from jobController (for now), employeesRange is now a tuple
+
 const ManyInputFields = ({name, list, setList}) => {
 
     const handleListChange = (index, event) => {
@@ -16,7 +18,7 @@ const ManyInputFields = ({name, list, setList}) => {
         // Update actual list
         setList(newList);
     }
-
+    
     // Add element at the end of the list (up to 10 total elements)
     const addElement = () => {
         if (list.length < 10)
@@ -36,6 +38,7 @@ const ManyInputFields = ({name, list, setList}) => {
             <div className={s.many_fields_container}>
                 {list.map((listElement, index) => (
                     <input
+                        key={`${name}Input${index}`}
                         type="text"
                         id={`${name}Input${index}`}
                         placeholder={`${name} ${index + 1}`}
@@ -64,37 +67,85 @@ const ManyInputFields = ({name, list, setList}) => {
 const CreateJobListing = ({jobListingsHandler}) => {
 
     const {handleCancel} = jobListingsHandler;
-
+    const [author, setAuthor] = useState(null);
     const [title, setTitle] = useState("");
-
+    const [employer, setEmployer] = useState("");
     const [location, setLocation] = useState("");
-
-    const [isOnSite, setIsOnSite] = useState(true);
-    const [isRemote, setIsRemote] = useState(false);
-    const [isHybrid, setIsHybrid] = useState(false);
-
-    const [isFullTime, setIsFullTime] = useState(true);
-    const [isPartTime, setIsPartTime] = useState(false);
-
-    const [employeesRange, setEmployeesRange] = useState("1-10");
-
+    const [description, setDescription] = useState("");
+    const [workingArrangement, setWorkingArrangement] = useState(0);
+    const [employmentType, setEmploymentType] = useState(0);
+    const [employeesRange, setEmployeesRange] = useState({value: 0, label: "1-10"});
     const [requirementsList, setRequirementsList] = useState([{value: ""},{value: ""},{value: ""}]);
-
     const [responsibilitiesList, setResponsibilitiesList] = useState([{value: ""},{value: ""},{value: ""}]);
-
     const [benefitsList, setBenefitsList] = useState([{value: ""},{value: ""},{value: ""}]);
 
-    const [description, setDescription] = useState("");
+    const [error, setError] = useState(null);
+    // Publish job
+    const handlePublish = async () => {
+        const applicants = [];
+        // Check validity of fields, then proceed
+        if (true){
 
-    const handlePublish = () => {
-        console.log("Publishing job")
+            // Create dummy job
+            const job = { 
+                // author,
+                title,
+                employer,
+                location,
+                description,
+                requirementsList,
+                benefitsList,
+                responsibilitiesList,
+                workingArrangement,
+                employmentType,
+                employeesRange: employeesRange.value,
+                applicants
+            }
+
+            const response = await fetch("/api/jobs", {
+                method: "POST",
+                body: JSON.stringify(job),
+                headers: {
+                    "Content-Type" : "application/json"
+                }
+            })
+
+            const json = await response.json();
+
+            // Error publishing job
+            if (!response.ok){
+                setError(json.error);
+                console.log(error)
+            }
+            // Publish job completed successfully
+            if (response.ok){
+
+                // Clear fields
+                setAuthor("");
+                setTitle("");
+                setEmployer("");
+                setLocation("");
+                setDescription("");
+                setRequirementsList([]);
+                setBenefitsList([]);
+                setResponsibilitiesList([]);
+                setWorkingArrangement(0);
+                setEmploymentType(0);
+                setEmployeesRange({value: 0, label: "1-10"});
+                
+                // Clear error mesasage
+                setError(null);
+
+                console.log("Job published successfully", json);
+            }
+        }
     }
 
     return(
         <div className={s.create_job_listing}>
             {/* Job Title */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobTitle">Job Title:</label>
+                <label className={s.text_input_label}>Job Title:</label>
                 <input
                     type="text"
                     id="jobTitleInput"
@@ -105,9 +156,22 @@ const CreateJobListing = ({jobListingsHandler}) => {
                 />
             </div>
 
+            {/* Employer */}
+            <div className={s.job_field_container}>
+                <label className={s.text_input_label}>Employer:</label>
+                <input
+                    type="text"
+                    id="jobEmployerInput"
+                    placeholder={"Employer"}
+                    className={s.text_input}
+                    value={employer}
+                    onChange={(e) => {setEmployer(e.target.value)}}
+                />
+            </div>
+
             {/* Location */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobLocation">Location:</label>
+                <label className={s.text_input_label}>Location:</label>
                 <input
                     type="text"
                     id="jobLocationInput"
@@ -124,46 +188,46 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                 {/* Working Arrangement */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label} htmlFor="workingArrangement">Working Arrangement:</label>
+                    <label className={s.text_input_label}>Working Arrangement:</label>
                     <div className={s.vertical_container}>
                         <button
-                            onClick={() => {setIsOnSite(true); setIsRemote(false); setIsHybrid(false);}}
-                            className={`${s.category_selection_button} ${ isOnSite ? s.selected : ""}`}
+                            onClick={() => {setWorkingArrangement(0)}}
+                            className={`${s.category_selection_button} ${ workingArrangement === 0 ? s.selected : ""}`}
                         >
                             On-site
                         </button>
 
                         <button
-                            onClick={() => {setIsOnSite(false); setIsRemote(true); setIsHybrid(false);}}
-                            className={`${s.category_selection_button} ${ isRemote ? s.selected : ""}`}
+                            onClick={() => {setWorkingArrangement(1)}}
+                            className={`${s.category_selection_button} ${ workingArrangement === 1 ? s.selected : ""}`}
                         >
                             Remote
                         </button>
 
                         <button
-                            onClick={() => {setIsOnSite(false); setIsRemote(false); setIsHybrid(true);}}
-                            className={`${s.category_selection_button} ${ isHybrid ? s.selected : ""}`}
+                            onClick={() => {setWorkingArrangement(2)}}
+                            className={`${s.category_selection_button} ${ workingArrangement === 2 ? s.selected : ""}`}
                         >
                             Hybrid
                         </button>
                     </div>
                 </div>
 
-                {/* Working Hours */}
+                {/* Employment Type */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label} htmlFor="workingHours">Working Hours:</label>
+                    <label className={s.text_input_label}>Working Hours:</label>
                     <div className={s.vertical_container}>
 
                         <button 
-                            onClick={() => {setIsFullTime(true); setIsPartTime(false);}}
-                            className={`${s.category_selection_button} ${ isFullTime ? s.selected : ""}`}
+                            onClick={() => {setEmploymentType(0)}}
+                            className={`${s.category_selection_button} ${ employmentType === 0 ? s.selected : ""}`}
                         >
                             Full-time
                         </button>
 
                         <button 
-                            onClick={() => {setIsFullTime(false); setIsPartTime(true);}}
-                            className={`${s.category_selection_button} ${ isPartTime ? s.selected : ""}`}
+                            onClick={() => {setEmploymentType(1)}}
+                            className={`${s.category_selection_button} ${ employmentType === 1 ? s.selected : ""}`}
                         >
                             Part-Time
                         </button>
@@ -173,11 +237,22 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                 {/* Number of employees range */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label} htmlFor="employeesRange">Employees Range:</label>
+                    <label className={s.text_input_label}>Employees Range:</label>
                     <Dropdown
-                        options={["1-10", "11-50", "51-100", "101-200", "201-500", "501-1000", "1001-2000", "2001-5000", "5001-10000", "10000+"]}
-                        value={employeesRange}
-                        onChange={(option) => {setEmployeesRange(option.value)}}
+                        options={[
+                            { value: 0, label: "1-10" },
+                            { value: 1, label: "11-50" },
+                            { value: 2, label: "51-100" },
+                            { value: 3, label: "101-200" },
+                            { value: 4, label: "201-500" },
+                            { value: 5, label: "501-1000" },
+                            { value: 6, label: "1001-2000" },
+                            { value: 7, label: "2001-5000" },
+                            { value: 8, label: "5001-10000" },
+                            { value: 9, label: "10000+" }
+                        ]}
+                        value={employeesRange.label}
+                        onChange={(option) => {setEmployeesRange(option)}}
                         placeholder={"Select Employee Number Range"}
                     />
 
@@ -187,7 +262,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Description */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobDescription">Description:</label>
+                <label className={s.text_input_label} >Description:</label>
                 <textarea
                     id="jobDescriptionInput"
                     placeholder={"Description"}
@@ -199,19 +274,19 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Requirements */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobRequirements">Requirements:</label>
+                <label className={s.text_input_label} >Requirements:</label>
                 <ManyInputFields name={"Requirement"} list={requirementsList} setList={setRequirementsList} />
             </div>
 
             {/* Responsibilities */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobResponsibilities">Responsibilities:</label>
+                <label className={s.text_input_label} >Responsibilities:</label>
                 <ManyInputFields name={"Responsibility"} list={responsibilitiesList} setList={setResponsibilitiesList} />
             </div>
 
             {/* Benefits */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} htmlFor="jobBenefits">Benefits:</label>
+                <label className={s.text_input_label} >Benefits:</label>
                 <ManyInputFields name={"Benefit"} list={benefitsList} setList={setBenefitsList} />
             </div>
 

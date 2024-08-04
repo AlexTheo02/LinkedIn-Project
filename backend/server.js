@@ -4,6 +4,8 @@ const express = require("express")
 const mongoose = require("mongoose")
 
 const userRoutes = require("./routes/users.js")
+const postRoutes = require("./routes/posts.js")
+const jobRoutes = require("./routes/jobs.js")
 // Create all necessary route files (posts, comments, ...)
 
 // Create an express app
@@ -18,7 +20,9 @@ app.use((request, response, next) => {
 })
 
 // Routes
-app.use("/api/users",userRoutes)
+app.use("/api/users", userRoutes)
+app.use("/api/posts", postRoutes)
+app.use("/api/jobs", jobRoutes)
 
 // Connect to the database
 mongoose.connect(process.env.MONGO_URI)

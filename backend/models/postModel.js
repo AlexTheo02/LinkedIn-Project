@@ -8,7 +8,7 @@ const postSchema = new Schema({
 
     caption: {type: String, required: true},
 
-    // multimedia: {type: multimedia??}
+    // multimedia: {type: multimedia??} // google cloud URL
 
     commentsList : {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true},
 

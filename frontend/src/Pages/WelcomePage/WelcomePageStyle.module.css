@@ -70,6 +70,11 @@
     transform: translateX(-50%);
 }
 
+.form_box .error_messages{
+    color: rgb(121, 0, 0);
+    text-align: start;
+}
+
 .input_field {
     background: #a8a4a4;
     margin: 15px 0;
@@ -171,5 +176,3 @@
 .middle_dropdown{
     width: 30%;
 }
-
-
