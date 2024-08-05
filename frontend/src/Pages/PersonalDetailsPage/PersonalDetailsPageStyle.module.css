@@ -135,6 +135,35 @@
     font-size: 12px;
 }
 
+.date_of_birth{
+    width: 100%;
+}
+
+.date_of_birth label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dropdown_row{
+    width: 100%;
+    gap: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 15px;
+}
+
+.side_dropdown{
+    width: 20%;
+}
+
+.middle_dropdown{
+    width: 30%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile_container {

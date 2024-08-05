@@ -1,6 +1,7 @@
 const express = require("express")
 const {
     getAllUsers,
+    getUserById,
     getUser,
     createUser,
     deleteUser,
@@ -15,8 +16,11 @@ const router = express.Router()
 // GET all users
 router.get("/", getAllUsers)
 
-// GET a signle user
-router.get("/:id", getUser)
+// GET a signle user (by id)
+router.get("/:id", getUserById)
+
+// GET a single user
+router.get("/find", getUser)
 
 // POST a new user
 router.post("/", createUser)

@@ -60,7 +60,7 @@ function Post({post, commentsPopupHandler}){
     //     user_id,
     //     timestamp,
     //     caption,
-    //     multimedia,
+    //     multimediaURL,
     //     multimediaType,
     //     likeCount,
     //     commentCount,
@@ -92,7 +92,8 @@ function Post({post, commentsPopupHandler}){
     //             <PostPreviewComments post_id={post_id} commentsPopupHandler={commentsPopupHandler} />
     //         </div>
     //     );
-
+    const multimediaURL="https://storage.googleapis.com/linkedin_project_bucket/1722867620034-christmas%20small%20doge.png"
+    const multimediaType = "image";
     return (
         <div className={s.post}>
             
@@ -103,8 +104,8 @@ function Post({post, commentsPopupHandler}){
             
             
             <PostCaption caption={post.caption}/>
-            {/* <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
-            <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
+            <PostMultimedia multimediaURL={multimediaURL} multimediaType={multimediaType}/>
+            {/* <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
             <HorizontalSeparator/>
             <PostInteractionBar isLiked={isLiked}/> */}
         </div>

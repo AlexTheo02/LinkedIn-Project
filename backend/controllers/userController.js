@@ -10,7 +10,7 @@ const getAllUsers = async (request, response) => {
 }
 
 // Get a single user
-const getUser = async (request, response) => {
+const getUserById = async (request, response) => {
     // Grab the id from the route parameters
     const { id } = request.params;
 
@@ -28,6 +28,52 @@ const getUser = async (request, response) => {
     
     // User exists
     response.status(200).json(user);
+}
+
+// Get a user by a specific field
+const getUser = async (request, response) => {
+    const {fieldName, fieldValue} = request.query;
+    
+    const allowedFields = [
+        "name",
+        "surname",
+        "dateOfBirth",
+        "email",
+        "phoneNumber",
+        "placeOfResidence",
+        "workingPosition",
+        "employmentOrganization",
+        "professionalExperience",
+        "education",
+        "skills",
+        "recentConversations",
+        "network",
+        "publishedPosts",
+        "publishedJobListings",
+        "likedPosts"
+    ];
+
+    if (!allowedFields.includes(fieldName)){
+        return response.status(400).json({error: "Invalid field name"})
+    }
+
+    try {
+        // Generate query
+        const query = {};
+        query[fieldName] = fieldValue;
+
+        const user = await User.find(query)
+
+        // User does not exist
+        if (!user) {
+            return response.status(404).json({error: "User not found"})
+        }
+        // User exists
+        response.status(200).json(user);
+
+    } catch (error) {
+        response.status(400).json({error: error.message})
+    }
 }
 
 // Create a new user
@@ -130,6 +176,7 @@ const updateUser = async (request, response) => {
 
 module.exports = {
     getAllUsers,
+    getUserById,
     getUser,
     createUser,
     deleteUser,

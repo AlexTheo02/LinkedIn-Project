@@ -4,8 +4,6 @@ import Dropdown from 'react-dropdown';
 import s from "./CreateJobListingStyle.module.css";
 import "./CustomDropdownStyle.css";
 
-// Changed dropdown value/labels, removed author from jobController (for now), employeesRange is now a tuple
-
 const ManyInputFields = ({name, list, setList}) => {
 
     const handleListChange = (index, event) => {
@@ -83,9 +81,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
     // Publish job
     const handlePublish = async () => {
         const applicants = [];
+        console.log(applicants.length);
         // Check validity of fields, then proceed
         if (true){
-
             // Create dummy job
             const job = { 
                 // author,

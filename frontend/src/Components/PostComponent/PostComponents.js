@@ -55,12 +55,12 @@ function PostCaption({caption}){
     )
 }
 
-function PostMultimedia({multimedia, multimediaType}){
+function PostMultimedia({multimediaURL, multimediaType}){
     return(
         <div className={s.multimedia}>
-            {multimediaType === "image" && <img src={multimedia} alt="No img source found" />}
-            {multimediaType === "video" && <video src={multimedia} controls alt="No vid source found" />}
-            {multimediaType === "audio" && <audio src={multimedia} controls alt="No aud source found" />}
+            {multimediaType === "image" && <img src={multimediaURL} alt="No img source found" />}
+            {multimediaType === "video" && <video src={multimediaURL} controls alt="No vid source found" />}
+            {multimediaType === "audio" && <audio src={multimediaURL} controls alt="No aud source found" />}
         </div>
     )
 }

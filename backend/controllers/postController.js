@@ -1,5 +1,8 @@
+const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+
 const Post = require("../models/postModel.js")
 const mongoose = require("mongoose")
+
 
 // Get all posts
 const getAllPosts = async (request, response) => {
@@ -33,26 +36,25 @@ const getPost = async (request, response) => {
 // Create a new post
 const createPost = async (request, response) => {
     const {
-        author,
+        // author,
         caption,
-        // multimedia
         commentsList,
         likesList
     } = request.body;
-
-    // Get multimedia file
-    // Upload and retrieve gc link
-    // Store link to db
+    
+    const multimediaURL = request.file ? await handleFileUpload(request.file) : null;
+    const multimediaType = request.file ? request.file.mimetype.split('/')[0] : null;
 
     // Add to mongodb database
     try {
         const post = await Post.create({
-            author,
+            // author,
             caption,
-            // multimedia
-            commentsList,
-            likesList
-    });
+            multimediaURL,
+            multimediaType,
+            commentsList: JSON.parse(commentsList),
+            likesList: JSON.parse(likesList)
+        });
         response.status(200).json(post)
     } catch (error) {
         response.status(400).json({error: error.message})

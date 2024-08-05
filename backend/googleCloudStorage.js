@@ -11,4 +11,4 @@ const gc = new Storage({
 // Google Cloud Storage Bucket
 const lp_bucket = gc.bucket(process.env.BUCKET_NAME);
 
-module.exports = lp_bucket;
+module.exports = {lp_bucket};

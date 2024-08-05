@@ -3,10 +3,10 @@ require("dotenv").config()
 const express = require("express")
 const mongoose = require("mongoose")
 
+// Routes
 const userRoutes = require("./routes/users.js")
 const postRoutes = require("./routes/posts.js")
 const jobRoutes = require("./routes/jobs.js")
-// Create all necessary route files (posts, comments, ...)
 
 // Create an express app
 const app = express()

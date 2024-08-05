@@ -78,22 +78,18 @@ function CreatePost({user_id}) {
         // Check if post is not empty
         if (caption !== ""){
 
-            // Create dummy post
-            const post = { 
-            author,
-            caption,
-            // multimedia,
-            commentsList,
-            likesList
-           }
+            const formData = new FormData();
+            // formData.append("author", author);
+            formData.append("caption", caption);
+            formData.append("commentsList", JSON.stringify(commentsList));
+            formData.append("likesList", JSON.stringify(likesList));
+            formData.append("file", multimedia);
 
            const response = await fetch("/api/posts", {
             method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                "Content-Type" : "application/json"
-            }
-           })
+            body: formData
+           });
+
            const json = await response.json();
 
             // Error publishing post
@@ -106,7 +102,9 @@ function CreatePost({user_id}) {
                 // Clear fields
                 setAuthor('');
                 setCaption('');
-                // setMultimedia...
+                setMultimedia(null);
+                setMultimediaPreview(null);
+                setMultimediaType(null);
                 setCommentsList([]);
                 setLikesList([]);
                 

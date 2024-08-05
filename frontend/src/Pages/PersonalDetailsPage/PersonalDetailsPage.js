@@ -2,8 +2,15 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faToggleOn, faToggleOff, faUserGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
 import s from './PersonalDetailsPageStyle.module.css';
-
+import Select from "react-dropdown-select";
 import NavBar from './../../Components/NavBar/NavBar.js';
+import "../../Components/SelectStyle.css"
+
+const {
+    createYearOptions,
+    calculateDaysOptions,
+    createRange
+} = require("../../Components/GeneralFunctions.js")
 
 function PersonalDetails() {
     const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
@@ -17,11 +24,21 @@ function PersonalDetails() {
     const [education, setEducation] = useState('');
     const [skills, setSkills] = useState('');
 
+    const [isDateOfBirthPublic, setIsDateOfBirthPublic] = useState(false);
     const [isPhonePublic, setIsPhonePublic] = useState(false);
     const [isLocationPublic, setIsLocationPublic] = useState(true);
     const [isExperiencePublic, setIsExperiencePublic] = useState(true);
     const [isEducationPublic, setIsEducationPublic] = useState(true);
     const [isSkillsPublic, setIsSkillsPublic] = useState(true);
+
+    const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+    const yearOptions = createYearOptions();
+    
+    const [daysOptions, setDaysOptions] = useState(createRange(31));
+    const [day, setDay] = useState(daysOptions[0]);
+    const [month, setMonth] = useState(monthOptions[0]);
+    const [year, setYear] = useState(yearOptions[0]);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -65,6 +82,54 @@ function PersonalDetails() {
                             onChange={(e) => setSurname(e.target.value)}
                         />
                     </div>
+                    <div className={s.date_of_birth}>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="day">Date of Birth</label>
+                            <div className={s.icons_container}>
+                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                <FontAwesomeIcon
+                                    icon={isDateOfBirthPublic ? faToggleOn : faToggleOff}
+                                    className={s.toggle_icon}
+                                    onClick={() => setIsDateOfBirthPublic(!isDateOfBirthPublic)}
+                                    title= {isDateOfBirthPublic ? 'Set to private' : 'Set to public'}
+                                />
+                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                            </div>
+                        </div>
+                        <div className={s.dropdown_row}>
+                            <div className={s.side_dropdown}>
+                                <Select
+                                onDropdownOpen={() => calculateDaysOptions(month, year, setDaysOptions)}
+                                closeOnClickInput={true}
+                                searchable={false}
+                                options={daysOptions.map(day => ({ label: day, value: day }))}
+                                values={[{ label: day, value: day }]}
+                                onChange={(values) => setDay(values[0].value)}
+                                />
+                            </div>
+
+                            <div className={s.middle_dropdown}>
+                                <Select
+                                searchable={false}
+                                closeOnClickInput={true}
+                                options={monthOptions.map(month => ({ label: month, value: month }))}
+                                values={[{ label: month, value: month }]}
+                                onChange={(values) => setMonth(values[0].value)}
+                                />
+                            </div>
+                            
+                            <div className={s.side_dropdown}>
+                                <Select
+                                searchable={false}
+                                closeOnClickInput={true}
+                                options={yearOptions.map(year => ({ label: year, value: year }))}
+                                values={[{ label: year, value: year }]}
+                                onChange={(values) => setYear(values[0].value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="phoneNumberInput">Phone Number</label>

@@ -1,4 +1,6 @@
 const express = require("express")
+const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+
 const {
     getAllPosts,
     getPost,
@@ -18,7 +20,7 @@ router.get("/", getAllPosts)
 router.get("/:id", getPost)
 
 // POST a new post
-router.post("/", createPost)
+router.post("/", upload.single("file"), createPost)
 
 // UPDATE a post
 router.patch("/:id", updatePost)

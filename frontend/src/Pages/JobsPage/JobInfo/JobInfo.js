@@ -3,8 +3,17 @@ import s from './JobInfoStyle.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faLocationDot, faUserTie, faCalendarDays, faBriefcase, faBuilding } from '@fortawesome/free-solid-svg-icons';
 import { formatDistanceToNow } from 'date-fns';
+const {
+    string_workingArrangmement,
+    string_employmentType,
+    calculate_employeesRange
+} = require("../functions.js")
 
 const JobInfo = ({ job, isExpanded, onExit}) => {
+    
+    // Έλεγχος εγκυρότητας ημερομηνίας
+    const isValidDate = !isNaN(new Date(job.createdAt));
+
     return (
         <div className={`${s.jobInfoContainer} ${isExpanded ? s.expanded : ''}`}>
             <FontAwesomeIcon 
@@ -20,17 +29,17 @@ const JobInfo = ({ job, isExpanded, onExit}) => {
             </p>
             <p className={s.time_and_applicants}>
                 <FontAwesomeIcon icon={faCalendarDays} className={s.icon} />
-                {formatDistanceToNow(new Date(job.timestamp))} ago • 
+                {isValidDate ? formatDistanceToNow(new Date(job.createdAt)) : 'Invalid date'} ago • 
                 <FontAwesomeIcon icon={faUserTie} className={s.applicants_icon} />
-                {job.applicantsNumber} applicants
+                {job.applicants?.length} applicants
             </p>
             <p className={s.rest_info}>
                 <FontAwesomeIcon icon={faBriefcase} className={s.icon} />
-                {job.workingArrangement} • {job.employmentType}
+                {string_workingArrangmement(job.workingArrangement)} • {string_employmentType(job.employmentType)}
             </p>
             <p className={s.rest_info}>
                 <FontAwesomeIcon icon={faBuilding} className={s.icon} />
-                {job.employeesNumber} employees
+                {calculate_employeesRange(job.employeesRange)} employees
             </p>
 
             <div className={s.section}>

@@ -26,7 +26,7 @@ const jobSchema = new Schema({
 
     employeesRange: {type: Number, required: true}, // Integer number
 
-    applicants: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: false} // Array of UserIds
+    applicants: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true} // Array of UserIds
     
 }, { timestamps: true})
 

@@ -3,6 +3,7 @@ import s from "./ProfilePageStyle.module.css";
 import NavBar from '../../Components/NavBar/NavBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { differenceInYears } from 'date-fns';
 
 const profilePic = require('./../../Images/profile_ergasiaSite.png');
 
@@ -74,6 +75,7 @@ const network = [
 const user = {
     name: 'John',
     surname: 'Doe',
+    date_of_birth: "1942-11-20T23:00:00.000+00:00",
     workingPosition: 'Software Engineer',
     employmentOrganization: 'Tech Company',
     location: 'New York, USA',
@@ -84,6 +86,12 @@ const user = {
     skills: skills,
     network: network
 };
+
+function calculateAge(birthDate) {
+    const dateOfBirth = new Date(birthDate);
+    const age = differenceInYears(new Date(), dateOfBirth);
+    return age;
+}
 
 function ExpandableText({ text, maxWords = 50 }) {
     const [expanded, setExpanded] = useState(false);
@@ -125,7 +133,8 @@ function ProfilePage(user_id) {
                             <img src={profilePic} alt="Profile" />
                             <h1>{user.name} {user.surname}</h1>
                             <b>{user.workingPosition} at {user.employmentOrganization}</b>
-                            <p className={s.location}>{user.location}</p>
+                            <p>{calculateAge(user.date_of_birth)} years old</p>
+                            <p>{user.location}</p>
                         </div>
                         <div className={s.operations}>
                             <div className={s.buttons}>
