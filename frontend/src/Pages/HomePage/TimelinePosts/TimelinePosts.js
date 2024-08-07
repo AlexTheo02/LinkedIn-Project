@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Post from "../../../Components/PostComponent/Post";
 import s from "./TimelinePostsStyle.module.css"
+import { usePostsContext } from "../../../Hooks/usePostsContext";
 
 function TimelinePosts({commentsPopupHandler}) {
-    const [posts, setPosts] = useState(null);
+    const {posts, dispatch} = usePostsContext()
 
     // Fetch posts from database
     useEffect(() => {
@@ -12,7 +13,7 @@ function TimelinePosts({commentsPopupHandler}) {
             const json = await response.json();
 
             if (response.ok){
-                setPosts(json);
+                dispatch({type: 'SET_POSTS', payload: json})
             }
         }
 

@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 const {
     string_workingArrangmement,
-    string_employmentType,
-    calculate_employeesRange
+    string_employmentType
 } = require("../functions.js")
 
 const JobListingFooter = ({ job }) => {

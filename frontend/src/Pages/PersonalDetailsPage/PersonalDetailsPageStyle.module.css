@@ -164,6 +164,44 @@
     width: 30%;
 }
 
+.button_container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.edit_button,
+.save_button,
+.cancel_button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.edit_button {
+    background-color: #a02500;
+    color: white;
+}
+
+.save_button {
+    background-color: #00af29;
+    color: white;
+}
+
+.cancel_button {
+    background-color: #ad0000;
+    color: white;
+}
+
+.edit_button:hover,
+.save_button:hover,
+.cancel_button:hover {
+    opacity: 0.8;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile_container {

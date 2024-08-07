@@ -81,7 +81,12 @@ const CreateJobListing = ({jobListingsHandler}) => {
     // Publish job
     const handlePublish = async () => {
         const applicants = [];
-        console.log(applicants.length);
+
+        // Μετατροπή των λιστών σε πίνακες από strings και φιλτράρισμα των κενών strings
+        const requirements = requirementsList.map(item => item.value).filter(item => item.trim() !== "");
+        const responsibilities = responsibilitiesList.map(item => item.value).filter(item => item.trim() !== "");
+        const benefits = benefitsList.map(item => item.value).filter(item => item.trim() !== "");
+        
         // Check validity of fields, then proceed
         if (true){
             // Create dummy job
@@ -91,9 +96,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
                 employer,
                 location,
                 description,
-                requirementsList,
-                benefitsList,
-                responsibilitiesList,
+                requirements,
+                benefits,
+                responsibilities,
                 workingArrangement,
                 employmentType,
                 employeesRange: employeesRange.value,

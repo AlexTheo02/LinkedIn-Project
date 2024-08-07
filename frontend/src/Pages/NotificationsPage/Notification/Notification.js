@@ -1,6 +1,5 @@
 import React from 'react';
 import s from './NotificationStyle.module.css';
-import { useNavigate } from 'react-router-dom';
 
 function Notification({ profilePic, name, surname, isInterestOrComment, comment, postPic, postCaption }) {
 

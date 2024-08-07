@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import s from "./PostNotificationsStyle.module.css";
 import Notification from '../Notification/Notification';
 
