@@ -15,8 +15,8 @@ const app = express()
 app.use(express.json())
 
 app.use((request, response, next) => {
-    console.log(request.path, request.method)
-    next()
+    console.log(request.path, request.method);
+    next();
 })
 
 // Routes

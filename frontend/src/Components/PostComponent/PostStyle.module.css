@@ -49,6 +49,10 @@
     cursor: pointer;
 }
 
+.alt_interactive_profile.non_interactive:hover{
+    cursor: default;
+}
+
 .alt_interactive_profile img {
     width: 30px;
     height: 30px;
@@ -108,44 +112,15 @@
     color: #555;
 }
 
-.like_button{
-    padding: 3px;
-    background-color: transparent;
-    border: none;
+.post_interaction_bar_button {
     width: 10vw;
     border-radius: 5px;
+    color: #a02500;
+    font-size: 20px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
 }
 
-
-.like_button img{
-    max-height: 20px;
-    height: auto;
-    width: auto;
-    border-radius: 0;
-}
-
-.like_button:hover{
-    background-color: #a0250066;
-}
-
-.like_button:active{
-    opacity: 0.8;
-}
-
-.comment_button {
-    background-color: transparent;
-    border: none;
-    width: 10vw;
-    border-radius: 5px;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.comment_button:hover{
-    text-decoration: underline;
+.post_interaction_bar_button:hover{
     background-color: #a0250066;
 }
 
@@ -161,10 +136,56 @@
     margin-bottom: 3px;
 }
 
+.add_comment_container{
+    width: 100%;
+    margin: auto;
+    margin-bottom: 0;
+}
+
 .comment_content{
     background-color: #e2dada;
 
     margin-left: 40px;
+}
+
+.add_comment_field_container{
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    padding-top: 0;
+    z-index: 1001;
+}
+
+.add_comment_field{
+    padding: 5px;
+    width: 95%;
+    font-size: medium;
+    margin-left: 40px;
+    border-radius: 10px;
+    border: none;
+    resize: none;
+    overflow-y: auto;
+    max-height: 20vh;
+}
+
+.post_comment_icon{
+    align-self: flex-end;
+    margin-bottom: 5px;
+    color: #a02500
+}
+
+.post_comment_icon:hover{
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.post_comment_icon:active{
+    opacity: 1;
+}
+
+.add_comment_field:focus{
+    outline: 1px solid #a02500;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.4);
 }
 
 .show_comments_popup_button{
@@ -219,8 +240,6 @@
     justify-content: space-evenly;
     gap: 10px;
     overflow-y: scroll;
-    /* scrollbar-width: thin; */
-    /* scrollbar-color: rgba(0, 0, 0, 0.2) transparent; */
 }
 
 ::-webkit-scrollbar{

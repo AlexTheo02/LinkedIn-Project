@@ -1,3 +1,6 @@
+// ADD PRIVATE/PUBLIC BOOLS. Maybe use an array instead of many values
+
+
 const mongoose = require("mongoose")
 
 // Define the schema for the model
@@ -16,7 +19,7 @@ const userSchema = new Schema({
 
     phoneNumber: {type: String, required: true, unique: true},
 
-    // profilePicture: {type: String, required: false}, // Change to type: multimedia... required true
+    // profilePicture: {type: String, required: false}, // CHANGE REQUIRED TO TRUE
 
     placeOfResidence: {type: String, required: true},
 

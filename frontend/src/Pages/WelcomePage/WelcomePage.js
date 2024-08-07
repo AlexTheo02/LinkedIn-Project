@@ -43,9 +43,10 @@ function WelcomePage() {
   const [fieldErrors, setFieldErrors] = useState(["", "", ""]);
 
   const duplicateEmailCheck = async () => {
+    // changed some functions to async, used await, changed order of routes in users.js (js uses first match for requests)
+    // response is either an array, or error message.
     const fieldName = "email";
     const fieldValue = email;
-
     const response = await fetch(`/api/users/find?fieldName=${encodeURIComponent(fieldName)}&fieldValue=${encodeURIComponent(fieldValue)}`, {
       method: "GET",
       headers: {
@@ -53,9 +54,21 @@ function WelcomePage() {
       }
     });
     
-    // User not found
-    if (response.status === 404)
-      return true;
+    const json = await response.json();
+    console.log(json);
+    if (response.ok){
+      // User already exists
+      if (json.length > 0){
+        console.log("Duplicate email");
+        return false;
+      }
+      else {
+        console.log("Valid email");
+        return true;
+      }
+    }
+
+    return true;
   }
   
   const duplicatePhoneNumberCheck = async () => {
@@ -70,7 +83,7 @@ function WelcomePage() {
     return true;
   }
   
-  const isFormValid = (register) => {
+  const isFormValid = async (register) => {
     // 0 -> phone number, 1 -> email, 2 -> password
     
     let isValid = true;
@@ -90,14 +103,14 @@ function WelcomePage() {
       else if (register && !duplicatePhoneNumberCheck){
         isValid = false;
         setPhoneNumberIsValid(false);
-        fe[0] = "This phone number is already registered"
+        fe[0] = "Phone number is already in use"
       }
       else{
         setPhoneNumberIsValid(true);
         fe[0] = "";
       }
     }
-    
+
     // Email check
     if (!emailRegex.test(email)){
       isValid = false;
@@ -105,10 +118,10 @@ function WelcomePage() {
       setEmailIsValid(false);
       fe[1] = "Email is invalid"
     }
-    else if (register && !duplicateEmailCheck()){
+    else if (register && !(await duplicateEmailCheck())){
       isValid = false;
       setEmailIsValid(false);
-      fe[1] = "This email is already registered"
+      fe[1] = "Email is already in use"
     }
     else{
       setEmailIsValid(true);
@@ -132,10 +145,12 @@ function WelcomePage() {
       fe[2] = "";
     }
     
+    // Login
     if (!register){
       // fetch user,
       // if email does not match password
-      if (true || !isLoginValid){
+      isLoginValid = true; // Credentials match
+      if (!isLoginValid){
         fe[0] = "Email or password is incorrect";
         fe[1] = "";
         fe[2] = "";
@@ -144,13 +159,21 @@ function WelcomePage() {
         setEmailIsValid(false);
         setPasswordIsValid(false);
       }
+      else{
+        fe[0] = ""
+        fe[1] = ""
+        fe[2] = ""
+        setEmailIsValid(true);
+        setPasswordIsValid(true);
+        isValid = true;
+      }
     }
     setFieldErrors(fe);
     return isValid;
   };
   
-  const handleLoginClick = () => {
-    if (isFormValid(false)){
+  const handleLoginClick = async () => {
+    if (await isFormValid(false)){
       navigate("/Home");
     }
   }
@@ -316,7 +339,7 @@ function WelcomePage() {
             </div>
           </form>
           <div className={s.error_messages}>
-              {fieldErrors.map((item) => (item !== "" ? <p>{`• ${item}`}</p> : <></>))}
+              {fieldErrors.map((item, index) => (item !== "" ? <p key={`error${index}`}>{`• ${item}`}</p> : <></>))}
           </div>
           <button onClick={isRegistering ? handleRegisterClick : handleLoginClick}> {isRegistering ? 'Register now' : 'Log in now'}</button>
         </div>

@@ -2,17 +2,22 @@
 
 import s from "./PostStyle.module.css";
 import {useState} from "react"
-import likedButtonImg from "../../Images/LikedButton.png"
-import notLikedButtonImg from "../../Images/LikeButton.png"
 import { useNavigate } from "react-router-dom";
 import { HorizontalSeparator, VerticalSeparator } from "../Separators/Separators";
 
 import tsipras from "../../Images/tsipras.jpg"
 import mitsotakis from "../../Images/mitsotakis.jpg"
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
+import {faThumbsUp as faThumbsUpSolid} from "@fortawesome/free-solid-svg-icons";
+import {faComment} from "@fortawesome/free-regular-svg-icons";
+import {faThumbsUp as faThumbsUpRegular} from "@fortawesome/free-regular-svg-icons";
+import TextAreaAutosize from "react-textarea-autosize"
 
 
-function InteractiveProfile({user_id, altern}){
+
+function InteractiveProfile({user_id, altern, nonInteractive}){
     // Replace with database access
     var profilePicture,userName
     if (user_id === 3){
@@ -29,14 +34,14 @@ function InteractiveProfile({user_id, altern}){
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
-        navigate("/");
+        if (!nonInteractive) { navigate("/"); }
     }
 
     const style = altern ? s.alt_interactive_profile : s.interactive_profile
 
     return(
         // Should be clickable and redirect you to the user's profile
-        <div onClick={handleProfileClick} className={style}>
+        <div onClick={handleProfileClick} className={`${style} ${nonInteractive ? s.non_interactive : ""}`}>
             <img className= {s.post_profile_picture} src={profilePicture} alt="NO PROFILE PIC"/>
             <strong className={s.username}>{userName}</strong>
         </div>
@@ -69,7 +74,6 @@ function PostInfoBar({likeCount, commentCount}){
     return (
         <div className={s.post_info_bar}>
             <div className={s.info_bar_left}>
-                <img src={likedButtonImg} alt="Like Button"/>
                 <small className={s.like_count}>{likeCount} Likes</small>
             </div>
             <small className={s.comment_count}>{commentCount} Comments</small>
@@ -81,25 +85,24 @@ function PostInfoBar({likeCount, commentCount}){
 function LikeButton({ initialLiked }) {
     const [isLiked, setIsLiked] = useState(initialLiked);
 
+    // Move state upwards and get the function
     const toggleLike = () => {
         setIsLiked(!isLiked);
     };
 
     return (
-        <button className={s.like_button} onClick={toggleLike}>
-            {isLiked ? <img src={likedButtonImg} alt="Liked Button"/> : <img src={notLikedButtonImg} alt="Not Liked Button"/>}
-        </button>
+        <>
+            {isLiked ? <FontAwesomeIcon icon={faThumbsUpSolid} onClick={toggleLike} className={s.post_interaction_bar_button}/> : <FontAwesomeIcon icon={faThumbsUpRegular} onClick={toggleLike} className={s.post_interaction_bar_button}/>}
+        </>
     );
 }
 
-function PostInteractionBar({isLiked}){
+function PostInteractionBar({isLiked, commentsPopupHandler}){
     return (
         <div className={s.interaction_bar}>
             <LikeButton />
             <VerticalSeparator/>
-            <button className={s.comment_button}>
-                Comment
-            </button>
+            <FontAwesomeIcon icon={faComment} className={s.post_interaction_bar_button} onClick={commentsPopupHandler.showCommentsPopup}/>
         </div>
     );
 }
@@ -119,7 +122,7 @@ function PostPreviewComments({post_id, commentsPopupHandler}){
 function Comment({comment_id}){
 
     // const user_id = getUserByCommentId(comment_id) // Implement function on backend
-
+    // Add timestamp on top right
     const user_id = 3;
     const content = "I am very proud of you my dear friend Koulis!"
     return(
@@ -143,6 +146,32 @@ function ShowAllCommentsButton({post_id, commentsPopupHandler}){
             Show all comments
         </button>
     );
+}
+
+const AddComment = ({user}) => {
+    const user_id = 3;
+    const [commentValue, setCommentValue] = useState("");
+
+    const postComment = () => {
+        setCommentValue("");    
+    }
+    return (
+        <div className={s.add_comment_container}>
+            <div className={s.comment}>
+                <InteractiveProfile user_id={user_id} altern={true} nonInteractive={true}/>
+                <div className={s.add_comment_field_container}>
+                    <TextAreaAutosize
+                        type="text"
+                        value={commentValue}
+                        onChange={(e) => {setCommentValue(e.target.value)}}
+                        className={s.add_comment_field} placeholder="Add comment"
+                        
+                    />
+                    <FontAwesomeIcon className={s.post_comment_icon} onClick={postComment} icon={faPaperPlane}/>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 function CommentsPopup({commentsPopupHandler}){
@@ -187,6 +216,7 @@ function CommentsPopup({commentsPopupHandler}){
                     <HorizontalSeparator />
                     <Comment comment_id={3}/>
                 </div>
+                <AddComment />
             </div>
         );
     else
@@ -206,6 +236,7 @@ function CommentsPopup({commentsPopupHandler}){
                     <HorizontalSeparator />
                     <Comment comment_id={3}/>
                 </div>
+                <AddComment />
             </div>
     );
 }

@@ -32,24 +32,15 @@ const getUserById = async (request, response) => {
 
 // Get a user by a specific field
 const getUser = async (request, response) => {
+
     const {fieldName, fieldValue} = request.query;
     
     const allowedFields = [
-        "name",
-        "surname",
-        "dateOfBirth",
-        "email",
-        "phoneNumber",
-        "placeOfResidence",
-        "workingPosition",
-        "employmentOrganization",
-        "professionalExperience",
-        "education",
-        "skills",
-        "recentConversations",
-        "network",
-        "publishedPosts",
-        "publishedJobListings",
+        "name", "surname", "dateOfBirth", "email",
+        "phoneNumber", "placeOfResidence", "workingPosition",
+        "employmentOrganization", "professionalExperience",
+        "education",  "skills",  "recentConversations",
+        "network", "publishedPosts", "publishedJobListings",
         "likedPosts"
     ];
 
@@ -65,7 +56,7 @@ const getUser = async (request, response) => {
         const user = await User.find(query)
 
         // User does not exist
-        if (!user) {
+        if (user.length === 0) {
             return response.status(404).json({error: "User not found"})
         }
         // User exists

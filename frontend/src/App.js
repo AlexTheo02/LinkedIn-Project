@@ -27,7 +27,7 @@ function App() {
         <Routes>
 
         {/* Welcome Route */}
-        <Route path="/" element={<ProfilePage />} />
+        <Route path="/" element={<WelcomePage />} />
 
         {/* Home Route */}
         <Route path="/Home" element={<HomePage user_id={2}/>} />

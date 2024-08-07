@@ -12,6 +12,7 @@ const postSchema = new Schema({
 
     multimediaType: {type: String},
 
+    // Modify to {author, content}
     commentsList : {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true},
 
     likesList : {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}
