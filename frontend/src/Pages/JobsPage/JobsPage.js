@@ -60,6 +60,10 @@ function JobsPage(){
                         {isCreatingJob ? 
                         <>
                             <h2>Create Job Listing</h2>
+                            <button className={s.job_listing_button} onClick={handleCancelCreateJobClick}>
+                                Cancel
+                            </button>
+
                         </> 
                         : 
                         <>

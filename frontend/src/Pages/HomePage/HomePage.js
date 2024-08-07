@@ -11,8 +11,10 @@ import mitsotakis from "../../Images/mitsotakis.jpg"
 import TextAreaAutosize from "react-textarea-autosize"
 import { FileUploader } from "react-drag-drop-files";
 import TimelinePosts from "./TimelinePosts/TimelinePosts.js"
+import { usePostsContext } from "../../Hooks/usePostsContext.js";
 
 function CreatePost({user_id}) {
+    const { dispatch } = usePostsContext()
 
     const imgFileTypes = ["JPG", "PNG"];
     const vidFileTypes = ["MP4", "MOV"];
@@ -112,6 +114,8 @@ function CreatePost({user_id}) {
                 setError(null);
 
                 console.log("Post published successfully", json);
+
+                dispatch({type: 'CREATE_POST', payload: json});
             }
         }
     }

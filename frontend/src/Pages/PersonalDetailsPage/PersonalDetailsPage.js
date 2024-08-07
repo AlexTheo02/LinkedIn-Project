@@ -24,6 +24,8 @@ function PersonalDetails() {
     const [education, setEducation] = useState('');
     const [skills, setSkills] = useState('');
 
+    const [isEditing, setIsEditing] = useState(false);
+
     const [isDateOfBirthPublic, setIsDateOfBirthPublic] = useState(false);
     const [isPhonePublic, setIsPhonePublic] = useState(false);
     const [isLocationPublic, setIsLocationPublic] = useState(true);
@@ -47,6 +49,20 @@ function PersonalDetails() {
         }
     };
 
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleCancel = () => {
+        // Επαναφορα των πεδιων στις αρχικες τους τιμες
+        setIsEditing(false);
+    };
+
+    const handleSaveChanges = () => {
+        // Αποθηκευση των αλλαγων
+        setIsEditing(false);
+    };
+
     return (
         <div>
             <NavBar currentPage={"Personal Details"}/>
@@ -54,15 +70,19 @@ function PersonalDetails() {
                 <div className={s.profile_container}>
                     <div className={s.profile_field} id="profileField">
                         <img src={profilePic} alt="Profile" id="profilePic" />
-                        <label htmlFor="inputImage">New profile picture</label>
-                        <input
-                            type="file"
-                            className={s.picture_input}
-                            placeholder="Upload Photo"
-                            accept="image/jpeg, image/png, image/jpg"
-                            id="inputImage"
-                            onChange={handleImageChange}
-                        />
+                        {isEditing && (
+                            <>
+                                <label htmlFor="inputImage">New profile picture</label>
+                                <input
+                                    type="file"
+                                    className={s.picture_input}
+                                    placeholder="Upload Photo"
+                                    accept="image/jpeg, image/png, image/jpg"
+                                    id="inputImage"
+                                    onChange={handleImageChange}
+                                />
+                            </>
+                        )}
                     </div>
                     <div className={s.input_field}>
                         <label htmlFor="nameInput">Name</label>
@@ -71,6 +91,7 @@ function PersonalDetails() {
                             id="nameInput"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -80,51 +101,57 @@ function PersonalDetails() {
                             id="surnameInput"
                             value={surname}
                             onChange={(e) => setSurname(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.date_of_birth}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="day">Date of Birth</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isDateOfBirthPublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsDateOfBirthPublic(!isDateOfBirthPublic)}
-                                    title= {isDateOfBirthPublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isDateOfBirthPublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsDateOfBirthPublic(!isDateOfBirthPublic)}
+                                        title={isDateOfBirthPublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <div className={s.dropdown_row}>
                             <div className={s.side_dropdown}>
                                 <Select
-                                onDropdownOpen={() => calculateDaysOptions(month, year, setDaysOptions)}
-                                closeOnClickInput={true}
-                                searchable={false}
-                                options={daysOptions.map(day => ({ label: day, value: day }))}
-                                values={[{ label: day, value: day }]}
-                                onChange={(values) => setDay(values[0].value)}
+                                    onDropdownOpen={() => calculateDaysOptions(month, year, setDaysOptions)}
+                                    closeOnClickInput={true}
+                                    searchable={false}
+                                    options={daysOptions.map(day => ({ label: day, value: day }))}
+                                    values={[{ label: day, value: day }]}
+                                    onChange={(values) => setDay(values[0].value)}
+                                    disabled={!isEditing}
                                 />
                             </div>
 
                             <div className={s.middle_dropdown}>
                                 <Select
-                                searchable={false}
-                                closeOnClickInput={true}
-                                options={monthOptions.map(month => ({ label: month, value: month }))}
-                                values={[{ label: month, value: month }]}
-                                onChange={(values) => setMonth(values[0].value)}
+                                    searchable={false}
+                                    closeOnClickInput={true}
+                                    options={monthOptions.map(month => ({ label: month, value: month }))}
+                                    values={[{ label: month, value: month }]}
+                                    onChange={(values) => setMonth(values[0].value)}
+                                    disabled={!isEditing}
                                 />
                             </div>
                             
                             <div className={s.side_dropdown}>
                                 <Select
-                                searchable={false}
-                                closeOnClickInput={true}
-                                options={yearOptions.map(year => ({ label: year, value: year }))}
-                                values={[{ label: year, value: year }]}
-                                onChange={(values) => setYear(values[0].value)}
+                                    searchable={false}
+                                    closeOnClickInput={true}
+                                    options={yearOptions.map(year => ({ label: year, value: year }))}
+                                    values={[{ label: year, value: year }]}
+                                    onChange={(values) => setYear(values[0].value)}
+                                    disabled={!isEditing}
                                 />
                             </div>
                         </div>
@@ -133,22 +160,25 @@ function PersonalDetails() {
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="phoneNumberInput">Phone Number</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isPhonePublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsPhonePublic(!isPhonePublic)}
-                                    title= {isPhonePublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isPhonePublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsPhonePublic(!isPhonePublic)}
+                                        title={isPhonePublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <input
                             type="tel"
                             id="phoneNumberInput"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -158,6 +188,7 @@ function PersonalDetails() {
                             id="workingPositionInput"
                             value={workingPosition}
                             onChange={(e) => setWorkingPosition(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -167,91 +198,114 @@ function PersonalDetails() {
                             id="employmentOrganizationInput"
                             value={employmentOrganization}
                             onChange={(e) => setEmploymentOrganization(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="locationInput">Place Of Residence</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isLocationPublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsLocationPublic(!isLocationPublic)}
-                                    title= {isLocationPublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isLocationPublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsLocationPublic(!isLocationPublic)}
+                                        title={isLocationPublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <textarea
                             id="locationInput"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             rows="1"
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="experienceInput">Professional Experience</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isExperiencePublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsExperiencePublic(!isExperiencePublic)}
-                                    title= {isExperiencePublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isExperiencePublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsExperiencePublic(!isExperiencePublic)}
+                                        title={isExperiencePublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <textarea
                             id="experienceInput"
                             value={experience}
                             onChange={(e) => setExperience(e.target.value)}
                             rows="4"
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="educationInput">Education</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isEducationPublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsEducationPublic(!isEducationPublic)}
-                                    title= {isEducationPublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isEducationPublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsEducationPublic(!isEducationPublic)}
+                                        title={isEducationPublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <textarea
                             id="educationInput"
                             value={education}
                             onChange={(e) => setEducation(e.target.value)}
                             rows="4"
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
                             <label htmlFor="skillsInput">Skills</label>
-                            <div className={s.icons_container}>
-                                <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                <FontAwesomeIcon
-                                    icon={isSkillsPublic ? faToggleOn : faToggleOff}
-                                    className={s.toggle_icon}
-                                    onClick={() => setIsSkillsPublic(!isSkillsPublic)}
-                                    title= {isSkillsPublic ? 'Set to private' : 'Set to public'}
-                                />
-                                <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                            </div>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isSkillsPublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsSkillsPublic(!isSkillsPublic)}
+                                        title={isSkillsPublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
                         </div>
                         <textarea
                             id="skillsInput"
                             value={skills}
                             onChange={(e) => setSkills(e.target.value)}
                             rows="4"
+                            disabled={!isEditing}
                         />
+                    </div>
+                    <div className={s.button_container}>
+                        {isEditing ? (
+                            <>
+                                <button className={s.save_button} onClick={handleSaveChanges}>Save changes</button>
+                                <button className={s.cancel_button} onClick={handleCancel}>Cancel</button>
+                            </>
+                        ) : (
+                            <button className={s.edit_button} onClick={handleEditToggle}>Edit</button>
+                        )}
                     </div>
                 </div>
             </div>

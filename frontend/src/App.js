@@ -11,6 +11,7 @@ import SettingsPage from "./Pages/SettingsPage/SettingsPage.js"
 import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
 import PostPage from './Pages/PostPage/PostPage.js';
 import NavBar from './Components/NavBar/NavBar.js';
+import { PostsContextProvider } from './Context/PostContext.js';
 
 import {
   BrowserRouter,
@@ -30,7 +31,11 @@ function App() {
         <Route path="/" element={<WelcomePage />} />
 
         {/* Home Route */}
-        <Route path="/Home" element={<HomePage user_id={2}/>} />
+        <Route path="/Home" element={
+          <PostsContextProvider>
+            <HomePage user_id={2} />
+          </PostsContextProvider>
+        } />
 
         {/* Network Route */}
         <Route path="/Network" element={<NetworkPage />} />
