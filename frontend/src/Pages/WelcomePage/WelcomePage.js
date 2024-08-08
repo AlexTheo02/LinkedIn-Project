@@ -178,62 +178,99 @@ function WelcomePage() {
     }
   }
 
-  const handleRegisterClick = async () => {
-    if (isFormValid(true)){
-      // Create dummy user
-        const dateOfBirth = new Date(`${month} ${String(Number(day) + 1)}, ${year}`);
-        const user = { 
-          name,
-          surname,
-          dateOfBirth,
-          phoneNumber,
-          workingPosition,
-          employmentOrganization,
-          placeOfResidence,
-          email,
-          password,
-      }
+  const handleRegisterClick = async (e) => {
+    e.preventDefault();
+    const dateOfBirth = new Date(`${month} ${day}, ${year} 00:00:00 GMT`);
+    // Create form data object
+    const formData = new FormData();
+    formData.append("profilePicture", profilePicture);
+    formData.append("name", name);
+    formData.append("surname", surname);
+    formData.append("dateOfBirth", dateOfBirth);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("confirmPassword", confirmPassword);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("placeOfResidence", placeOfResidence);
+    formData.append("workingPosition", workingPosition);
+    formData.append("employmentOrganization", employmentOrganization);
 
-      const response = await fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify(user),
-        headers: {
-            "Content-Type" : "application/json"
-        }
-      })
-      const json = await response.json();
+    console.log(formData)
+    // Send register request to the server
+    const response = await fetch ("api/users/register", {
+      method: "POST",
+      body: formData,
+    });
 
-      // Error publishing user
-      if (!response.ok){
-          setError(json.error);
-      }
-      // User register completed
-      if (response.ok){
+    const json = await response.json();
 
-          // Clear fields
-          setName("");
-          setSurname("");
-          setPhoneNumber("");
-          setWorkingPosition("");
-          setEmploymentOrganization("");
-          setPlaceOfResidence("");
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-          setYear(yearOptions[0]);
-          setMonth(monthOptions[0]);
-          calculateDaysOptions();
-          setDay(daysOptions[0]);
+    // Registered user's json
+    console.log(json);
+
+    // Handle response accordingly
+    // IMPORTANT: Response is in json format, if error, read userModel.statics.register function, else is the user's json stored in the database
+    // READ userModel.js register function, check validator, check what format the response is given in, and handle accordingly
+    // ALL FIELDS ARE REQUIRED IN THE VALIDATION LOGIC, IF ANY ARE NOT NEEDED, REMOVE THEIR CATEGORY (not advised, except employmentOrganization), can be null maybe
+    // Any fields that do not have value 1 in error response, turn red, (error messages on the end of the form must be generated based on the error response)
+    
+
+    
+    // if (isFormValid(true)){
+    //   // Create dummy user
+    //     const dateOfBirth = new Date(`${month} ${String(Number(day) + 1)}, ${year}`);
+    //     const user = { 
+    //       name,
+    //       surname,
+    //       dateOfBirth,
+    //       phoneNumber,
+    //       workingPosition,
+    //       employmentOrganization,
+    //       placeOfResidence,
+    //       email,
+    //       password,
+    //   }
+
+    //   const response = await fetch("/api/users", {
+    //     method: "POST",
+    //     body: JSON.stringify(user),
+    //     headers: {
+    //         "Content-Type" : "application/json"
+    //     }
+    //   })
+    //   const json = await response.json();
+
+    //   // Error publishing user
+    //   if (!response.ok){
+    //       setError(json.error);
+    //   }
+    //   // User register completed
+    //   if (response.ok){
+
+    //       // Clear fields
+    //       setName("");
+    //       setSurname("");
+    //       setPhoneNumber("");
+    //       setWorkingPosition("");
+    //       setEmploymentOrganization("");
+    //       setPlaceOfResidence("");
+    //       setEmail("");
+    //       setPassword("");
+    //       setConfirmPassword("");
+    //       setYear(yearOptions[0]);
+    //       setMonth(monthOptions[0]);
+    //       calculateDaysOptions();
+    //       setDay(daysOptions[0]);
           
-          // Clear error mesasage
-          setError(null);
+    //       // Clear error mesasage
+    //       setError(null);
 
-          console.log("User published successfully", json);
-      }
-    }
+    //       console.log("User published successfully", json);
+    //   }
+    // }
   }
   const [isRegistering, setIsRegistering] = useState(false);
   const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const handleModeSwitch = () => {
     setIsRegistering(!isRegistering);
@@ -246,7 +283,8 @@ function WelcomePage() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setProfilePic(URL.createObjectURL(file)); /* Να το κρατησουμε καπου για database!!! */
+      setProfilePicture(file); // actual file
+      setProfilePic(URL.createObjectURL(file)); // preview
     }
   };
   
