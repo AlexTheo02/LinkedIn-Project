@@ -6,8 +6,6 @@ const {
     updateJob
 } = require("../controllers/jobController.js")
 
-const Job = require("../models/jobModel.js")
-
 // Instance of the Router
 const router = express.Router()
 

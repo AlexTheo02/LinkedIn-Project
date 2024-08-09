@@ -32,7 +32,6 @@ const getJob = async (request, response) => {
 
 // Create a new job
 const createJob = async (request, response) => {
-    console.log(request.body);
     const {
         // author,
         title,
@@ -48,6 +47,27 @@ const createJob = async (request, response) => {
         applicants
     } = request.body;
 
+    console.log('Request body:', request.body);
+    
+    let emptyFields = [];
+
+    if (!title){
+        emptyFields.push('title')
+    }
+    if (!employer){
+        emptyFields.push('employer')
+    }
+    if (!location){
+        emptyFields.push('location')
+    }
+    if (!description){
+        emptyFields.push('description')
+    }
+    
+    if (emptyFields.length > 0){
+        return response.status(401).json({error: `Please fill the fields: ${emptyFields.join(', ')}`, emptyFields})
+    }
+    
     // Add to mongodb database
     try {
         const job = await Job.create({
