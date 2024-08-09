@@ -204,8 +204,34 @@ function WelcomePage() {
 
     const json = await response.json();
 
-    // Registered user's json
+    // Registered user's json or error message
     console.log(json);
+
+    // Fail
+    if (!response.ok){
+      console.log("User registration failed");
+      const error = JSON.parse(json.error)
+
+      // Access error fields like this
+      console.log(error.email)
+      console.log(error.dateOfBirth)
+
+    }
+    // Success
+    else{
+      console.log("User registeration successful");
+      // Reset form fields
+      // set styles to not invalid
+
+
+      // setProfilePic and setProfilePicture
+      // profilePic = preview
+      // profilePicture = actual file
+
+      // Maybe show a window that registration was completed successfuly
+
+
+    }
 
     // Handle response accordingly
     // IMPORTANT: Response is in json format, if error, read userModel.statics.register function, else is the user's json stored in the database
@@ -270,7 +296,7 @@ function WelcomePage() {
   }
   const [isRegistering, setIsRegistering] = useState(false);
   const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState("");
 
   const handleModeSwitch = () => {
     setIsRegistering(!isRegistering);

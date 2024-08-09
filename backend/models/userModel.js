@@ -72,32 +72,32 @@ userSchema.statics.register = async function(userData) {
     if (userData.name) {
         validFields.name = 1;
     } else {
-        isValid = false;
         validFields.name = 0;
+        isValid = false;
     }
 
     // ---------------------------------------------------------------- Surname validation
     if (userData.surname) {
         validFields.surname = 1;
     } else {
-        isValid = false;
         validFields.surname = 0;
+        isValid = false;
     }
 
     // ---------------------------------------------------------------- Working Position validation
     if (userData.workingPosition) {
         validFields.workingPosition = 1;
     } else {
-        isValid = false;
         validFields.workingPosition = 0;
+        isValid = false;
     }
 
     // ---------------------------------------------------------------- Employment Organization validation
     if (userData.employmentOrganization) {
         validFields.employmentOrganization = 1;
     } else {
-        isValid = false;
         validFields.employmentOrganization = 0;
+        isValid = false;
     }
 
     // ---------------------------------------------------------------- Place of Residence validation
@@ -106,11 +106,12 @@ userSchema.statics.register = async function(userData) {
     } else {
         isValid = false;
         validFields.placeOfResidence = 0;
+        isValid = false;
     }
-    
     // ---------------------------------------------------------------- Profile picture validation
     if (!userData.profilePicture){
         validFields.profilePicture = 0;
+        isValid = false;
     }
     // Not an image
     else if (!userData.profilePicture.mimetype.split('/')[0] === "image"){
@@ -121,7 +122,6 @@ userSchema.statics.register = async function(userData) {
     else {
         validFields.profilePicture = 1;
     }
-
 
     // ---------------------------------------------------------------- Email validation
     if(!userData.email){
@@ -212,7 +212,7 @@ userSchema.statics.register = async function(userData) {
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(userData.password, salt)
+    const hash = await bcrypt.hash(userData.password, salt);
 
     // Upload profile picture to google cloud storage
 
