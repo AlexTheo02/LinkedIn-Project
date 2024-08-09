@@ -77,7 +77,10 @@ const CreateJobListing = ({jobListingsHandler}) => {
     const [responsibilitiesList, setResponsibilitiesList] = useState([{value: ""},{value: ""},{value: ""}]);
     const [benefitsList, setBenefitsList] = useState([{value: ""},{value: ""},{value: ""}]);
 
+    const [emptyFields, setEmptyFields] = useState([]);
+
     const [error, setError] = useState(null);
+
     // Publish job
     const handlePublish = async () => {
         const applicants = [];
@@ -86,7 +89,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
         const requirements = requirementsList.map(item => item.value).filter(item => item.trim() !== "");
         const responsibilities = responsibilitiesList.map(item => item.value).filter(item => item.trim() !== "");
         const benefits = benefitsList.map(item => item.value).filter(item => item.trim() !== "");
-        
+
         // Check validity of fields, then proceed
         if (true){
             // Create dummy job
@@ -118,7 +121,8 @@ const CreateJobListing = ({jobListingsHandler}) => {
             // Error publishing job
             if (!response.ok){
                 setError(json.error);
-                console.log(error)
+                setEmptyFields(json.emptyFields);
+                console.log(error);
             }
             // Publish job completed successfully
             if (response.ok){
@@ -129,15 +133,16 @@ const CreateJobListing = ({jobListingsHandler}) => {
                 setEmployer("");
                 setLocation("");
                 setDescription("");
-                setRequirementsList([]);
-                setBenefitsList([]);
-                setResponsibilitiesList([]);
+                setRequirementsList([{value: ""}, {value: ""}, {value: ""}]);
+                setBenefitsList([{value: ""}, {value: ""}, {value: ""}]);
+                setResponsibilitiesList([{value: ""}, {value: ""}, {value: ""}]);
                 setWorkingArrangement(0);
                 setEmploymentType(0);
                 setEmployeesRange({value: 0, label: "1-10"});
                 
                 // Clear error mesasage
                 setError(null);
+                setEmptyFields([])
 
                 console.log("Job published successfully", json);
             }
@@ -148,12 +153,12 @@ const CreateJobListing = ({jobListingsHandler}) => {
         <div className={s.create_job_listing}>
             {/* Job Title */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label}>Job Title:</label>
+                <label>Job Title:</label>
                 <input
                     type="text"
                     id="jobTitleInput"
                     placeholder={"Title"}
-                    className={s.text_input}
+                    className={emptyFields.includes('title') ? s.error : ''}
                     value={title}
                     onChange={(e) => {setTitle(e.target.value)}}
                 />
@@ -161,12 +166,12 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Employer */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label}>Employer:</label>
+                <label>Employer:</label>
                 <input
                     type="text"
                     id="jobEmployerInput"
                     placeholder={"Employer"}
-                    className={s.text_input}
+                    className={emptyFields.includes('employer') ? s.error : ''}
                     value={employer}
                     onChange={(e) => {setEmployer(e.target.value)}}
                 />
@@ -174,12 +179,12 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Location */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label}>Location:</label>
+                <label>Location:</label>
                 <input
                     type="text"
                     id="jobLocationInput"
                     placeholder={"City, Country"}
-                    className={s.text_input}
+                    className={emptyFields.includes('location') ? s.error : ''}
                     value={location}
                     onChange={(e) => {setLocation(e.target.value)}}
                 />
@@ -191,7 +196,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                 {/* Working Arrangement */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label}>Working Arrangement:</label>
+                    <label>Working Arrangement:</label>
                     <div className={s.vertical_container}>
                         <button
                             onClick={() => {setWorkingArrangement(0)}}
@@ -218,7 +223,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                 {/* Employment Type */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label}>Working Hours:</label>
+                    <label>Working Hours:</label>
                     <div className={s.vertical_container}>
 
                         <button 
@@ -240,7 +245,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
                 {/* Number of employees range */}
                 <div className={s.job_field_container}>
-                    <label className={s.text_input_label}>Employees Range:</label>
+                    <label>Employees Range:</label>
                     <Dropdown
                         options={[
                             { value: 0, label: "1-10" },
@@ -265,11 +270,11 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Description */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} >Description:</label>
+                <label>Description:</label>
                 <textarea
                     id="jobDescriptionInput"
                     placeholder={"Description"}
-                    className={s.text_area_input}
+                    className={emptyFields.includes('description') ? s.error : ''}
                     value={description}
                     onChange={(e) => {setDescription(e.target.value)}}
                 />
@@ -277,21 +282,28 @@ const CreateJobListing = ({jobListingsHandler}) => {
 
             {/* Requirements */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} >Requirements:</label>
+                <label>Requirements:</label>
                 <ManyInputFields name={"Requirement"} list={requirementsList} setList={setRequirementsList} />
             </div>
 
             {/* Responsibilities */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} >Responsibilities:</label>
+                <label>Responsibilities:</label>
                 <ManyInputFields name={"Responsibility"} list={responsibilitiesList} setList={setResponsibilitiesList} />
             </div>
 
             {/* Benefits */}
             <div className={s.job_field_container}>
-                <label className={s.text_input_label} >Benefits:</label>
+                <label>Benefits:</label>
                 <ManyInputFields name={"Benefit"} list={benefitsList} setList={setBenefitsList} />
             </div>
+
+            {/* Display error message */}
+            {error && (
+                <div className={s.error_message}>
+                    <b>{error}</b>
+                </div>
+            )}
 
             {/* Interaction Bar */}
             <div className={s.create_job_listing_interaction_bar}>

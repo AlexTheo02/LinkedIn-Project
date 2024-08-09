@@ -101,7 +101,7 @@
     opacity: 1;
 }
 
-.text_area_input{
+.job_field_container textarea{
     height: 15vh;
 }
 
@@ -112,13 +112,13 @@
     margin-bottom: 1vh;
 }
 
-.job_field_container .text_input_label{
+.job_field_container label{
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.job_field_container .text_input,
+.job_field_container input,
 .job_field_container textarea{
     width: 100%;
     padding: 1vh;
@@ -127,11 +127,16 @@
     transition: border-color 0.3s ease;
 }
 
+.job_field_container input.error,
+.job_field_container textarea.error{
+    border: 2px solid rgb(255, 0, 0);
+}
+
 .job_field_container textarea{
     resize: none;
 }
 
-.job_field_container .text_input:focus,
+.job_field_container input:focus,
 .job_field_container textarea:focus {
     border-color: #a02500;
     outline: none;
@@ -177,4 +182,16 @@
     width: 50%;
     gap: .5vh;
     /* margin: auto; */
+}
+
+.error_message{
+    padding: 13px 7px;
+    background: rgba(255, 0, 0, 0.247);
+    border-radius: 15px;
+    border: 2px solid rgb(218, 0, 0);
+}
+
+.error_message b{
+    font-style: italic;
+    color: #353535;
 }
