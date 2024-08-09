@@ -69,6 +69,7 @@ const getUser = async (request, response) => {
 
 // Create a new user
 const createUser = async (request, response) => {
+
     const {
         name,
         surname,
@@ -165,11 +166,49 @@ const updateUser = async (request, response) => {
     response.status(200).json(user);
 }
 
+
+
+
+
+
+
+
+
+
+// ------------------------------------------------------------------------
+
+// Login user
+const loginUser = async (request, response) => {
+
+    response.json({message: "login user"});
+}
+
+// Register user
+const registerUser = async (request, response) => {
+    // Grab userData from the request body
+    const userBodyData = request.body
+    const profilePicture = request.file;
+    const userData = {profilePicture, ...userBodyData}
+    // console.log(userData);
+
+    // Create the user
+    try {
+        const user = await User.register(userData);
+        console.log(user);
+
+        response.status(200).json({user});
+    } catch (error) {
+        response.status(400).json({error: error.message})
+    }
+}
+
 module.exports = {
     getAllUsers,
     getUserById,
     getUser,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    loginUser,
+    registerUser
 }

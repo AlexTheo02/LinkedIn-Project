@@ -1,11 +1,16 @@
 const express = require("express")
+const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+
+// Controller functions
 const {
     getAllUsers,
     getUserById,
     getUser,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    loginUser,
+    registerUser
 } = require("../controllers/userController.js")
 
 const User = require("../models/userModel.js")
@@ -22,7 +27,6 @@ router.get("/find", getUser)
 // GET a signle user (by id)
 router.get("/:id", getUserById)
 
-
 // POST a new user
 router.post("/", createUser)
 
@@ -31,6 +35,14 @@ router.delete("/:id", deleteUser)
 
 // UPDATE a user
 router.patch("/:id", updateUser)
+
+// ----------------------------------------------------------------------------
+
+// Login route
+router.post("/login", loginUser)
+
+// Register route
+router.post("/register",upload.single("profilePicture"), registerUser)
 
 
 module.exports = router
