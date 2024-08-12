@@ -6,22 +6,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 function SearchBar() {
     const imageForUsers = require('./../../../Images/logo.png');
 
-    const availableKeywords = [
-        { name: 'Joe', surname: 'Biden', profilePic: imageForUsers, workingPosition: 'President', employmentOrganization: 'United States Government' },
-        { name: 'Donald', surname: 'Trump', profilePic: imageForUsers, workingPosition: 'Businessman', employmentOrganization: 'Trump Organization' },
-        { name: 'Barack', surname: 'Obama', profilePic: imageForUsers, workingPosition: 'Former President', employmentOrganization: 'United States Government' },
-        { name: 'Travis', surname: 'Scott', profilePic: imageForUsers, workingPosition: 'Rapper', employmentOrganization: 'Cactus Jack Records' },
-        { name: 'Andreas', surname: 'Papandreou', profilePic: imageForUsers, workingPosition: 'Former Prime Minister', employmentOrganization: 'Greek Government' },
-        { name: 'Kostas', surname: 'Karamanlis', profilePic: imageForUsers, workingPosition: 'Former Prime Minister', employmentOrganization: 'Greek Government' },
-        { name: 'Sakis', surname: 'Rouvas', profilePic: imageForUsers, workingPosition: 'Singer', employmentOrganization: 'Self-employed' },
-        { name: 'Kanye', surname: 'West', profilePic: imageForUsers, workingPosition: 'Rapper', employmentOrganization: 'GOOD Music' },
-        { name: 'Elon', surname: 'Musk', profilePic: imageForUsers, workingPosition: 'CEO', employmentOrganization: 'SpaceX' },
-        { name: 'Mark', surname: 'Zuckerberg', profilePic: imageForUsers, workingPosition: 'CEO', employmentOrganization: 'Meta' },
-        { name: 'Bill', surname: 'Gates', profilePic: imageForUsers, workingPosition: 'Co-founder', employmentOrganization: 'Microsoft' },
-    ];
-    
-
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState("");
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
 
@@ -40,20 +25,39 @@ function SearchBar() {
         };
     }, []);
 
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setInput(value);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (input.length > 0) {
+                try {
+                    const response = await fetch(`/api/users?searchTerm=${input}`);
+                    const data = await response.json();
+                    if (input.length > 0) { // Ελέγχει ξανά το input για να σιγουρευτεί ότι δεν είναι κενό
+                        setResults(data);
+                        setShowResults(true);
+                    }
+                } catch (error) {
+                    console.error('Error fetching the users:', error);
+                    setResults([]);
+                    setShowResults(false);
+                }
+            } else {
+                setResults([]);
+                setShowResults(false);
+            }
+        };
 
-        if (value.length > 0) {
-            const filteredResults = availableKeywords.filter((keyword) =>
-                `${keyword.name} ${keyword.surname}`.toLowerCase().includes(value.toLowerCase())
-            );
-            setResults(filteredResults);
-            setShowResults(true);
-        } else {
-            setResults([]);
-            setShowResults(false);
-        }
+        // Χρησιμοποιούμε ένα timeout για να περιμένουμε μέχρι να σταματήσει ο χρήστης να πληκτρολογεί
+        const timeoutId = setTimeout(() => {
+            fetchData();
+        }, 300); // Προσθέτουμε μια μικρή καθυστέρηση (300ms)
+
+        return () => {
+            clearTimeout(timeoutId); // Καθαρίζουμε το timeout αν το input αλλάξει πριν το fetchData
+        };
+    }, [input]);
+
+    const handleInputChange = (e) => {
+        setInput(e.target.value);
     };
 
     const selectInput = (keyword) => {
@@ -81,7 +85,7 @@ function SearchBar() {
                     <ul>
                         {results.map((result, index) => (
                             <li key={index} onClick={() => selectInput(result)}>
-                                <img src={result.profilePic} alt={`${result.name} ${result.surname}`} />
+                                <img src={imageForUsers} alt={`${result.name} ${result.surname}`} />
                                 <div className={s.user_info}>
                                     <b>{result.name} {result.surname}</b>
                                     <b className={s.position}>{result.workingPosition} at {result.employmentOrganization}</b>

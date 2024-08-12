@@ -6,6 +6,7 @@ const {
     getAllUsers,
     getUserById,
     getUser,
+    getUserSearch,
     createUser,
     deleteUser,
     updateUser,
@@ -13,10 +14,13 @@ const {
     registerUser
 } = require("../controllers/userController.js")
 
-const User = require("../models/userModel.js")
+// const requireAuth = require('../middleware/requireAuth')
 
 // Instance of the Router
 const router = express.Router()
+
+// // require Authentcation for all Users routes
+// router.use(requireAuth)
 
 // GET all users
 router.get("/", getAllUsers)

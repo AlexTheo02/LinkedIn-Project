@@ -6,8 +6,13 @@ const {
     updateJob
 } = require("../controllers/jobController.js")
 
+const requireAuth = require('../middleware/requireAuth.js')
+
 // Instance of the Router
 const router = express.Router()
+
+// require Authentcation for all Users routes
+router.use(requireAuth)
 
 // GET all jobs
 router.get("/", getAllJobs)

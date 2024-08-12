@@ -1,12 +1,29 @@
 const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
+const jwb = require("jsonwebtoken")
 
 // Get all users
 const getAllUsers = async (request, response) => {
+    const searchTerm = request.query.searchTerm.toLowerCase()
     // Get all users, sorted by newest created
-    const users = await User.find({}).sort({createdAt: -1});
-
-    response.status(200).json(users);
+    if (!searchTerm){
+        const users = await User.find({}).sort({createdAt: -1});
+        response.status(200).json(users);
+    }
+    else{
+        try {
+            console.log('EEEEEEEEEEEEE')
+            const users = await User.find(); // Παίρνουμε όλους τους χρήστες
+            const filteredUsers = users.filter(user => {
+                const fullName = `${user.name} ${user.surname}`.toLowerCase(); // Συνενώνουμε name και surname
+                return fullName.includes(searchTerm); // Ελέγχουμε αν περιέχει το searchTerm
+            }).slice(0, 10); // Περιορισμός στα 10 πρώτα αποτελέσματα
+    
+            response.status(200).json(filteredUsers);
+        } catch (error) {
+            response.status(500).json({ error: 'Internal server error' });
+        }
+    }
 }
 
 // Get a single user
@@ -177,10 +194,37 @@ const updateUser = async (request, response) => {
 
 // ------------------------------------------------------------------------
 
+const createToken = (id) => {
+    return jwb.sign({id}, process.env.SECRET, { expiresIn: '3d' })
+}
+
 // Login user
 const loginUser = async (request, response) => {
+    // Grab userData from the request body
+    const userData = request.body
 
-    response.json({message: "login user"});
+    // Login the user
+    try {
+        const user = await User.login(userData);
+
+        const token = createToken(user._id);
+
+        console.log(user);
+
+        response.status(200).json({ userId: user._id, token: token });
+    } catch (error) {
+        // Αν το error περιεχει τα validFields
+        if (error.fields) {
+            response.status(401).json({
+                error: error.message,
+                errorFields: error.fields
+            });
+        } 
+        else {
+            // Άλλοι πιθανοί τύποι σφαλμάτων
+            response.status(400).json({error: error.message});
+        }
+    }
 }
 
 // Register user
@@ -194,11 +238,24 @@ const registerUser = async (request, response) => {
     // Create the user
     try {
         const user = await User.register(userData);
+
+        const token = createToken(user._id);
+
         console.log(user);
 
-        response.status(200).json({user});
+        response.status(200).json({ userId: user._id, token: token });
     } catch (error) {
-        response.status(400).json({error: error.message})
+        // Αν το error περιεχει τα validFields
+        if (error.fields) {
+            response.status(401).json({
+                error: error.message,
+                errorFields: error.fields
+            });
+        } 
+        else {
+            // Άλλοι πιθανοί τύποι σφαλμάτων
+            response.status(400).json({error: error.message});
+        }
     }
 }
 
@@ -206,6 +263,7 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUser,
+    getUserSearch,
     createUser,
     deleteUser,
     updateUser,
