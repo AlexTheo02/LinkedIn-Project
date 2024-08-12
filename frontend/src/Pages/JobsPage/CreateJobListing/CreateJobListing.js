@@ -3,6 +3,7 @@ import 'react-dropdown/style.css';
 import Dropdown from 'react-dropdown';
 import s from "./CreateJobListingStyle.module.css";
 import "./CustomDropdownStyle.css";
+import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 const ManyInputFields = ({name, list, setList}) => {
 
@@ -63,6 +64,7 @@ const ManyInputFields = ({name, list, setList}) => {
 }
 
 const CreateJobListing = ({jobListingsHandler}) => {
+    const {user} = useAuthContext()
 
     const {handleCancel} = jobListingsHandler;
     const [author, setAuthor] = useState(null);
@@ -80,9 +82,17 @@ const CreateJobListing = ({jobListingsHandler}) => {
     const [emptyFields, setEmptyFields] = useState([]);
 
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(null);
 
     // Publish job
     const handlePublish = async () => {
+
+        if (!user){
+            setError("You must be logged in");
+            return
+        }
+
+        setIsLoading(true);
         const applicants = [];
 
         // Μετατροπή των λιστών σε πίνακες από strings και φιλτράρισμα των κενών strings
@@ -90,63 +100,62 @@ const CreateJobListing = ({jobListingsHandler}) => {
         const responsibilities = responsibilitiesList.map(item => item.value).filter(item => item.trim() !== "");
         const benefits = benefitsList.map(item => item.value).filter(item => item.trim() !== "");
 
-        // Check validity of fields, then proceed
-        if (true){
-            // Create dummy job
-            const job = { 
-                // author,
-                title,
-                employer,
-                location,
-                description,
-                requirements,
-                benefits,
-                responsibilities,
-                workingArrangement,
-                employmentType,
-                employeesRange: employeesRange.value,
-                applicants
-            }
-
-            const response = await fetch("/api/jobs", {
-                method: "POST",
-                body: JSON.stringify(job),
-                headers: {
-                    "Content-Type" : "application/json"
-                }
-            })
-
-            const json = await response.json();
-
-            // Error publishing job
-            if (!response.ok){
-                setError(json.error);
-                setEmptyFields(json.emptyFields);
-                console.log(error);
-            }
-            // Publish job completed successfully
-            if (response.ok){
-
-                // Clear fields
-                setAuthor("");
-                setTitle("");
-                setEmployer("");
-                setLocation("");
-                setDescription("");
-                setRequirementsList([{value: ""}, {value: ""}, {value: ""}]);
-                setBenefitsList([{value: ""}, {value: ""}, {value: ""}]);
-                setResponsibilitiesList([{value: ""}, {value: ""}, {value: ""}]);
-                setWorkingArrangement(0);
-                setEmploymentType(0);
-                setEmployeesRange({value: 0, label: "1-10"});
-                
-                // Clear error mesasage
-                setError(null);
-                setEmptyFields([])
-
-                console.log("Job published successfully", json);
-            }
+        // Create dummy job
+        const job = { 
+            // author,
+            title,
+            employer,
+            location,
+            description,
+            requirements,
+            benefits,
+            responsibilities,
+            workingArrangement,
+            employmentType,
+            employeesRange: employeesRange.value,
+            applicants
         }
+
+        const response = await fetch("/api/jobs", {
+            method: "POST",
+            body: JSON.stringify(job),
+            headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `Bearer ${user.token}`
+            }
+        })
+
+        const json = await response.json();
+
+        // Error publishing job
+        if (!response.ok){
+            setError(json.error);
+            setEmptyFields(json.emptyFields);
+            console.log(error);
+        }
+        // Publish job completed successfully
+        if (response.ok){
+
+            // Clear fields
+            setAuthor("");
+            setTitle("");
+            setEmployer("");
+            setLocation("");
+            setDescription("");
+            setRequirementsList([{value: ""}, {value: ""}, {value: ""}]);
+            setBenefitsList([{value: ""}, {value: ""}, {value: ""}]);
+            setResponsibilitiesList([{value: ""}, {value: ""}, {value: ""}]);
+            setWorkingArrangement(0);
+            setEmploymentType(0);
+            setEmployeesRange({value: 0, label: "1-10"});
+            
+            // Clear error mesasage
+            setError(null);
+            setEmptyFields([])
+
+            console.log("Job published successfully", json);
+        }
+        setIsLoading(false);
     }
 
     return(
@@ -311,7 +320,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
                     Cancel
                 </button>
 
-                <button onClick={handlePublish}>
+                <button disabled={isLoading} onClick={handlePublish}>
                     Publish
                 </button>
 

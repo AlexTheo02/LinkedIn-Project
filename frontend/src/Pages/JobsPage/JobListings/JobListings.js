@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
 import JobListing from "../JobListing/JobListing";
 import s from "./JobListingsStyle.module.css"
+import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 function JobListings({onClick}) {
+    const {user} = useAuthContext()
 
     const [jobs, setJobs] = useState(null);
 
     // Fetch posts from database
     useEffect(() => {
         const fetchJobs = async() => {
-            const response = await fetch('/api/jobs');
+            const response = await fetch('/api/jobs', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
             const json = await response.json();
 
             if (response.ok){
@@ -17,10 +23,12 @@ function JobListings({onClick}) {
             }
         }
 
-        fetchJobs()
-
+        if (user){
+            fetchJobs()
+        }
+        
         // filter jobs for user's timeline
-    }, [])
+    }, [user])
 
 
     return(

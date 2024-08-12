@@ -47,6 +47,13 @@ const userSchema = new Schema({
     
 })
 
+function formatFieldName(fieldName) {
+    return fieldName
+        .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
+        .replace(/^./, str => str.toUpperCase()) // Κάνει κεφαλαίο το πρώτο γράμμα
+        .trim(); // Αφαιρεί τυχόν περιττά κενά
+}
+
 // Static register method
 userSchema.statics.register = async function(userData) {
 
@@ -63,7 +70,8 @@ userSchema.statics.register = async function(userData) {
         employmentOrganization: 0,
         placeOfResidence: 0,
         email: 0,
-        password: 0
+        password: 0,
+        confirmPassword: 0
     };
 
     let isValid = true;
@@ -111,11 +119,6 @@ userSchema.statics.register = async function(userData) {
     // ---------------------------------------------------------------- Profile picture validation
     if (!userData.profilePicture){
         validFields.profilePicture = 0;
-        isValid = false;
-    }
-    // Not an image
-    else if (!userData.profilePicture.mimetype.split('/')[0] === "image"){
-        validFields.profilePicture = 2;
         isValid = false;
     }
     // Valid
@@ -172,7 +175,7 @@ userSchema.statics.register = async function(userData) {
     const dateOfBirth = new Date(userData.dateOfBirth);
 
     // Compare dates, to validate if user is older than 16 years old
-    if (validator.isAfter(dateOfBirth.toISOString().split('T')[0], sixteenYearsAgo.toISOString().split('T')[0])){
+    if (dateOfBirth > sixteenYearsAgo){
         validFields.dateOfBirth = 2;
         isValid = false;
     }
@@ -182,7 +185,7 @@ userSchema.statics.register = async function(userData) {
     }
 
     // ---------------------------------------------------------------- Password Validation
-    if (!userData.password || !userData.confirmPassword){
+    if (!userData.password){
         validFields.password = 0;
         isValid = false;
     }
@@ -201,13 +204,91 @@ userSchema.statics.register = async function(userData) {
         validFields.password = 1;
     }
 
-    // Throw error with string message
-    if (!isValid){
-        console.log(JSON.stringify(validFields));
-        throw Error(JSON.stringify(validFields));
+    if (!userData.confirmPassword){
+        validFields.confirmPassword = 0;
+        isValid = false;
+    }
+    else{
+        validFields.confirmPassword = 1;
     }
 
+    // Throw error with string message
+    if (!isValid) {
+        let errorMessage = "";
+        let invalidFields = [];
+    
+        // Ελέγχεις αν υπάρχουν πεδία που είναι 0 (κενά)
+        for (const [field, status] of Object.entries(validFields)) {
+            if (status === 0) {
+                invalidFields.push(formatFieldName(field));
+            }
+        }
+    
+        // Εάν υπάρχουν πεδία που είναι 0, προσθέτεις μήνυμα για κενά πεδία
+        if (invalidFields.length > 0) {
+            errorMessage = `Please fill the fields: ${invalidFields.join(", ")}`;
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
 
+        // Younger than 16 years old
+        if (validFields['dateOfBirth'] === 2) {
+            errorMessage = "You must be over 16 years old";
+            const error = new Error(errorMessage);
+            error.fields = ['Date Of Birth'];
+            throw error;
+        }
+
+        // Αν δεν υπάρχουν κενά πεδία, ελέγχεις για μη έγκυρα πεδία (status 2)
+        const possibleInvalidFIelds = ['email', 'phoneNumber']
+
+        possibleInvalidFIelds.forEach(field => {
+            if (validFields[field] === 2) {
+                invalidFields.push(formatFieldName(field));
+            }
+        });
+
+        if (invalidFields.length > 0) {
+            errorMessage = `The following fields are not valid: ${invalidFields.join(", ")}`;
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
+        
+        // Weak Password
+        if (validFields['password'] === 2) {
+            errorMessage = "Password is weak. Please insert a stronger password";
+            const error = new Error(errorMessage);
+            error.fields = ['Password'];
+            throw error;
+        }
+
+        // Email in use
+        if (validFields['email'] === 3) {
+            errorMessage = "Email already in use";
+            const error = new Error(errorMessage);
+            error.fields = ['Email'];
+            throw error;
+        }
+
+        // Phone Number in use
+        if (validFields['phoneNumber'] === 3) {
+            errorMessage = "Phone number already in use";
+            const error = new Error(errorMessage);
+            error.fields = ['Phone Number'];
+            throw error;
+        }
+
+        // Password and Confirm password not the same
+        if (validFields['password'] === 4) {
+            errorMessage = "Password and Confirm password are not the same";
+            const error = new Error(errorMessage);
+            error.fields = ['Password', 'Confirm Password'];
+            throw error;
+        }
+    }
+    
     // Validation logic complete
 
     // Hash the password
@@ -247,6 +328,46 @@ userSchema.statics.register = async function(userData) {
     });
 
     // console.log(user)
+    return user;
+}
+
+// Static login method
+userSchema.statics.login = async function(userData){
+    let errorFields = [];
+
+    if (!userData.email){
+        errorFields.push('Email');
+    }
+
+    if (!userData.password){
+        errorFields.push('Password');
+    }
+
+    if (errorFields.length > 0){
+        const errorMessage = "All fields must be filled";
+        const error = new Error(errorMessage);
+        error.fields = errorFields;
+        throw error;
+    }
+
+    const user = await this.findOne({email: userData.email});
+
+    if (!user){
+        const errorMessage = "Incorrect email or password";
+        const error = new Error(errorMessage);
+        error.fields = ['Email', 'Password'];
+        throw error;
+    }
+
+    const match = await bcrypt.compare(userData.password, user.password);
+
+    if (!match){
+        const errorMessage = "Incorrect email or password";
+        const error = new Error(errorMessage);
+        error.fields = ['Email', 'Password'];
+        throw error;
+    }
+
     return user;
 }
 
