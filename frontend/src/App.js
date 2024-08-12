@@ -62,7 +62,7 @@ function App() {
         <Route path="/Settings" element={user ? <SettingsPage user_id={3}/> : <Navigate to="/" />} />
           
         {/* Profile Route */}
-        <Route path="/Profile" element={user ? <ProfilePage /> : <Navigate to="/" />} />
+        <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
 
         {/* Post Page Route */}
         <Route path="/Post" element={user ? <PostPage post_id={2}/> : <Navigate to="/" />} />

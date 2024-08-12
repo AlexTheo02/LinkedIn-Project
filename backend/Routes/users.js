@@ -6,7 +6,6 @@ const {
     getAllUsers,
     getUserById,
     getUser,
-    getUserSearch,
     createUser,
     deleteUser,
     updateUser,

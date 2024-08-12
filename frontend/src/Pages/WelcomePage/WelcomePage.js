@@ -3,7 +3,6 @@ import s from './WelcomePageStyle.module.css';
 import Select from "react-dropdown-select";
 import WelcomeNavBar from './../../Components/WelcomeNavBar/WelcomeNavBar.js';
 import "../../Components/SelectStyle.css"
-import { useNavigate } from 'react-router-dom';
 import { useAuthentication } from '../../Hooks/useAuthentication.js';
 const {
   createYearOptions,
@@ -12,7 +11,6 @@ const {
 } = require("../../Components/GeneralFunctions.js")
 
 function WelcomePage() {
-  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
