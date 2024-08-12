@@ -56,6 +56,7 @@ function App() {
         <Route path="/Settings" element={<SettingsPage user_id={3}/>} />
           
         {/* Profile Route */}
+<<<<<<< Updated upstream
         <Route path="/Profile" element={<ProfilePage />} />
 =======
         <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />

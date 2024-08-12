@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 
 // Get all users
 const getAllUsers = async (request, response) => {
+<<<<<<< Updated upstream
     // Get all users, sorted by newest created
     const users = await User.find({}).sort({createdAt: -1});
 
