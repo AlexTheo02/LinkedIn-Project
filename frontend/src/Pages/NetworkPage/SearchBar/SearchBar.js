@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import s from "./SearchBarStyle.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +25,8 @@ function SearchBar() {
     const [input, setInput] = useState('');
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
+
+    const navigate = useNavigate();
 
     const searchInputRef = useRef(null);
 
@@ -60,6 +63,9 @@ function SearchBar() {
         setInput(`${keyword.name} ${keyword.surname}`);
         setResults([]);
         setShowResults(false);
+        
+        // Ανακατεύθυνση στο profile του χρήστη
+        navigate(`/profile/${keyword._id}`);
     };
 
     return (

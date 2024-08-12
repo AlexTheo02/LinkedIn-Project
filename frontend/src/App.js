@@ -57,6 +57,9 @@ function App() {
           
         {/* Profile Route */}
         <Route path="/Profile" element={<ProfilePage />} />
+=======
+        <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
+>>>>>>> Stashed changes
 
         {/* Post Page Route */}
         <Route path="/Post" element={<PostPage post_id={2}/>} />

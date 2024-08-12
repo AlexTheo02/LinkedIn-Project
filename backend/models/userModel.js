@@ -27,11 +27,11 @@ const userSchema = new Schema({
 
     employmentOrganization: {type: String, required: true},
 
-    professionalExperience: {type: [String]}, // Array of strings
+    professionalExperience: {type: String}, // String
 
-    education: {type: [String]}, // Array of strings
+    education: {type: String}, // String
 
-    skills: {type: [String]}, // Array of strings
+    skills: {type: String}, // String
 
     recentConversations: {type: [{type: Schema.Types.ObjectId, ref: "Conversation"}], required: true}, // Array of Conversation ObjectIds
 
@@ -231,9 +231,9 @@ userSchema.statics.register = async function(userData) {
         placeOfResidence: userData.placeOfResidence,
         workingPosition: userData.workingPosition,
         employmentOrganization: userData.employmentOrganization,
-        professionalExperience: [],
-        education: [],
-        skills: [],
+        professionalExperience: "",
+        education: "",
+        skills: "",
         recentConversations: [],
         network: [],
         publishedPosts: [],
