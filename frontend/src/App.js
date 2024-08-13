@@ -59,13 +59,13 @@ function App() {
         <Route path="/Personal Details" element={user ? <PersonalDetailsPage /> : <Navigate to="/" />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={user ? <SettingsPage user_id={3}/> : <Navigate to="/" />} />
+        <Route path="/Settings" element={user ? <SettingsPage /> : <Navigate to="/" />} />
           
         {/* Profile Route */}
         <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
 
         {/* Post Page Route */}
-        <Route path="/Post" element={user ? <PostPage post_id={2}/> : <Navigate to="/" />} />
+        <Route path="/Post" element={user ? <PostPage /> : <Navigate to="/" />} />
 
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />

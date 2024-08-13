@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import s from "./SearchBarStyle.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +12,7 @@ function SearchBar() {
     const [showResults, setShowResults] = useState(false);
 
     const searchInputRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -31,7 +33,7 @@ function SearchBar() {
                 try {
                     const response = await fetch(`/api/users?searchTerm=${input}`);
                     const data = await response.json();
-                    if (input.length > 0) { // Ελέγχει ξανά το input για να σιγουρευτεί ότι δεν είναι κενό
+                    if (input.length > 0) {
                         setResults(data);
                         setShowResults(true);
                     }
@@ -46,13 +48,12 @@ function SearchBar() {
             }
         };
 
-        // Χρησιμοποιούμε ένα timeout για να περιμένουμε μέχρι να σταματήσει ο χρήστης να πληκτρολογεί
         const timeoutId = setTimeout(() => {
             fetchData();
-        }, 300); // Προσθέτουμε μια μικρή καθυστέρηση (300ms)
+        }, 300);
 
         return () => {
-            clearTimeout(timeoutId); // Καθαρίζουμε το timeout αν το input αλλάξει πριν το fetchData
+            clearTimeout(timeoutId);
         };
     }, [input]);
 
@@ -61,9 +62,13 @@ function SearchBar() {
     };
 
     const selectInput = (keyword) => {
+        // Αρχικοποιούμε το input με το όνομα και το επίθετο του χρήστη
         setInput(`${keyword.name} ${keyword.surname}`);
+        // Καθαρίζουμε τα αποτελέσματα
         setResults([]);
         setShowResults(false);
+        // Ανακατεύθυνση στο profile του χρήστη
+        navigate(`/profile/${keyword._id}`);
     };
 
     return (
@@ -85,7 +90,7 @@ function SearchBar() {
                     <ul>
                         {results.map((result, index) => (
                             <li key={index} onClick={() => selectInput(result)}>
-                                <img src={imageForUsers} alt={`${result.name} ${result.surname}`} />
+                                <img src={result.profilePicture} alt={`${result.name} ${result.surname}`} />
                                 <div className={s.user_info}>
                                     <b>{result.name} {result.surname}</b>
                                     <b className={s.position}>{result.workingPosition} at {result.employmentOrganization}</b>

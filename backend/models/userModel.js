@@ -322,8 +322,7 @@ userSchema.statics.register = async function(userData) {
         likedPosts: [],
         // Set all fields to private initialy
         privateDetails: [
-            "dateOfBirth", "phoneNumber", "placeOfResidence",
-            "professionalExperience", "education", "skills"
+            "dateOfBirth", "phoneNumber"
         ]
     });
 
