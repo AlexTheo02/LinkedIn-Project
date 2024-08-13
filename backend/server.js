@@ -4,9 +4,10 @@ const express = require("express")
 const mongoose = require("mongoose")
 
 // Routes
-const userRoutes = require("./Routes/users.js")
-const postRoutes = require("./Routes/posts.js")
-const jobRoutes = require("./Routes/jobs.js")
+const userRoutes = require("./routes/users.js")
+const postRoutes = require("./routes/posts.js")
+const jobRoutes = require("./routes/jobs.js")
+const conversationRoutes = require("./routes/conversations.js")
 
 // Create an express app
 const app = express()
@@ -23,6 +24,7 @@ app.use((request, response, next) => {
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/jobs", jobRoutes)
+app.use("/api/conversations", conversationRoutes)
 
 // Connect to the database
 mongoose.connect(process.env.MONGO_URI)

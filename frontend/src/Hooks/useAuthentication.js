@@ -29,8 +29,8 @@ export const useAuthentication = () => {
         console.log(formData)
         // Send register request to the server
         const response = await fetch ("api/users/register", {
-        method: "POST",
-        body: formData,
+            method: "POST",
+            body: formData,
         });
 
         const json = await response.json();

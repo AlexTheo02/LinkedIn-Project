@@ -43,8 +43,13 @@ const userSchema = new Schema({
 
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
 
-    privateDetails: {type: [""], required: true} // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
-    
+    privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
+
+    appliedJobs: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], required: true}, // Array of job ids that the user has applied to
+
+    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "Notification"}], required: true}, // Array of Post Notification ids
+
+    linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "LinkUpRequest"}], required: true}, // Array of Link Up Requests ids
 })
 
 function formatFieldName(fieldName) {
@@ -320,13 +325,12 @@ userSchema.statics.register = async function(userData) {
         publishedPosts: [],
         publishedJobListings: [],
         likedPosts: [],
-        // Set all fields to private initialy
-        privateDetails: [
-            "dateOfBirth", "phoneNumber"
-        ]
+        privateDetails: ["dateOfBirth", "phoneNumber"],
+        appliedJobs: [],
+        postNotifications: [],
+        linkUpRequests: [],
     });
 
-    // console.log(user)
     return user;
 }
 

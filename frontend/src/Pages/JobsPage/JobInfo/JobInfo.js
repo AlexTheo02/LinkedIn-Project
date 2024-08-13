@@ -46,30 +46,36 @@ const JobInfo = ({ job, isExpanded, onExit}) => {
                 <h3>About the job</h3>
                 <p>{job.description}</p>
             </div>
-            <div className={s.section}>
-                <h3>Requirements</h3>
-                <ul>
-                    {job.requirements.map((req, index) => (
-                        <li key={index}>{req}</li>
-                    ))}
-                </ul>
-            </div>
-            <div className={s.section}>
-                <h3>Responsibilities</h3>
-                <ul>
-                    {job.responsibilities.map((res, index) => (
-                        <li key={index}>{res}</li>
-                    ))}
-                </ul>
-            </div>
-            <div className={s.section}>
-                <h3>Benefits</h3>
-                <ul>
-                    {job.benefits.map((benefit, index) => (
-                        <li key={index}>{benefit}</li>
-                    ))}
-                </ul>
-            </div>
+            { job.requirements.length > 0 && 
+                <div className={s.section}>
+                    <h3>Requirements</h3>
+                    <ul>
+                        {job.requirements.map((req, index) => (
+                            <li key={index}>{req}</li>
+                        ))}
+                    </ul>
+                </div>
+            }
+            { job.responsibilities.length > 0 && 
+                <div className={s.section}>
+                    <h3>Responsibilities</h3>
+                    <ul>
+                        {job.responsibilities.map((res, index) => (
+                            <li key={index}>{res}</li>
+                        ))}
+                    </ul>
+                </div>
+            }
+            { job.benefits.length > 0 && 
+                <div className={s.section}>
+                    <h3>Benefits</h3>
+                    <ul>
+                        {job.benefits.map((benefit, index) => (
+                            <li key={index}>{benefit}</li>
+                        ))}
+                    </ul>
+                </div>
+            }
             <button className={s.apply_button}>Apply Now</button>
         </div>
     );

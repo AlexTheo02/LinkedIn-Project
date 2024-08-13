@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import s from "./SearchBarStyle.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useAuthContext } from '../../../Hooks/useAuthContext';
 
 function SearchBar() {
+    const {user} = useAuthContext();
+
     const imageForUsers = require('./../../../Images/logo.png');
 
     const [input, setInput] = useState("");
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
-
-    const navigate = useNavigate();
 
     const searchInputRef = useRef(null);
     const navigate = useNavigate();
@@ -33,7 +34,11 @@ function SearchBar() {
         const fetchData = async () => {
             if (input.length > 0) {
                 try {
-                    const response = await fetch(`/api/users?searchTerm=${input}`);
+                    const response = await fetch(`/api/users?searchTerm=${input}`,{
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`
+                        }
+                    });
                     const data = await response.json();
                     if (input.length > 0) {
                         setResults(data);
@@ -57,7 +62,7 @@ function SearchBar() {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [input]);
+    }, [input, user]);
 
     const handleInputChange = (e) => {
         setInput(e.target.value);

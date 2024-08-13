@@ -183,17 +183,6 @@ const updateUser = async (request, response) => {
     response.status(200).json(user);
 }
 
-
-
-
-
-
-
-
-
-
-// ------------------------------------------------------------------------
-
 const createToken = (id) => {
     return jwb.sign({id}, process.env.SECRET, { expiresIn: '3d' })
 }

@@ -13,13 +13,19 @@ const {
     registerUser
 } = require("../controllers/userController.js")
 
-// const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require('../middleware/requireAuth')
 
 // Instance of the Router
 const router = express.Router()
 
-// // require Authentcation for all Users routes
-// router.use(requireAuth)
+// Login route
+router.post("/login", loginUser)
+
+// Register route
+router.post("/register",upload.single("profilePicture"), registerUser)
+
+// require Authentcation for all Users routes
+router.use(requireAuth)
 
 // GET all users
 router.get("/", getAllUsers)
@@ -38,14 +44,5 @@ router.delete("/:id", deleteUser)
 
 // UPDATE a user
 router.patch("/:id", updateUser)
-
-// ----------------------------------------------------------------------------
-
-// Login route
-router.post("/login", loginUser)
-
-// Register route
-router.post("/register",upload.single("profilePicture"), registerUser)
-
 
 module.exports = router

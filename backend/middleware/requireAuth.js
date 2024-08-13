@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/userModel')
+const User = require('../models/userModel.js')
 
 const requireAuth = async (req, res, next) => {
     // verify authentication
@@ -9,12 +9,12 @@ const requireAuth = async (req, res, next) => {
         return res.status(402).json({error: "Authorization token required"});
     }
 
-    const token = authorization.split(' ')[1];
+    const token = authorization.split(' ')[1];  // Since it will be something like `Bearer ${token}`
 
     try{
-        const {_id} = jwt.verify(token, process.env.SECRET);
+        const {id} = jwt.verify(token, process.env.SECRET);
 
-        req.user = await User.findOne({_id}).select('_id');
+        req.user = await User.findOne({_id: id}).select('_id');
         next();
     } catch(error){
         console.log(error);

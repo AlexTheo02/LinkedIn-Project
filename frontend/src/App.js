@@ -12,6 +12,7 @@ import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
 import PostPage from './Pages/PostPage/PostPage.js';
 import NavBar from './Components/NavBar/NavBar.js';
 import { PostsContextProvider } from './Context/PostContext.js';
+import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
 
 import {
@@ -50,7 +51,10 @@ function App() {
         <Route path="/Jobs" element={user ? <JobsPage /> : <Navigate to="/" />} />
 
         {/* Conversations Route */}
-        <Route path="/Conversations" element={user ? <ConversationsPage /> : <Navigate to="/" />} />
+        <Route path="/Conversations" element={user ?
+        <ConversationContextProvider>
+          <ConversationsPage />
+        </ConversationContextProvider>  : <Navigate to="/" />} />
 
         {/* Notifications Route */}
         <Route path="/Notifications" element={user ? <NotificationsPage /> : <Navigate to="/" />} />

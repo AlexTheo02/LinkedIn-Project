@@ -5,7 +5,10 @@ import { InteractiveProfile } from "../../Components/PostComponent/PostComponent
 import InteractiveProfilePicture from "../../Components/InteractiveProfilePicture/InteractiveProfilePicture.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../../Hooks/useAuthContext.js";
+import { useConversationContext } from "../../Hooks/useConversationContext.js";
+
 
 import tsipras from "../../Images/tsipras.jpg"
 import mitsotakis from "../../Images/mitsotakis.jpg"
@@ -62,9 +65,18 @@ function RecentConversation({conversation_id, conversationHandler}){
     );
 }
 
-function RecentConversationsPanel({conversationHandler}){
+function RecentConversationsPanel({conversations, conversationHandler}){
+
+    // conversations is a list containing all of the user's recent conversations
+    // 
+
 
     const {recentConversations,setRecentConversations,setActiveConversation} = conversationHandler;
+
+    // For each conversation:
+    // Check the other participant's id, (find the one you are not) and fetch name,surname,profilePicture,
+    // get timestamp, and send them to RecentConversation component, that will display profile picture, name surname and timestamp, and onClick,
+    // display the correct conversation (set Current Conversation to the messageLog)
 
     // Use map to create different elements for recent conversations. create recent conversation component to go on the left panel
 
@@ -195,6 +207,51 @@ function getRecentConversationsByUserId(user_id){
 }
 
 function ConversationsPage({user_id}){
+    // Get current logged in user
+    const {user} = useAuthContext();
+
+    // Fetch current user's recent conversations
+    const {conversations, conversationDispatch} = useConversationContext();
+
+    useEffect(() => {
+        const getRecentConversations = async () => {
+
+            // Get user's recent conversation ids
+            const response = await fetch(`api/conversations/`, {
+                headers: {
+                    "Authorization": `Bearer ${user.token}`
+                }
+            });
+            const json = await response.json();
+
+            if (response.ok){
+                // Update conversation context to contain the actual conversation objects
+                const conversationsList = []
+
+                json.forEach(async (conv_id) => {
+                    // Fetch conversation and add it to the list
+                    const resp = await fetch(`api/conversations/${conv_id}`, {
+                        headers: {
+                            "Authorization": `Bearer ${user.token}`
+                        }
+                    })
+                    const conv = await resp.json();
+                    if (resp.ok){
+                        conversationsList.push(conv);
+                    }
+                });
+                // Update the context
+                conversationDispatch({type:"SET_CONVERSATIONS", payload: conversationsList})
+                console.log(conversations)
+            }   
+        }
+
+        if (user){
+            getRecentConversations();
+        }
+
+    }, [user]);
+
 
     // Based on user id, fetch recent conversations and most recent conversation
 
@@ -214,7 +271,7 @@ function ConversationsPage({user_id}){
         <div className="conversations-page">
             <NavBar currentPage={"Conversations"}/>
             <div className={s.container}>
-                <RecentConversationsPanel conversationHandler={conversationHandler}/>
+                <RecentConversationsPanel conversations={conversations} conversationHandler={conversationHandler}/>
                 <VerticalSeparator />
                 <CurrentConversationPanel conversationHandler={conversationHandler}/>
             </div>

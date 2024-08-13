@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { differenceInYears } from 'date-fns';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../Hooks/useAuthContext';
 
 const profilePic = require('./../../Images/profile_ergasiaSite.png');
 
@@ -38,33 +39,46 @@ function ExpandableText({ text, maxWords = 50 }) {
 }
 
 function ProfilePage() {
+    const {user} = useAuthContext()
+
     const { id } = useParams(); // Ανάκτηση του id από το URL
     const [userData, setUserData] = useState(null);
-    const [isFollowing, setIsFollowing] = useState(false);
+    const [isConnected, setIsConnected] = useState(false);
+    const [isRequested, setIsRequested] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 // Εδώ μπορείς να κάνεις fetch δεδομένων από το API χρησιμοποιώντας το id
-                const response = await fetch(`/api/users/${id}`);
+                const response = await fetch(`/api/users/${id}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
                 const data = await response.json();
                 setUserData(data);
+                setIsConnected(data.network.includes(user.userId));
+                setIsRequested(data.linkUpRequests.includes(user.userId));
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
 
         fetchUserData();
-    }, [id]);
+    }, [id, user]);
 
     if (!userData) {
         return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
     const handleFollowClick = () => {
-        setIsFollowing(!isFollowing);
+        setIsConnected(!isConnected);
     };
+
+    const handleUnFollowClick = () => {
+        setIsConnected(!isConnected);
+    }
 
     const handleNetworkUserClick = (userId) => {
         navigate(`/profile/${userId}`);
@@ -87,11 +101,19 @@ function ProfilePage() {
                         </div>
                         <div className={s.operations}>
                             <div className={s.buttons}>
-                                <button
-                                    className={isFollowing ? s.followed_button : s.follow_button} onClick={handleFollowClick}>
-                                    {isFollowing ? 'Followed' : 'Follow'}
-                                    <FontAwesomeIcon className={s.follow_button_icon} icon={isFollowing ? faCheck : faUserPlus} />
-                                </button>
+                                { isConnected || isRequested ?
+                                    <button
+                                        className={s.followed_or_requested_button} onClick={handleUnFollowClick}>
+                                        {isConnected ? 'Connected' : 'Sent Request'}
+                                        <FontAwesomeIcon className={s.follow_button_icon} icon={faCheck} />
+                                    </button>
+                                    :
+                                    <button
+                                        className={s.follow_button} onClick={handleFollowClick}>
+                                        Connect
+                                        <FontAwesomeIcon className={s.follow_button_icon} icon={faUserPlus} />
+                                    </button>
+                                }
                                 <button className={s.message_button}>Message</button>
                             </div>
                             <div className={s.contact_info}>
