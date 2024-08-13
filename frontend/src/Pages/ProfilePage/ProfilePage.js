@@ -144,7 +144,6 @@ function ProfilePage() {
                             <h3>This user has not connected with any other user yet</h3>
                         </div>
                     }
-                    
                 </div>
             </div>
         </div>

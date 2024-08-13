@@ -11,6 +11,8 @@ function SearchBar() {
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
 
+    const navigate = useNavigate();
+
     const searchInputRef = useRef(null);
     const navigate = useNavigate();
 
@@ -67,6 +69,7 @@ function SearchBar() {
         // Καθαρίζουμε τα αποτελέσματα
         setResults([]);
         setShowResults(false);
+
         // Ανακατεύθυνση στο profile του χρήστη
         navigate(`/profile/${keyword._id}`);
     };

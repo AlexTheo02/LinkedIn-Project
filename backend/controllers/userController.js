@@ -4,6 +4,7 @@ const jwb = require("jsonwebtoken")
 
 // Get all users
 const getAllUsers = async (request, response) => {
+  
     const searchTerm = request.query.searchTerm
     // Get all users, sorted by newest created
     if (!searchTerm){
