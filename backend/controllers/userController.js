@@ -4,7 +4,8 @@ const jwb = require("jsonwebtoken")
 
 // Get all users
 const getAllUsers = async (request, response) => {
-    const searchTerm = request.query.searchTerm.toLowerCase()
+  
+    const searchTerm = request.query.searchTerm
     // Get all users, sorted by newest created
     if (!searchTerm){
         const users = await User.find({}).sort({createdAt: -1});
@@ -12,11 +13,10 @@ const getAllUsers = async (request, response) => {
     }
     else{
         try {
-            console.log('EEEEEEEEEEEEE')
             const users = await User.find(); // Παίρνουμε όλους τους χρήστες
             const filteredUsers = users.filter(user => {
                 const fullName = `${user.name} ${user.surname}`.toLowerCase(); // Συνενώνουμε name και surname
-                return fullName.includes(searchTerm); // Ελέγχουμε αν περιέχει το searchTerm
+                return fullName.includes(String(searchTerm).toLowerCase()); // Ελέγχουμε αν περιέχει το searchTerm
             }).slice(0, 10); // Περιορισμός στα 10 πρώτα αποτελέσματα
     
             response.status(200).json(filteredUsers);
@@ -263,7 +263,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUser,
-    getUserSearch,
     createUser,
     deleteUser,
     updateUser,
