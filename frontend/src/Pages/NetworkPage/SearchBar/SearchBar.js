@@ -7,28 +7,14 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 function SearchBar() {
     const imageForUsers = require('./../../../Images/logo.png');
 
-    const availableKeywords = [
-        { name: 'Joe', surname: 'Biden', profilePic: imageForUsers, workingPosition: 'President', employmentOrganization: 'United States Government' },
-        { name: 'Donald', surname: 'Trump', profilePic: imageForUsers, workingPosition: 'Businessman', employmentOrganization: 'Trump Organization' },
-        { name: 'Barack', surname: 'Obama', profilePic: imageForUsers, workingPosition: 'Former President', employmentOrganization: 'United States Government' },
-        { name: 'Travis', surname: 'Scott', profilePic: imageForUsers, workingPosition: 'Rapper', employmentOrganization: 'Cactus Jack Records' },
-        { name: 'Andreas', surname: 'Papandreou', profilePic: imageForUsers, workingPosition: 'Former Prime Minister', employmentOrganization: 'Greek Government' },
-        { name: 'Kostas', surname: 'Karamanlis', profilePic: imageForUsers, workingPosition: 'Former Prime Minister', employmentOrganization: 'Greek Government' },
-        { name: 'Sakis', surname: 'Rouvas', profilePic: imageForUsers, workingPosition: 'Singer', employmentOrganization: 'Self-employed' },
-        { name: 'Kanye', surname: 'West', profilePic: imageForUsers, workingPosition: 'Rapper', employmentOrganization: 'GOOD Music' },
-        { name: 'Elon', surname: 'Musk', profilePic: imageForUsers, workingPosition: 'CEO', employmentOrganization: 'SpaceX' },
-        { name: 'Mark', surname: 'Zuckerberg', profilePic: imageForUsers, workingPosition: 'CEO', employmentOrganization: 'Meta' },
-        { name: 'Bill', surname: 'Gates', profilePic: imageForUsers, workingPosition: 'Co-founder', employmentOrganization: 'Microsoft' },
-    ];
-    
-
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState("");
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
 
     const navigate = useNavigate();
 
     const searchInputRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -43,27 +29,47 @@ function SearchBar() {
         };
     }, []);
 
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setInput(value);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (input.length > 0) {
+                try {
+                    const response = await fetch(`/api/users?searchTerm=${input}`);
+                    const data = await response.json();
+                    if (input.length > 0) {
+                        setResults(data);
+                        setShowResults(true);
+                    }
+                } catch (error) {
+                    console.error('Error fetching the users:', error);
+                    setResults([]);
+                    setShowResults(false);
+                }
+            } else {
+                setResults([]);
+                setShowResults(false);
+            }
+        };
 
-        if (value.length > 0) {
-            const filteredResults = availableKeywords.filter((keyword) =>
-                `${keyword.name} ${keyword.surname}`.toLowerCase().includes(value.toLowerCase())
-            );
-            setResults(filteredResults);
-            setShowResults(true);
-        } else {
-            setResults([]);
-            setShowResults(false);
-        }
+        const timeoutId = setTimeout(() => {
+            fetchData();
+        }, 300);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [input]);
+
+    const handleInputChange = (e) => {
+        setInput(e.target.value);
     };
 
     const selectInput = (keyword) => {
+        // Αρχικοποιούμε το input με το όνομα και το επίθετο του χρήστη
         setInput(`${keyword.name} ${keyword.surname}`);
+        // Καθαρίζουμε τα αποτελέσματα
         setResults([]);
         setShowResults(false);
-        
+
         // Ανακατεύθυνση στο profile του χρήστη
         navigate(`/profile/${keyword._id}`);
     };
@@ -87,7 +93,7 @@ function SearchBar() {
                     <ul>
                         {results.map((result, index) => (
                             <li key={index} onClick={() => selectInput(result)}>
-                                <img src={result.profilePic} alt={`${result.name} ${result.surname}`} />
+                                <img src={result.profilePicture} alt={`${result.name} ${result.surname}`} />
                                 <div className={s.user_info}>
                                     <b>{result.name} {result.surname}</b>
                                     <b className={s.position}>{result.workingPosition} at {result.employmentOrganization}</b>

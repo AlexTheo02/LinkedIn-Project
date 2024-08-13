@@ -1,8 +1,15 @@
 import s from './NavBarStyle.module.css';
 import HomeLogo from "../HomeLogo/HomeLogo.js"
 import NavBarNavigateButton from './NavbarCategories.js';
+import { useLogout } from '../../Hooks/useLogout.js';
 
 function NavBar({isHome, currentPage}){
+  const {logout} = useLogout()
+
+  const handleLogout = () => {
+    logout();
+  }
+  
   return (
     <div className={s.navbar}>
 
@@ -41,8 +48,8 @@ function NavBar({isHome, currentPage}){
             
         </div>
 
-        <div className={s.navbar_right}>
-            navbar-right
+        <div className={s.logout_button}>
+          <button onClick={handleLogout}>Log Out</button>
         </div>
 
 

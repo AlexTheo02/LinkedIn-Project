@@ -59,7 +59,7 @@ function ProfilePage() {
     }, [id]);
 
     if (!userData) {
-        return <div>Loading...</div>;
+        return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
     const handleFollowClick = () => {
@@ -77,11 +77,13 @@ function ProfilePage() {
                 <div className={s.profile}>
                     <div className={s.container}>
                         <div className={s.profile_field}>
-                            <img src={profilePic} alt="Profile" />
+                            <img src={userData.profilePicture} alt="Profile" />
                             <h1>{userData.name} {userData.surname}</h1>
                             <b>{userData.workingPosition} at {userData.employmentOrganization}</b>
-                            <p>{calculateAge(userData.date_of_birth)} years old</p>
-                            <p>{userData.location}</p>
+                            {!userData.privateDetails.includes("dateOfBirth") ? (
+                                <p>{calculateAge(userData.dateOfBirth)} years old</p>
+                            ) : null}
+                            <p>{userData.placeOfResidence}</p>
                         </div>
                         <div className={s.operations}>
                             <div className={s.buttons}>
@@ -93,7 +95,7 @@ function ProfilePage() {
                                 <button className={s.message_button}>Message</button>
                             </div>
                             <div className={s.contact_info}>
-                                {userData.isPhonePublic ? (
+                                {!userData.privateDetails.includes("phoneNumber") ? (
                                     <>
                                         <p>Phone Number:</p>
                                         <p>{userData.phoneNumber}</p>
@@ -102,34 +104,46 @@ function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    <div className={s.container}>
-                        <h3>Professional Experience:</h3>
-                        <ExpandableText text={userData.professional_experience} />
-                    </div>
-                    <div className={s.container}>
-                        <h3>Educational Experience:</h3>
-                        <ExpandableText text={userData.educational_experience} />
-                    </div>
-                    <div className={s.container}>
-                        <h3>Skills:</h3>
-                        <ExpandableText text={userData.skills} />
-                    </div>
+                    {!userData.privateDetails.includes("phoneNumber") ? (
+                        <div className={s.container}>
+                            <h3>Professional Experience:</h3>
+                            <ExpandableText text={userData.professionalExperience} />
+                        </div>
+                    ) : null}
+                    {!userData.privateDetails.includes("education") ? (
+                        <div className={s.container}>
+                            <h3>Educational Experience:</h3>
+                            <ExpandableText text={userData.education} />
+                        </div>
+                    ) : null}
+                    {!userData.privateDetails.includes("skills") ? (
+                        <div className={s.container}>
+                            <h3>Skills:</h3>
+                            <ExpandableText text={userData.skills} />
+                        </div>
+                    ) : null}
                 </div>
                 <div className={s.network}>
                     <h2>Network:</h2>
-                    <div className={s.users_list}>
-                        <ul>
-                            {userData.network.map((connected_user, index) => (
-                                <li key={index} onClick={() => handleNetworkUserClick(connected_user._id)}>
-                                    <img src={connected_user.profilePic} alt={`${connected_user.name} ${connected_user.surname}`} />
-                                    <div className={s.user_info}>
-                                        <b>{connected_user.name} {connected_user.surname}</b>
-                                        <b className={s.position}>{connected_user.workingPosition} at {connected_user.employmentOrganization}</b>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {userData.network.length > 0 ? 
+                        <div className={s.users_list}>
+                            <ul>
+                                {userData.network.map((connected_user, index) => (
+                                    <li key={index} onClick={() => handleNetworkUserClick(connected_user._id)}>
+                                        <img src={connected_user.profilePic} alt={`${connected_user.name} ${connected_user.surname}`} />
+                                        <div className={s.user_info}>
+                                            <b>{connected_user.name} {connected_user.surname}</b>
+                                            <b className={s.position}>{connected_user.workingPosition} at {connected_user.employmentOrganization}</b>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        :
+                        <div className={s.empty_network}>
+                            <h3>This user has not connected with any other user yet</h3>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

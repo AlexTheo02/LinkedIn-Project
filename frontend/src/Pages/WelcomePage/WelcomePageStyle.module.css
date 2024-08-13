@@ -96,6 +96,10 @@
     transition: padding 0.5s;
 }
 
+.input_field input.error{
+    border: 2px solid rgb(255, 0, 0);
+}
+
 .profile_field {
     max-height: 200px;
     transition: max-height 0.5s, padding 0.5s, opacity 0.5s;
@@ -104,6 +108,7 @@
 }
 
 .profile_field img {
+    object-fit: cover;
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -127,12 +132,6 @@
 
 .picture_input {
     display: none;
-}
-
-.input_field.invalid{
-    /* background-color: #a02500; */
-    border: 2px solid #a00000;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.4);
 }
 
 .error_messages{
@@ -189,4 +188,18 @@
 
 .middle_dropdown{
     width: 30%;
+}
+
+.error_message{
+    text-align: start;
+    padding: 13px 7px;
+    background: rgba(255, 0, 0, 0.247);
+    border-radius: 15px;
+    border: 2px solid rgb(218, 0, 0);
+    margin-bottom: 15px;
+}
+
+.error_message b{
+    font-style: italic;
+    color: #353535;
 }

@@ -24,3 +24,13 @@
     border: 1px solid #a02500 !important;
     box-shadow: 0 8px 12px #a727004d !important;
 }
+
+.react-dropdown-select.error{
+    border: 2px solid rgb(255, 0, 0) !important; 
+    box-shadow: 0 4px 8px #a025004d !important;
+}
+
+.react-dropdown-select.error:hover{
+    border: 2px solid rgb(255, 0, 0) !important;
+    box-shadow: 0 8px 12px #a727004d !important;
+}

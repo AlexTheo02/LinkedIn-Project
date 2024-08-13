@@ -12,6 +12,7 @@ import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
 import PostPage from './Pages/PostPage/PostPage.js';
 import NavBar from './Components/NavBar/NavBar.js';
 import { PostsContextProvider } from './Context/PostContext.js';
+import { useAuthContext } from './Hooks/useAuthContext.js';
 
 import {
   BrowserRouter,
@@ -21,6 +22,8 @@ import {
 } from "react-router-dom";
 
 function App() {
+  const {user} = useAuthContext()
+
   return (
     <BrowserRouter>
       {/* <NavBar /> */}
@@ -28,42 +31,41 @@ function App() {
         <Routes>
 
         {/* Welcome Route */}
-        <Route path="/" element={<WelcomePage />} />
+        <Route path="/" element={!user ? <WelcomePage /> : <Navigate to="/Home" />} />
 
         {/* Home Route */}
         <Route path="/Home" element={
+          user ?
           <PostsContextProvider>
             <HomePage user_id={2} />
           </PostsContextProvider>
+          : 
+          <Navigate to="/" />
         } />
 
         {/* Network Route */}
-        <Route path="/Network" element={<NetworkPage />} />
+        <Route path="/Network" element={user ? <NetworkPage /> : <Navigate to="/" />} />
 
         {/* Jobs Route */}
-        <Route path="/Jobs" element={<JobsPage />} />
+        <Route path="/Jobs" element={user ? <JobsPage /> : <Navigate to="/" />} />
 
         {/* Conversations Route */}
-        <Route path="/Conversations" element={<ConversationsPage />} />
+        <Route path="/Conversations" element={user ? <ConversationsPage /> : <Navigate to="/" />} />
 
         {/* Notifications Route */}
-        <Route path="/Notifications" element={<NotificationsPage />} />
+        <Route path="/Notifications" element={user ? <NotificationsPage /> : <Navigate to="/" />} />
 
         {/* Personal Details Route */}
-        <Route path="/Personal Details" element={<PersonalDetailsPage />} />
+        <Route path="/Personal Details" element={user ? <PersonalDetailsPage /> : <Navigate to="/" />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={<SettingsPage user_id={3}/>} />
+        <Route path="/Settings" element={user ? <SettingsPage /> : <Navigate to="/" />} />
           
         {/* Profile Route */}
-<<<<<<< Updated upstream
-        <Route path="/Profile" element={<ProfilePage />} />
-=======
         <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
->>>>>>> Stashed changes
 
         {/* Post Page Route */}
-        <Route path="/Post" element={<PostPage post_id={2}/>} />
+        <Route path="/Post" element={user ? <PostPage /> : <Navigate to="/" />} />
 
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />

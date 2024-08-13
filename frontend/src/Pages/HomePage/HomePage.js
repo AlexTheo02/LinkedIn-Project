@@ -12,9 +12,11 @@ import TextAreaAutosize from "react-textarea-autosize"
 import { FileUploader } from "react-drag-drop-files";
 import TimelinePosts from "./TimelinePosts/TimelinePosts.js"
 import { usePostsContext } from "../../Hooks/usePostsContext.js";
+import { useAuthContext } from "../../Hooks/useAuthContext.js";
 
 function CreatePost({user_id}) {
     const { dispatch } = usePostsContext()
+    const {user} = useAuthContext()
 
     const imgFileTypes = ["JPG", "PNG"];
     const vidFileTypes = ["MP4", "MOV"];
@@ -77,6 +79,11 @@ function CreatePost({user_id}) {
 
     // Publish post
     const handlePublisButtonClick = async () => {
+
+        if (!user){
+            setError("You must be logged in");
+            return
+        }
         // Check if post is not empty
         if (caption !== ""){
 
@@ -89,7 +96,10 @@ function CreatePost({user_id}) {
 
            const response = await fetch("/api/posts", {
             method: "POST",
-            body: formData
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
            });
 
            const json = await response.json();
