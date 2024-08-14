@@ -7,8 +7,6 @@ import { differenceInYears } from 'date-fns';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../Hooks/useAuthContext';
 
-const profilePic = require('./../../Images/profile_ergasiaSite.png');
-
 function calculateAge(birthDate) {
     const dateOfBirth = new Date(birthDate);
     const age = differenceInYears(new Date(), dateOfBirth);
