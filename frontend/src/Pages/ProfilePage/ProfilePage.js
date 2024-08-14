@@ -44,6 +44,7 @@ function ProfilePage() {
     const { id } = useParams(); // Ανάκτηση του id από το URL
     const [userData, setUserData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [connectButtonLoading, setConnectButtonLoading] = useState(false)
     const [isRequested, setIsRequested] = useState(false);
     const navigate = useNavigate();
 
@@ -58,6 +59,8 @@ function ProfilePage() {
                 });
                 const data = await response.json();
                 setUserData(data);
+
+                // RIGHT THERE I LOOK IF THE USER OF THE PROFILE PAGE HAS CONNECTED OR HAS BEEN SENT A REQUEST BY THE USER LOGGED IN !!!
                 setIsConnected(data.network.includes(user.userId));
                 setIsRequested(data.linkUpRequests.includes(user.userId));
             } catch (error) {
@@ -72,13 +75,52 @@ function ProfilePage() {
         return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
-    const handleFollowClick = () => {
-        setIsConnected(!isConnected);
+    const handleConnectClick = async () => {
+        setConnectButtonLoading(true);
+        try {
+            const response = await fetch(`/api/users/requestConnection/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+    
+            if (response.ok) {
+                setIsRequested(true);
+            } else {
+                console.error('Error sending connection request');
+            }
+        } catch (error) {
+            console.error('Error sending connection request:', error);
+        }
+        setConnectButtonLoading(false);
     };
+    
 
-    const handleUnFollowClick = () => {
-        setIsConnected(!isConnected);
-    }
+    const handleDisconnectClick = async () => {
+        setConnectButtonLoading(true);
+        try {
+            const response = await fetch(`/api/users/removeConnection/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+    
+            if (response.ok) {
+                setIsConnected(false);
+                setIsRequested(false);
+            } else {
+                console.error('Error removing connection');
+            }
+        } catch (error) {
+            console.error('Error removing connection:', error);
+        }
+        setConnectButtonLoading(false);
+    };
+    
 
     const handleNetworkUserClick = (userId) => {
         navigate(`/profile/${userId}`);
@@ -102,19 +144,21 @@ function ProfilePage() {
                         <div className={s.operations}>
                             <div className={s.buttons}>
                                 { isConnected || isRequested ?
-                                    <button
-                                        className={s.followed_or_requested_button} onClick={handleUnFollowClick}>
+                                    <button disabled={connectButtonLoading}
+                                        className={s.followed_or_requested_button} onClick={handleDisconnectClick}>
                                         {isConnected ? 'Connected' : 'Sent Request'}
                                         <FontAwesomeIcon className={s.follow_button_icon} icon={faCheck} />
                                     </button>
                                     :
                                     <button
-                                        className={s.follow_button} onClick={handleFollowClick}>
+                                        className={s.follow_button} onClick={handleConnectClick}>
                                         Connect
                                         <FontAwesomeIcon className={s.follow_button_icon} icon={faUserPlus} />
                                     </button>
                                 }
-                                <button className={s.message_button}>Message</button>
+                                { isConnected &&
+                                    <button  disabled={connectButtonLoading} className={s.message_button}>Message</button>
+                                }
                             </div>
                             <div className={s.contact_info}>
                                 {!userData.privateDetails.includes("phoneNumber") ? (
@@ -126,47 +170,49 @@ function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    {!userData.privateDetails.includes("phoneNumber") ? (
+                    {!userData.privateDetails.includes("phoneNumber") || isConnected ? (
                         <div className={s.container}>
                             <h3>Professional Experience:</h3>
                             <ExpandableText text={userData.professionalExperience} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("education") ? (
+                    {!userData.privateDetails.includes("education") || isConnected ? (
                         <div className={s.container}>
                             <h3>Educational Experience:</h3>
                             <ExpandableText text={userData.education} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("skills") ? (
+                    {!userData.privateDetails.includes("skills") || isConnected ? (
                         <div className={s.container}>
                             <h3>Skills:</h3>
                             <ExpandableText text={userData.skills} />
                         </div>
                     ) : null}
                 </div>
-                <div className={s.network}>
-                    <h2>Network:</h2>
-                    {userData.network.length > 0 ? 
-                        <div className={s.users_list}>
-                            <ul>
-                                {userData.network.map((connected_user, index) => (
-                                    <li key={index} onClick={() => handleNetworkUserClick(connected_user._id)}>
-                                        <img src={connected_user.profilePic} alt={`${connected_user.name} ${connected_user.surname}`} />
-                                        <div className={s.user_info}>
-                                            <b>{connected_user.name} {connected_user.surname}</b>
-                                            <b className={s.position}>{connected_user.workingPosition} at {connected_user.employmentOrganization}</b>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        :
-                        <div className={s.empty_network}>
-                            <h3>This user has not connected with any other user yet</h3>
-                        </div>
-                    }
-                </div>
+                { isConnected &&
+                    <div className={s.network}>
+                        <h2>Network:</h2>
+                        {userData.network.length > 0 ? 
+                            <div className={s.users_list}>
+                                <ul>
+                                    {userData.network.map((connected_user, index) => (
+                                        <li key={index} onClick={() => handleNetworkUserClick(connected_user._id)}>
+                                            <img src={connected_user.profilePic} alt={`${connected_user.name} ${connected_user.surname}`} />
+                                            <div className={s.user_info}>
+                                                <b>{connected_user.name} {connected_user.surname}</b>
+                                                <b className={s.position}>{connected_user.workingPosition} at {connected_user.employmentOrganization}</b>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            :
+                            <div className={s.empty_network}>
+                                <h3>This user has not connected with any other user yet</h3>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
         </div>
     );

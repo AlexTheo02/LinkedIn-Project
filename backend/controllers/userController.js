@@ -162,6 +162,62 @@ const deleteUser = async (request, response) => {
     response.status(200).json(user);
 }
 
+// Connection Request
+const requestConnection = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the request already exists
+        if (user.linkUpRequests.includes(loggedInUserId)) {
+            return response.status(400).json({ error: "Connection request already sent" });
+        }
+
+        user.linkUpRequests.push(loggedInUserId);
+        await user.save();
+
+        response.status(200).json({ message: "Connection request sent" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove connection
+const removeConnection = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.network = user.network.filter(connection => connection.toString() !== loggedInUserId);
+        user.linkUpRequests = user.linkUpRequests.filter(request => request.toString() !== loggedInUserId);
+
+        await user.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+
 // Update a user
 const updateUser = async (request, response) => {
     // Grab the id from the route parameters
@@ -254,6 +310,8 @@ module.exports = {
     getUser,
     createUser,
     deleteUser,
+    requestConnection,
+    removeConnection,
     updateUser,
     loginUser,
     registerUser

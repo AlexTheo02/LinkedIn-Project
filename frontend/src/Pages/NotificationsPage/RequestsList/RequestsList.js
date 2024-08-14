@@ -7,6 +7,8 @@ import { faAnglesLeft, faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 function RequestsList({ requests }) {
     const listRef = useRef(null);
 
+    
+
     const scrollLeft = () => {
         if (listRef.current) {
             listRef.current.scrollBy({ left: -400, behavior: 'smooth' });

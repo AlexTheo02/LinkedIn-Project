@@ -8,6 +8,8 @@ const {
     getUser,
     createUser,
     deleteUser,
+    requestConnection,
+    removeConnection,
     updateUser,
     loginUser,
     registerUser
@@ -41,6 +43,12 @@ router.post("/", createUser)
 
 // DELETE a user
 router.delete("/:id", deleteUser)
+
+// Connection request
+router.patch("/requestConnection/:id", requestConnection);
+
+// Remove Connection
+router.patch("/removeConnection/:id", removeConnection);
 
 // UPDATE a user
 router.patch("/:id", updateUser)
