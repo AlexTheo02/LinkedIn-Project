@@ -1,0 +1,26 @@
+.message_container{
+    padding: 5px;
+    display: flex;
+    align-items: end;
+}
+
+.message{
+    background-color: azure;
+    border-radius: 20px;
+    padding: 12px;
+    margin: 5px 5px;
+    max-width: 45%;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+}
+
+.message_received{
+    background-color: rgb(255, 255, 255);
+}
+
+.message_sent{
+    margin-left: auto;
+    margin-right: 5px;
+    background-color: #da3300;
+    color: #fff;
+    
+}

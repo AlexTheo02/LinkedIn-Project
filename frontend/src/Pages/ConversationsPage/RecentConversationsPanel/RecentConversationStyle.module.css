@@ -1,0 +1,48 @@
+.recent_conversation{
+    margin: auto;
+    width: 100%;
+    border-radius: 5px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: medium;
+    font-weight: 600;
+    background-color: #fff;
+}
+
+.usr_time_container{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.recent_conversation:hover{
+    cursor: pointer;
+    background-color: #e2dada;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.4);
+}
+
+.recent_conversation:active{
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+}
+
+.recent_conversation_timestamp{
+    font-size: 11px;
+    margin: auto;
+    margin-right: 0px;
+    font-weight: 300;
+    opacity: 0.7;
+}
+
+.recent_conversation_pfp{
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+}
+
+.recent_conversation_username{
+    font-size: medium;
+    margin: 5px 0px;
+}

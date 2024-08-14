@@ -6,12 +6,35 @@ const mongoose = require("mongoose")
 const getAllConversations = async (request, response) => {
     // Get current user's Recent Conversations List
     const recentConversations = await User.findById(request.user._id).select("recentConversations")
-    console.log(recentConversations.recentConversations)
 
     // Sort by timestamp
     // recentConversations.recentConversations.sort((a, b) => b.createdAt - a.createdAt)
 
     response.status(200).json(recentConversations.recentConversations);
+}
+
+// Get multiple conversations (not ids) based on ids
+const getMultipleConversations = async (request, response) => {
+    // Grab the ids from the route parameters and add them to an array
+    const { ids } = request.query;
+    const idsArray = ids && ids.split(',');
+
+    // Keep only valid mongoose ids
+    const validateId = (id) => {
+        return mongoose.Types.ObjectId.isValid(id);
+    }
+    const validIdsArray = idsArray.filter(validateId)
+
+    try {
+        const conversations = await Conversation.find({
+            _id: { $in: validIdsArray}
+        });
+    
+        response.status(200).json(conversations)
+
+    } catch (error) {
+        response.status(400).json({error: "Failed to fetch conversations"})
+    }
 }
 
 // Get a single conversation
@@ -82,6 +105,7 @@ const updateConversation = async (request, response) => {
 
 module.exports = {
     getAllConversations,
+    getMultipleConversations,
     getConversation,
     createConversation,
     updateConversation

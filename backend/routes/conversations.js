@@ -2,6 +2,7 @@ const express = require("express")
 
 const {
     getAllConversations,
+    getMultipleConversations,
     getConversation,
     createConversation,
     updateConversation
@@ -15,8 +16,11 @@ const router = express.Router()
 // require Authentcation for all Users routes
 router.use(requireAuth)
 
-// GET all conversation
+// GET all conversations
 router.get("/", getAllConversations)
+
+// GET multiple conversations (by id)
+router.get("/multiple", getMultipleConversations)
 
 // GET a signle conversation
 router.get("/:id", getConversation)

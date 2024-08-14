@@ -1,0 +1,78 @@
+.current_conversation_panel{
+    width: 74%;
+    background-color: #e2dada;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.conversation_header{
+    padding: 3px;
+    font-size: larger;
+    font-weight: bold;
+    background-color: #e2dada;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid;
+    border-color: #511300;
+    z-index: 20;
+    
+}
+
+.conversation{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3px;
+    background-color: #e2dada;
+    border-radius: 5px;
+    padding: 3px 10px;
+    overflow-y: scroll;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.control_bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 8.5%;
+    margin: 3px;
+    background-color: #e2dada;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 3px;
+}
+
+.message_field{
+    background-color: #f6f1f1;
+    border-radius: 20px;
+    border: none;
+    flex-grow: 1;
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+.message_field textarea{
+    margin: 5p;
+}
+
+.message_field:focus{
+    outline: none;
+    border: none;
+}
+
+.send_message_button{
+    color: #da3300;
+    font-size: larger;
+    padding: 10px;
+}
+
+.send_message_button:hover{
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.send_message_button:active{
+    color: #7f1e00;
+}
