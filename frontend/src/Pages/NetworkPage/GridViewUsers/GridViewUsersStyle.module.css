@@ -9,3 +9,19 @@
     display: flex;
     justify-content: center;
 }
+
+.loading_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+    font-size: xx-large;
+    color: white;
+}
+
+.empty_network h3{
+    width: 25%;
+    margin: 150px auto;
+    font-style: italic;
+    color: white;
+}

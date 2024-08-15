@@ -26,5 +26,5 @@
     border-radius: 50%;
     background: #eb4917;
     padding: 6px;
-    object-fit: cover; /* Βοηθάει στην σωστή απεικόνιση της εικόνας */
+    object-fit: cover;
 }

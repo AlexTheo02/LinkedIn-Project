@@ -49,7 +49,6 @@ function ProfilePage() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                // Εδώ μπορείς να κάνεις fetch δεδομένων από το API χρησιμοποιώντας το id
                 const response = await fetch(`/api/users/${id}`,{
                     headers: {
                         'Authorization': `Bearer ${user.token}`
@@ -58,7 +57,6 @@ function ProfilePage() {
                 const data = await response.json();
                 setUserData(data);
 
-                // RIGHT THERE I LOOK IF THE USER OF THE PROFILE PAGE HAS CONNECTED OR HAS BEEN SENT A REQUEST BY THE USER LOGGED IN !!!
                 setIsConnected(data.network.includes(user.userId));
                 setIsRequested(data.linkUpRequests.includes(user.userId));
             } catch (error) {
@@ -121,7 +119,7 @@ function ProfilePage() {
     
 
     const handleNetworkUserClick = (userId) => {
-        navigate(`/profile/${userId}`);
+        navigate(`/Profile/${userId}`);
     };
 
     return (
@@ -159,7 +157,7 @@ function ProfilePage() {
                                 }
                             </div>
                             <div className={s.contact_info}>
-                                {!userData.privateDetails.includes("phoneNumber") ? (
+                                {!userData.privateDetails.includes("phoneNumber") || isConnected ? (
                                     <>
                                         <p>Phone Number:</p>
                                         <p>{userData.phoneNumber}</p>
@@ -168,7 +166,7 @@ function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    {!userData.privateDetails.includes("phoneNumber") || isConnected ? (
+                    {!userData.privateDetails.includes("professionalExperience") || isConnected ? (
                         <div className={s.container}>
                             <h3>Professional Experience:</h3>
                             <ExpandableText text={userData.professionalExperience} />

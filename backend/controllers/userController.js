@@ -1,6 +1,7 @@
 const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 const jwb = require("jsonwebtoken")
+const validator = require("validator")
 
 // Get all users
 const getAllUsers = async (request, response) => {
@@ -217,6 +218,116 @@ const removeConnection = async (request, response) => {
     }
 }
 
+function formatFieldName(fieldName) {
+    return fieldName
+        .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
+        .replace(/^./, str => str.toUpperCase()) // Κάνει κεφαλαίο το πρώτο γράμμα
+        .trim(); // Αφαιρεί τυχόν περιττά κενά
+}
+
+// Validation function
+async function validateUserData(userData, userId = null) {
+    let validFields = {
+        // profilePicture: 0,
+        name: 0,
+        surname: 0,
+        dateOfBirth: 2,
+        phoneNumber: 0,
+        workingPosition: 0,
+        employmentOrganization: 0,
+        placeOfResidence: 0
+    };
+
+    let isValid = true;
+
+    // Name validation
+    if (userData.name) validFields.name = 1;
+    else { validFields.name = 0; isValid = false; }
+
+    // Surname validation
+    if (userData.surname) validFields.surname = 1;
+    else { validFields.surname = 0; isValid = false; }
+
+    // Working Position validation
+    if (userData.workingPosition) validFields.workingPosition = 1;
+    else { validFields.workingPosition = 0; isValid = false; }
+
+    // Employment Organization validation
+    if (userData.employmentOrganization) validFields.employmentOrganization = 1;
+    else { validFields.employmentOrganization = 0; isValid = false; }
+
+    // Place of Residence validation
+    if (userData.placeOfResidence) validFields.placeOfResidence = 1;
+    else { validFields.placeOfResidence = 0; isValid = false; }
+
+    // Profile picture validation
+    // if (userData.profilePicture) validFields.profilePicture = 1;
+    // else { validFields.profilePicture = 0; isValid = false; }
+
+    // Phone Number validation
+    if (!userData.phoneNumber) {
+        validFields.phoneNumber = 0; isValid = false;
+    } else if (!validator.isMobilePhone(userData.phoneNumber)) {
+        validFields.phoneNumber = 2; isValid = false;
+    } else {
+        // Check for unique phone number
+        const existingUser = await User.findOne({ phoneNumber: userData.phoneNumber });
+        if (existingUser && existingUser._id.toString() !== userId) {
+            validFields.phoneNumber = 3; isValid = false;
+        } else {
+            validFields.phoneNumber = 1;
+        }
+    }
+
+    // Date of Birth Validation
+    const today = new Date();
+    const sixteenYearsAgo = new Date();
+    sixteenYearsAgo.setFullYear(today.getFullYear() - 16);
+    const dateOfBirth = new Date(userData.dateOfBirth);
+
+    if (dateOfBirth > sixteenYearsAgo) {
+        validFields.dateOfBirth = 2; isValid = false;
+    } else {
+        validFields.dateOfBirth = 1;
+    }
+
+    if (!isValid) {
+        let errorMessage = "";
+        let invalidFields = [];
+
+        for (const [field, status] of Object.entries(validFields)) {
+            if (status === 0) invalidFields.push(formatFieldName(field));
+        }
+
+        if (invalidFields.length > 0) {
+            errorMessage = `Please fill the fields: ${invalidFields.join(", ")}`;
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
+
+        if (validFields['dateOfBirth'] === 2) {
+            errorMessage = "You must be over 16 years old";
+            const error = new Error(errorMessage);
+            error.fields = ['Date Of Birth'];
+            throw error;
+        }
+
+        if (validFields['phoneNumber'] === 2) {
+            errorMessage = 'Phone Number is not valid';
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
+
+        if (validFields['phoneNumber'] === 3) {
+            errorMessage = "Phone number already in use";
+            const error = new Error(errorMessage);
+            error.fields = ['Phone Number'];
+            throw error;
+        }
+    }
+}
 
 // Update a user
 const updateUser = async (request, response) => {
@@ -225,19 +336,40 @@ const updateUser = async (request, response) => {
 
     // Check if id is a valid mongoose id
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return response.status(404).json({error: "User not found"})
+        return response.status(404).json({error: "User not found"});
     }
 
-    const user = await User.findOneAndUpdate({_id: id}, {...request.body})
+    try {
+        await validateUserData(request.body, id);
+        
+        // Find user by id and update
+        const user = await User.findOneAndUpdate(
+            { _id: id },
+            { ...request.body },
+            { new: true } // Return the updated document
+        );
 
-     // User does not exist
-     if (!user) {
-        return response.status(404).json({error: "User not found"})
+        // User does not exist
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // User exists, send back updated user
+        response.status(200).json(user);
+    } catch (error) {
+        // Αν το error περιεχει τα validFields
+        if (error.fields) {
+            response.status(401).json({
+                error: error.message,
+                errorFields: error.fields
+            });
+        } 
+        else {
+            // Άλλοι πιθανοί τύποι σφαλμάτων
+            response.status(400).json({error: error.message});
+        }
     }
-    
-    // User exists, send back updated user
-    response.status(200).json(user);
-}
+};
 
 const createToken = (id) => {
     return jwb.sign({id}, process.env.SECRET, { expiresIn: '3d' })
