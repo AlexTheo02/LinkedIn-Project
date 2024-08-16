@@ -5,8 +5,7 @@ import s from './SettingsPageStyle.module.css';
 
 import NavBar from './../../Components/NavBar/NavBar.js';
 
-import tsipras from "../../Images/tsipras.jpg"
-import mitsotakis from "../../Images/mitsotakis.jpg"
+import { useAuthContext } from '../../Hooks/useAuthContext.js';
 
 const ConfirmPassword = ({correctPassword, IsConfirmingPassword, setIsConfirmingPassword}) => {
 
@@ -105,42 +104,16 @@ const SettingControlBar = ({settingName, settingHandler}) => {
     )
 }
 
-function SettingsPage({user_id}) {
-    
-    const getProfilePicById = (user_id) => {
-        if (user_id === 3)
-            return tsipras
-        if (user_id === 2)
-            return mitsotakis
-    };
-
-    const getUserNameById = (user_id) => {
-        if (user_id === 3)
-            return "Alexis Tsipras"
-        if (user_id === 2)
-            return "Kyriakos Mitsotakis"
-    }
-    
-    const getEmailAndPassword = (user_id) => {
-        if (user_id === 3)
-            return {
-        initialEmail: "tsipras.o.ntriplas@yahoo.com",
-        initialPassword: "MitsotakiGamiesai!"
-    };
-    
-    if (user_id === 2)
-        return {
-    initialEmail: "mitsos.takis@gmail.com",
-    initialPassword: "JHx6z#hu&3"
-};
-};
+function SettingsPage() {
+    const {user} = useAuthContext();
+    // Fetch user's data
 
     const [isConfirmingPassword, setIsConfirmingPassword] = useState(true);
 
-    const {initialEmail,initialPassword} = getEmailAndPassword(user_id);
+    const {initialEmail,initialPassword} = "";
 
-    const [previousEmail, setPreviousEmail] = useState(initialEmail);
-    const [currentEmail, setCurrentEmail] = useState(previousEmail);
+    const [previousEmail, setPreviousEmail] = useState("");
+    const [currentEmail, setCurrentEmail] = useState("");
     const [isEmailChanging, setIsEmailChanging] = useState(false);
     const [isEmailWrong, setIsEmailWrong] = useState(false);
 
@@ -178,8 +151,8 @@ function SettingsPage({user_id}) {
         onCancel: cancelEmailChange
     }
 
-    const [previousPassword, setPreviousPassword] = useState(initialPassword)
-    const [currentPassword, setCurrentPassword] = useState(previousPassword);
+    const [previousPassword, setPreviousPassword] = useState("")
+    const [currentPassword, setCurrentPassword] = useState("");
     const [currentConfirmPassword, setCurrentConfirmPassword] = useState("");
     const [isPasswordChanging, setIsPasswordChanging] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -235,8 +208,8 @@ function SettingsPage({user_id}) {
         onCancel: cancelPasswordChange
     }
 
-    const profilePic = getProfilePicById(user_id);
-    const userName = getUserNameById(user_id);
+    const profilePic = "";
+    const userName = "";
 
     const handlePwdChange = (e) => {
         setIsPasswordWrong(false);

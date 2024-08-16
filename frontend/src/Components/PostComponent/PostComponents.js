@@ -17,23 +17,13 @@ import TextAreaAutosize from "react-textarea-autosize"
 
 
 
-function InteractiveProfile({user_id, altern, nonInteractive}){
-    // Replace with database access
-    var profilePicture,userName
-    if (user_id === 3){
-        profilePicture = tsipras;
-        userName = "Alexis Tsipras";
-    }
-    if (user_id === 2){
-        profilePicture = mitsotakis;
-        userName = "Kyriakos Mitsotakis"
-    }
-
+function InteractiveProfile({profilePicture, name, surname, user_id, altern, nonInteractive}){
 
     // Change arguments to user_id, then get pfp and username from database
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
+        // Navigate to user's profile based on the id
         if (!nonInteractive) { navigate("/"); }
     }
 
@@ -42,8 +32,8 @@ function InteractiveProfile({user_id, altern, nonInteractive}){
     return(
         // Should be clickable and redirect you to the user's profile
         <div onClick={handleProfileClick} className={`${style} ${nonInteractive ? s.non_interactive : ""}`}>
-            <img className= {s.post_profile_picture} src={profilePicture} alt="NO PROFILE PIC"/>
-            <strong className={s.username}>{userName}</strong>
+            <img className= {s.post_profile_picture} src={profilePicture} alt="User Profile"/>
+            <strong className={s.username}>{`${name} ${surname}`}</strong>
         </div>
     );
 }
