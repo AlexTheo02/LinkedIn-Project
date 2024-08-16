@@ -1,6 +1,7 @@
 const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 const jwb = require("jsonwebtoken")
+const validator = require("validator")
 
 // Get all users
 const getAllUsers = async (request, response) => {
@@ -162,6 +163,255 @@ const deleteUser = async (request, response) => {
     response.status(200).json(user);
 }
 
+// Publish a Job
+const publishJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the job is already published
+        if (user.publishedJobListings.includes(id)) {
+            return response.status(400).json({ error: "Job already published" });
+        }
+
+        user.publishedJobListings.push(id);
+        await user.save();
+
+        response.status(200).json({ message: "User published job" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Apply for job
+const applyJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the user has already applied
+        if (user.appliedJobs.includes(id)) {
+            return response.status(400).json({ error: "User has already applied for this job" });
+        }
+
+        user.appliedJobs.push(id);
+        await user.save();
+
+        response.status(200).json({ message: "Applied for the job" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove apply for a job
+const removeApplyJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.appliedJobs = user.appliedJobs.filter(appliance => appliance.toString() !== id);
+
+        await user.save();
+
+        response.status(200).json({ message: "Appliance removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Connection Request
+const requestConnection = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the request already exists
+        if (user.linkUpRequests.includes(loggedInUserId)) {
+            return response.status(400).json({ error: "Connection request already sent" });
+        }
+
+        user.linkUpRequests.push(loggedInUserId);
+        await user.save();
+
+        response.status(200).json({ message: "Connection request sent" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove connection
+const removeConnection = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.network = user.network.filter(connection => connection.toString() !== loggedInUserId);
+        user.linkUpRequests = user.linkUpRequests.filter(request => request.toString() !== loggedInUserId);
+
+        await user.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+function formatFieldName(fieldName) {
+    return fieldName
+        .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
+        .replace(/^./, str => str.toUpperCase()) // Κάνει κεφαλαίο το πρώτο γράμμα
+        .trim(); // Αφαιρεί τυχόν περιττά κενά
+}
+
+// Validation function
+async function validateUserData(userData, userId = null) {
+    let validFields = {
+        // profilePicture: 0,
+        name: 0,
+        surname: 0,
+        dateOfBirth: 2,
+        phoneNumber: 0,
+        workingPosition: 0,
+        employmentOrganization: 0,
+        placeOfResidence: 0
+    };
+
+    let isValid = true;
+
+    // Name validation
+    if (userData.name) validFields.name = 1;
+    else { validFields.name = 0; isValid = false; }
+
+    // Surname validation
+    if (userData.surname) validFields.surname = 1;
+    else { validFields.surname = 0; isValid = false; }
+
+    // Working Position validation
+    if (userData.workingPosition) validFields.workingPosition = 1;
+    else { validFields.workingPosition = 0; isValid = false; }
+
+    // Employment Organization validation
+    if (userData.employmentOrganization) validFields.employmentOrganization = 1;
+    else { validFields.employmentOrganization = 0; isValid = false; }
+
+    // Place of Residence validation
+    if (userData.placeOfResidence) validFields.placeOfResidence = 1;
+    else { validFields.placeOfResidence = 0; isValid = false; }
+
+    // Profile picture validation
+    // if (userData.profilePicture) validFields.profilePicture = 1;
+    // else { validFields.profilePicture = 0; isValid = false; }
+
+    // Phone Number validation
+    if (!userData.phoneNumber) {
+        validFields.phoneNumber = 0; isValid = false;
+    } else if (!validator.isMobilePhone(userData.phoneNumber)) {
+        validFields.phoneNumber = 2; isValid = false;
+    } else {
+        // Check for unique phone number
+        const existingUser = await User.findOne({ phoneNumber: userData.phoneNumber });
+        if (existingUser && existingUser._id.toString() !== userId) {
+            validFields.phoneNumber = 3; isValid = false;
+        } else {
+            validFields.phoneNumber = 1;
+        }
+    }
+
+    // Date of Birth Validation
+    const today = new Date();
+    const sixteenYearsAgo = new Date();
+    sixteenYearsAgo.setFullYear(today.getFullYear() - 16);
+    const dateOfBirth = new Date(userData.dateOfBirth);
+
+    if (dateOfBirth > sixteenYearsAgo) {
+        validFields.dateOfBirth = 2; isValid = false;
+    } else {
+        validFields.dateOfBirth = 1;
+    }
+
+    if (!isValid) {
+        let errorMessage = "";
+        let invalidFields = [];
+
+        for (const [field, status] of Object.entries(validFields)) {
+            if (status === 0) invalidFields.push(formatFieldName(field));
+        }
+
+        if (invalidFields.length > 0) {
+            errorMessage = `Please fill the fields: ${invalidFields.join(", ")}`;
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
+
+        if (validFields['dateOfBirth'] === 2) {
+            errorMessage = "You must be over 16 years old";
+            const error = new Error(errorMessage);
+            error.fields = ['Date Of Birth'];
+            throw error;
+        }
+
+        if (validFields['phoneNumber'] === 2) {
+            errorMessage = 'Phone Number is not valid';
+            const error = new Error(errorMessage);
+            error.fields = invalidFields;
+            throw error;
+        }
+
+        if (validFields['phoneNumber'] === 3) {
+            errorMessage = "Phone number already in use";
+            const error = new Error(errorMessage);
+            error.fields = ['Phone Number'];
+            throw error;
+        }
+    }
+}
+
 // Update a user
 const updateUser = async (request, response) => {
     // Grab the id from the route parameters
@@ -169,19 +419,40 @@ const updateUser = async (request, response) => {
 
     // Check if id is a valid mongoose id
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return response.status(404).json({error: "User not found"})
+        return response.status(404).json({error: "User not found"});
     }
 
-    const user = await User.findOneAndUpdate({_id: id}, {...request.body})
+    try {
+        await validateUserData(request.body, id);
+        
+        // Find user by id and update
+        const user = await User.findOneAndUpdate(
+            { _id: id },
+            { ...request.body },
+            { new: true } // Return the updated document
+        );
 
-     // User does not exist
-     if (!user) {
-        return response.status(404).json({error: "User not found"})
+        // User does not exist
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // User exists, send back updated user
+        response.status(200).json(user);
+    } catch (error) {
+        // Αν το error περιεχει τα validFields
+        if (error.fields) {
+            response.status(401).json({
+                error: error.message,
+                errorFields: error.fields
+            });
+        } 
+        else {
+            // Άλλοι πιθανοί τύποι σφαλμάτων
+            response.status(400).json({error: error.message});
+        }
     }
-    
-    // User exists, send back updated user
-    response.status(200).json(user);
-}
+};
 
 const createToken = (id) => {
     return jwb.sign({id}, process.env.SECRET, { expiresIn: '3d' })
@@ -254,6 +525,11 @@ module.exports = {
     getUser,
     createUser,
     deleteUser,
+    publishJob,
+    applyJob,
+    removeApplyJob,
+    requestConnection,
+    removeConnection,
     updateUser,
     loginUser,
     registerUser

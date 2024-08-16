@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faToggleOn, faToggleOff, faUserGroup, faUsers } from '@fortawesome/free-solid-svg-icons';
 import s from './PersonalDetailsPageStyle.module.css';
 import Select from "react-dropdown-select";
 import NavBar from './../../Components/NavBar/NavBar.js';
 import "../../Components/SelectStyle.css"
+import { useAuthContext } from '../../Hooks/useAuthContext.js';
 
 const {
     createYearOptions,
@@ -13,34 +14,89 @@ const {
 } = require("../../Components/GeneralFunctions.js")
 
 function PersonalDetails() {
-    const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
-    const [name, setName] = useState('Kostas');
-    const [surname, setSurname] = useState('Loulos');
-    const [phoneNumber, setPhoneNumber] = useState('123456');
+    const [profilePic, setProfilePic] = useState(null);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [workingPosition, setWorkingPosition] = useState('');
     const [employmentOrganization, setEmploymentOrganization] = useState('');
-    const [location, setLocation] = useState('');
-    const [experience, setExperience] = useState('');
+    const [placeOfResidence, setPlaceOfResidence] = useState('');
+    const [professionalExperience, setProfessionalExperience] = useState('');
     const [education, setEducation] = useState('');
     const [skills, setSkills] = useState('');
 
-    const [isEditing, setIsEditing] = useState(false);
+    const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const yearOptions = createYearOptions();
+    const [daysOptions, setDaysOptions] = useState(createRange(31));
+
+    const [day, setDay] = useState(null);
+    const [month, setMonth] = useState(null);
+    const [year, setYear] = useState(null);
 
     const [isDateOfBirthPublic, setIsDateOfBirthPublic] = useState(false);
     const [isPhonePublic, setIsPhonePublic] = useState(false);
-    const [isLocationPublic, setIsLocationPublic] = useState(true);
-    const [isExperiencePublic, setIsExperiencePublic] = useState(true);
+    const [isPlaceOfResidencePublic, setIsPlaceOfResidencePublic] = useState(true);
+    const [isProfessionalExperiencePublic, setIsProfessionalExperiencePublic] = useState(true);
     const [isEducationPublic, setIsEducationPublic] = useState(true);
     const [isSkillsPublic, setIsSkillsPublic] = useState(true);
 
-    const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  
-    const yearOptions = createYearOptions();
-    
-    const [daysOptions, setDaysOptions] = useState(createRange(31));
-    const [day, setDay] = useState(daysOptions[0]);
-    const [month, setMonth] = useState(monthOptions[0]);
-    const [year, setYear] = useState(yearOptions[0]);
+    const {user} = useAuthContext()
+    const [userData, setUserData] = useState(null);
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [error, setError] = useState(null);
+    const [errorFields, setErrorFields] = useState([]);
+
+    useEffect(() => {
+        const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const fetchUserData = async () => {
+            try {
+                // Εδώ μπορείς να κάνεις fetch δεδομένων από το API χρησιμοποιώντας το id
+                const response = await fetch(`/api/users/${user.userId}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+                const data = await response.json();
+                setUserData(data);
+
+                setProfilePic(data.profilePicture);
+                setName(data.name);
+                setSurname(data.surname);
+                setPhoneNumber(data.phoneNumber);
+                setWorkingPosition(data.workingPosition);
+                setEmploymentOrganization(data.employmentOrganization);
+                setPlaceOfResidence(data.placeOfResidence);
+                setProfessionalExperience(data.professionalExperience);
+                setEducation(data.education);
+                setSkills(data.skills);
+
+                const dob = new Date(data.dateOfBirth);
+                setDay(dob.getDate());
+                setMonth(monthOptions[dob.getMonth()]);
+                setYear(dob.getFullYear());
+
+                setIsDateOfBirthPublic(!data.privateDetails.includes("dateOfBirth"));
+                setIsPhonePublic(!data.privateDetails.includes("phoneNumber"));
+                setIsPlaceOfResidencePublic(!data.privateDetails.includes("placeOfResidence"));
+                setIsProfessionalExperiencePublic(!data.privateDetails.includes("professionalExperience"));
+                setIsEducationPublic(!data.privateDetails.includes("education"));
+                setIsSkillsPublic(!data.privateDetails.includes("skills"))
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, [user]);
+
+    if (!userData) {
+        return <h1 className={s.loading_text}>Loading...</h1>;
+    }
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -50,18 +106,93 @@ function PersonalDetails() {
     };
 
     const handleEditToggle = () => {
-        setIsEditing(!isEditing);
+        setIsEditing(true);
     };
 
     const handleCancel = () => {
-        // Επαναφορα των πεδιων στις αρχικες τους τιμες
+        setError(null);
+        setErrorFields([]);
+
+        setProfilePic(userData.profilePicture);
+        setName(userData.name);
+        setSurname(userData.surname);
+        setPhoneNumber(userData.phoneNumber);
+        setWorkingPosition(userData.workingPosition);
+        setEmploymentOrganization(userData.employmentOrganization);
+        setPlaceOfResidence(userData.placeOfResidence);
+        setProfessionalExperience(userData.professionalExperience);
+        setEducation(userData.education);
+        setSkills(userData.skills);
+
+        const dob = new Date(userData.dateOfBirth);
+        setDay(dob.getDate());
+        setMonth(monthOptions[dob.getMonth()]);
+        setYear(dob.getFullYear());
+
+        setIsDateOfBirthPublic(!userData.privateDetails.includes("dateOfBirth"));
+        setIsPhonePublic(!userData.privateDetails.includes("phoneNumber"));
+        setIsPlaceOfResidencePublic(!userData.privateDetails.includes("placeOfResidence"));
+        setIsProfessionalExperiencePublic(!userData.privateDetails.includes("professionalExperience"));
+        setIsEducationPublic(!userData.privateDetails.includes("education"));
+        setIsSkillsPublic(!userData.privateDetails.includes("skills"));
+
         setIsEditing(false);
     };
 
-    const handleSaveChanges = () => {
-        // Αποθηκευση των αλλαγων
-        setIsEditing(false);
+    const handleSaveChanges = async () => {
+        setIsLoading(true);
+        setError(null);
+        setErrorFields([]);
+
+        const updatedUserData = {
+            // ProfilePic here
+            name,
+            surname,
+            phoneNumber,
+            workingPosition,
+            employmentOrganization,
+            placeOfResidence,
+            professionalExperience,
+            education,
+            skills,
+            dateOfBirth: new Date(`${month} ${day}, ${year} 00:00:00 GMT`),
+            privateDetails: [
+                !isDateOfBirthPublic && "dateOfBirth",
+                !isPhonePublic && "phoneNumber",
+                !isPlaceOfResidencePublic && "placeOfResidence",
+                !isProfessionalExperiencePublic && "professionalExperience",
+                !isEducationPublic && "education",
+                !isSkillsPublic && "skills"
+            ].filter(Boolean), // Κραταμε μονο τα true values (τα privates)
+        };
+
+        try {
+            const response = await fetch(`/api/users/${user.userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`,
+                },
+                body: JSON.stringify(updatedUserData),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.error)
+                setErrorFields(data.errorFields);
+            }
+            if (response.ok){
+                setUserData(data);
+                setIsEditing(false);
+            }
+            
+        } catch (error) {
+            console.error('Error updating user data:', error);
+        }
+        setIsLoading(false);
     };
+
 
     return (
         <div>
@@ -92,6 +223,7 @@ function PersonalDetails() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Name') ? s.error : ''}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -102,6 +234,7 @@ function PersonalDetails() {
                             value={surname}
                             onChange={(e) => setSurname(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Surname') ? s.error : ''}
                         />
                     </div>
                     <div className={s.date_of_birth}>
@@ -130,6 +263,7 @@ function PersonalDetails() {
                                     values={[{ label: day, value: day }]}
                                     onChange={(values) => setDay(values[0].value)}
                                     disabled={!isEditing}
+                                    className={errorFields.includes('Date Of Birth') ? 'error' : ''}
                                 />
                             </div>
 
@@ -141,6 +275,7 @@ function PersonalDetails() {
                                     values={[{ label: month, value: month }]}
                                     onChange={(values) => setMonth(values[0].value)}
                                     disabled={!isEditing}
+                                    className={errorFields.includes('Date Of Birth') ? 'error' : ''}
                                 />
                             </div>
                             
@@ -152,6 +287,7 @@ function PersonalDetails() {
                                     values={[{ label: year, value: year }]}
                                     onChange={(values) => setYear(values[0].value)}
                                     disabled={!isEditing}
+                                    className={errorFields.includes('Date Of Birth') ? 'error' : ''}
                                 />
                             </div>
                         </div>
@@ -179,6 +315,7 @@ function PersonalDetails() {
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Phone Number') ? s.error : ''}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -189,6 +326,7 @@ function PersonalDetails() {
                             value={workingPosition}
                             onChange={(e) => setWorkingPosition(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Working Position') ? s.error : ''}
                         />
                     </div>
                     <div className={s.input_field}>
@@ -199,52 +337,53 @@ function PersonalDetails() {
                             value={employmentOrganization}
                             onChange={(e) => setEmploymentOrganization(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Employment Organization') ? s.error : ''}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
-                            <label htmlFor="locationInput">Place Of Residence</label>
+                            <label htmlFor="placeOfResidenceInput">Place Of Residence</label>
                             {isEditing && (
                                 <div className={s.icons_container}>
                                     <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
                                     <FontAwesomeIcon
-                                        icon={isLocationPublic ? faToggleOn : faToggleOff}
+                                        icon={isPlaceOfResidencePublic ? faToggleOn : faToggleOff}
                                         className={s.toggle_icon}
-                                        onClick={() => setIsLocationPublic(!isLocationPublic)}
-                                        title={isLocationPublic ? 'Set to private' : 'Set to public'}
+                                        onClick={() => setIsPlaceOfResidencePublic(!isPlaceOfResidencePublic)}
+                                        title={isPlaceOfResidencePublic ? 'Set to private' : 'Set to public'}
                                     />
                                     <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
                                 </div>
                             )}
                         </div>
-                        <textarea
-                            id="locationInput"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            rows="1"
+                        <input
+                            id="placeOfResidenceInput"
+                            value={placeOfResidence}
+                            onChange={(e) => setPlaceOfResidence(e.target.value)}
                             disabled={!isEditing}
+                            className={errorFields.includes('Place Of Residence') ? s.error : ''}
                         />
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
-                            <label htmlFor="experienceInput">Professional Experience</label>
+                            <label htmlFor="professionalExperienceInput">Professional Experience</label>
                             {isEditing && (
                                 <div className={s.icons_container}>
                                     <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
                                     <FontAwesomeIcon
-                                        icon={isExperiencePublic ? faToggleOn : faToggleOff}
+                                        icon={isProfessionalExperiencePublic ? faToggleOn : faToggleOff}
                                         className={s.toggle_icon}
-                                        onClick={() => setIsExperiencePublic(!isExperiencePublic)}
-                                        title={isExperiencePublic ? 'Set to private' : 'Set to public'}
+                                        onClick={() => setIsProfessionalExperiencePublic(!isProfessionalExperiencePublic)}
+                                        title={isProfessionalExperiencePublic ? 'Set to private' : 'Set to public'}
                                     />
                                     <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
                                 </div>
                             )}
                         </div>
                         <textarea
-                            id="experienceInput"
-                            value={experience}
-                            onChange={(e) => setExperience(e.target.value)}
+                            id="professionalExperienceInput"
+                            value={professionalExperience}
+                            onChange={(e) => setProfessionalExperience(e.target.value)}
                             rows="4"
                             disabled={!isEditing}
                         />
@@ -297,10 +436,16 @@ function PersonalDetails() {
                             disabled={!isEditing}
                         />
                     </div>
+                    {/* Display error message */}
+                    {error && (
+                        <div className={s.error_message}>
+                            <b>{error}</b>
+                        </div>
+                    )}
                     <div className={s.button_container}>
                         {isEditing ? (
                             <>
-                                <button className={s.save_button} onClick={handleSaveChanges}>Save changes</button>
+                                <button disabled={isLoading} className={s.save_button} onClick={handleSaveChanges}>Save changes</button>
                                 <button className={s.cancel_button} onClick={handleCancel}>Cancel</button>
                             </>
                         ) : (

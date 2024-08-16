@@ -29,6 +29,15 @@
     background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
 }
 
+.loading_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: xx-large;
+    color: #333;
+}
+
 .profile_container {
     width: 50%;
     margin: auto;
@@ -106,6 +115,10 @@
     resize: none;
 }
 
+.input_field input.error{
+    border: 2px solid rgb(255, 0, 0);
+}
+
 .input_field input:focus,
 .input_field textarea:focus {
     border-color: #a02500;
@@ -162,6 +175,20 @@
 
 .middle_dropdown{
     width: 30%;
+}
+
+.error_message{
+    text-align: start;
+    padding: 13px 7px;
+    background: rgba(255, 0, 0, 0.247);
+    border-radius: 15px;
+    border: 2px solid rgb(218, 0, 0);
+    margin-bottom: 15px;
+}
+
+.error_message b{
+    font-style: italic;
+    color: #353535;
 }
 
 .button_container {

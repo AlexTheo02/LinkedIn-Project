@@ -32,8 +32,9 @@ const getJob = async (request, response) => {
 
 // Create a new job
 const createJob = async (request, response) => {
+    const author = request.user.id;
+
     const {
-        // author,
         title,
         employer,
         location,
@@ -71,7 +72,7 @@ const createJob = async (request, response) => {
     // Add to mongodb database
     try {
         const job = await Job.create({
-            // author,
+            author: author,
             title,
             employer,
             location,
@@ -90,6 +91,59 @@ const createJob = async (request, response) => {
     }
 }
 
+// Apply for job
+const addApplicant = async (request, response) => {
+    const { id } = request.params;  // Job id
+    const loggedInUserId = request.user.id; // Logged in user id
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const job = await Job.findById(id);
+        if (!job) {
+            return response.status(404).json({ error: "Job not found" });
+        }
+
+        // Check if the applicant already exists
+        if (job.applicants.includes(loggedInUserId)) {
+            return response.status(200).json({ message: "Applicant has already been added" });
+        }
+
+        job.applicants.push(loggedInUserId);
+        await job.save();
+
+        response.status(200).json({ message: "Applicant added" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove applicant
+const removeApplicant = async (request, response) => {
+    const { id } = request.params;  // Job id
+    const loggedInUserId = request.user.id; // Logged in user id
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const job = await Job.findById(id);
+        if (!job) {
+            return response.status(404).json({ error: "Job not found" });
+        }
+
+        job.applicants = job.applicants.filter(applicant => applicant.toString() !== loggedInUserId);
+
+        await user.save();
+
+        response.status(200).json({ message: "Applicant removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
 
 // Update a job
 const updateJob = async (request, response) => {
@@ -116,5 +170,7 @@ module.exports = {
     getAllJobs,
     getJob,
     createJob,
+    addApplicant,
+    removeApplicant,
     updateJob
 }

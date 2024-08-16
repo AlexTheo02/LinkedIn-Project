@@ -67,7 +67,6 @@ const CreateJobListing = ({jobListingsHandler}) => {
     const {user} = useAuthContext()
 
     const {handleCancel} = jobListingsHandler;
-    const [author, setAuthor] = useState(null);
     const [title, setTitle] = useState("");
     const [employer, setEmployer] = useState("");
     const [location, setLocation] = useState("");
@@ -101,8 +100,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
         const benefits = benefitsList.map(item => item.value).filter(item => item.trim() !== "");
 
         // Create dummy job
-        const job = { 
-            // author,
+        const job = {
             title,
             employer,
             location,
@@ -116,7 +114,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
             applicants
         }
 
-        const response = await fetch("/api/jobs", {
+        const jobResponse = await fetch("/api/jobs", {
             method: "POST",
             body: JSON.stringify(job),
             headers: {
@@ -125,19 +123,35 @@ const CreateJobListing = ({jobListingsHandler}) => {
             }
         })
 
-        const json = await response.json();
+        const json = await jobResponse.json();
 
         // Error publishing job
-        if (!response.ok){
+        if (!jobResponse.ok){
             setError(json.error);
             setEmptyFields(json.emptyFields);
             console.log(error);
         }
         // Publish job completed successfully
-        if (response.ok){
+        if (jobResponse.ok){
+            try {
+                const userResponse = await fetch(`/api/users/publishJob/${json._id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+        
+                if (userResponse.ok) {
+                    console.log('User published the job');
+                } else {
+                    console.error('Error user publishing job');
+                }
+            } catch (error) {
+                console.error('Error publishing job:', error);
+            }
 
             // Clear fields
-            setAuthor("");
             setTitle("");
             setEmployer("");
             setLocation("");

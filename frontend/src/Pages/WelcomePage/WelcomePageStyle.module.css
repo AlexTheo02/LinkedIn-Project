@@ -134,13 +134,6 @@
     display: none;
 }
 
-.error_messages{
-    display: flex;
-    color: #a00000;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
 /* Κατάσταση μη ενεργών πεδίων */
 .input_field.hidden {
     max-height: 0;

@@ -49,7 +49,7 @@ const userSchema = new Schema({
 
     postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "Notification"}], required: true}, // Array of Post Notification ids
 
-    linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "LinkUpRequest"}], required: true}, // Array of Link Up Requests ids
+    linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}, // Array of Link Up Requests ids
 })
 
 function formatFieldName(fieldName) {
