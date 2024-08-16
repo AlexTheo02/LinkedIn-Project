@@ -5,11 +5,12 @@ import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import Message from "./Message";
 import { useConversationContext } from "../../../Hooks/useConversationContext";
+import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 function CurrentConversationPanel(){
-    const {receiver, activeConversation, conversationDispatch} = useConversationContext();
 
-    const messageLog=[]
+    const {user} = useAuthContext();
+    const {receiver, activeConversation, conversationDispatch} = useConversationContext();
 
     const [message, setMessage] = useState("");
 
@@ -24,12 +25,47 @@ function CurrentConversationPanel(){
         }
       };
 
-    const handleSendMessage = () => {
-        // Add message to the message log of current conversation (update on DB also)
-        // Send request to the db for update with the included message, then if response.ok, update the context using dispatch
-        
-        // Clear input field
-        setMessage("");
+    const handleSendMessage = async () => {
+        const validMessageRegex = /\S/;
+        if(validMessageRegex.test(message)){
+            // Create new message object
+            const msg = {sender: user.userId, content: message, timestamp: new Date(), failedToSend: false}
+
+            // Clear input field
+            setMessage("");
+
+            // Update local messageLog state
+            activeConversation.messageLog = [msg, ...activeConversation.messageLog]
+            console.log(activeConversation)
+
+            // Update the conversation on the database
+            const filteredMessageLog = activeConversation.messageLog.filter(msg => msg.failedToSend !== true);
+            const filteredConv = activeConversation;
+            filteredConv.messageLog=filteredMessageLog;
+
+            const response = await fetch(`/api/conversations/${activeConversation._id}`, {
+                headers: {
+                    "Authorization": `Bearer ${user.token}`,
+                    "Content-Type": "application/json"
+                },
+                method: "PATCH",
+                body: JSON.stringify(filteredConv)
+            });
+            
+            const json = await response.json();
+            
+            if (!response.ok){
+                // find failed message based on the timestamp, then update the failed to send field
+                
+                const failedMessage = activeConversation.messageLog.find(msg =>new Date(msg.timestamp).getTime() === new Date(json.timestamp).getTime())
+                console.log(failedMessage)
+                if (failedMessage){
+                    failedMessage.failedToSend = true;
+                }
+            }
+            conversationDispatch({type: "SET_ACTIVE_CONVERSATION", payload: activeConversation})
+            
+        }
     };
 
     return(
@@ -46,8 +82,8 @@ function CurrentConversationPanel(){
 
             <div className={s.conversation}>
                 {/* Change to map the activeConversation.messageLog field */}
-                {messageLog.map(mid => (
-                    <Message messageId={mid} />
+                {activeConversation.messageLog.map((msg, index) => (
+                    <Message key={`message-${index}`} message={msg} receiver={receiver}/>
                 ))}
             </div>
 

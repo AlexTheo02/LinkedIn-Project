@@ -89,14 +89,14 @@ const updateConversation = async (request, response) => {
 
     // Check if id is a valid mongoose id
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return response.status(404).json({error: "Conversation not found"})
+        return response.status(404).json({error: "Conversation not found", timestamp: request.body.messageLog[0].timestamp})
     }
 
-    const conversation = await Conversation.findOneAndUpdate({_id: id}, {...request.body})
+    const conversation = await Conversation.findOneAndUpdate({_id: id}, {...request.body}, {new: true})
 
      // Conversation does not exist
      if (!conversation) {
-        return response.status(404).json({error: "Conversation not found"})
+        return response.status(404).json({error: "Conversation not found", timestamp: request.body.messageLog[0].timestamp})
     }
     
     // Conversation exists, send back updated conversation

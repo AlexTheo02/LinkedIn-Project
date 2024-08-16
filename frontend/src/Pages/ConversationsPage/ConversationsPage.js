@@ -23,12 +23,10 @@ function ConversationsPage({user_id}){
             // Get user's recent conversation ids
             const response = await fetch(`api/conversations/`, {
                 headers: {
-                    "Authorization": `Bearer ${user.token}`
+                    "Authorization": `Bearer ${user.token}`,
                 }
             });
             const json = await response.json();
-
-            console.log("CONV ID ARRAY",json)
 
             if (response.ok && json.length){
                 // Update conversation context to contain the actual conversation objects

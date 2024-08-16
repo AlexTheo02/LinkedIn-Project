@@ -9,7 +9,7 @@ function RecentConversation({conversation}){
     const {receiver, activeConversation, conversationDispatch} = useConversationContext();
 
     // get message log's last message timestamp
-    const [timestamp, setTimestamp] = useState(`${formatDistanceToNow(Date())} ago`);
+    const [timestamp, setTimestamp] = useState(formatDistanceToNow(conversation.messageLog[0].timestamp, {addSuffix: true}));
 
 
     const handleRecentConversationClick = () => {

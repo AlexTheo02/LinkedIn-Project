@@ -22,14 +22,15 @@
 
 .conversation{
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     margin-bottom: 3px;
     background-color: #e2dada;
     border-radius: 5px;
     padding: 3px 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
     gap: 5px;
     flex-grow: 1;
+    scroll-behavior: smooth;
 }
 
 .control_bar{

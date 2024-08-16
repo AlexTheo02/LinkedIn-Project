@@ -1,7 +1,6 @@
 import s from "./HomePageStyle.module.css";
 import NavBar from "../../Components/NavBar/NavBar";
 import PersonalDetailsPanel from "../../Components/PersonalDetailsPanel/PersonalDetailsPanel.js"
-import Post from "../../Components/PostComponent/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImage, faFileVideo, faFileAudio  } from "@fortawesome/free-solid-svg-icons";
 import { useState, useCallback } from "react";
