@@ -163,6 +163,89 @@ const deleteUser = async (request, response) => {
     response.status(200).json(user);
 }
 
+// Publish a Job
+const publishJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the job is already published
+        if (user.publishedJobListings.includes(id)) {
+            return response.status(400).json({ error: "Job already published" });
+        }
+
+        user.publishedJobListings.push(id);
+        await user.save();
+
+        response.status(200).json({ message: "User published job" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Apply for job
+const applyJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the user has already applied
+        if (user.appliedJobs.includes(id)) {
+            return response.status(400).json({ error: "User has already applied for this job" });
+        }
+
+        user.appliedJobs.push(id);
+        await user.save();
+
+        response.status(200).json({ message: "Applied for the job" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove apply for a job
+const removeApplyJob = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.appliedJobs = user.appliedJobs.filter(appliance => appliance.toString() !== id);
+
+        await user.save();
+
+        response.status(200).json({ message: "Appliance removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
 // Connection Request
 const requestConnection = async (request, response) => {
     const { id } = request.params;
@@ -442,6 +525,9 @@ module.exports = {
     getUser,
     createUser,
     deleteUser,
+    publishJob,
+    applyJob,
+    removeApplyJob,
     requestConnection,
     removeConnection,
     updateUser,

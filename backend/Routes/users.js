@@ -8,6 +8,9 @@ const {
     getUser,
     createUser,
     deleteUser,
+    publishJob,
+    applyJob,
+    removeApplyJob,
     requestConnection,
     removeConnection,
     updateUser,
@@ -43,6 +46,15 @@ router.post("/", createUser)
 
 // DELETE a user
 router.delete("/:id", deleteUser)
+
+// Publish job
+router.patch("/publishJob/:id", publishJob);
+
+// Apply for job
+router.patch("/applyJob/:id", applyJob);
+
+// Remove appliance for job
+router.patch("/removeApplyjob/:id", removeApplyJob);
 
 // Connection request
 router.patch("/requestConnection/:id", requestConnection);

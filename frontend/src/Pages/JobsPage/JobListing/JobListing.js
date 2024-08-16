@@ -2,21 +2,69 @@ import { useState } from "react";
 import s from "./JobListingStyle.module.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useAuthContext } from "../../../Hooks/useAuthContext.js";
 const {
     string_workingArrangmement,
     string_employmentType
 } = require("../functions.js")
 
 const JobListingFooter = ({ job }) => {
+    const {user} = useAuthContext();
 
     // Move state to Job, not on footer only
-    const [isApplied, setIsApplied] = useState(false);
+    const [applyButtonLoading, setConnectButtonLoading] = useState(false)
 
-    const handleApplyClick = (event) => {
+    const handleApplyClick = async (event) => {
         event.stopPropagation();
-        // Toggle state
-        setIsApplied(!isApplied);
-        // Add user to applicants
+        setConnectButtonLoading(true);
+        console.log('EEEEEEEEEE1')
+        try {
+            console.log('EEEEEEEEEE2')
+            const jobResponse = await fetch(`/api/jobs/addApplicant/${job._id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+    
+            if (jobResponse.ok) {
+                console.log('EEEEEEEEEE')
+                try {
+                    const userResponse = await fetch(`/api/users/applyJob/${job._id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${user.token}`
+                        }
+                    });
+            
+                    if (userResponse.ok) {
+                        console.log('User applied the job successfully');
+                    } else {
+                        console.error('User error applying');
+                    }
+                } catch (error) {
+                    console.error('User error applying:', error);
+                }
+
+            } else {
+                console.error('Error adding applicant', jobResponse.error);
+            }
+        } catch (error) {
+            console.error('Error adding applicant:', error);
+        }
+
+        setConnectButtonLoading(false);
+    }
+
+    const handleRemoveApplyClick = async (event) => {
+        event.stopPropagation();
+        setConnectButtonLoading(true);
+
+
+
+        setConnectButtonLoading(false);
     }
 
     return (
@@ -27,8 +75,8 @@ const JobListingFooter = ({ job }) => {
             <div className={s.job_listing_interaction_bar}>
                 {/* Interaction Bar */}
                 {/* Add id to applied */}
-                <button className={`${s.job_listing_button} ${isApplied ? s.applied : ""}`} onClick={handleApplyClick}>
-                    {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply </>}
+                <button disabled={applyButtonLoading} className={`${s.job_listing_button} ${job.applicants.includes(user.userId) ? s.applied : ""}`} onClick={job.applicants.includes(user.userId) ? handleRemoveApplyClick : handleApplyClick}>
+                    {job.applicants.includes(user.userId) ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply </>}
                 </button>
             </div>
 

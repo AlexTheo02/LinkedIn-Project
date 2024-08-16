@@ -3,6 +3,8 @@ const {
     getAllJobs,
     getJob,
     createJob,
+    addApplicant,
+    removeApplicant,
     updateJob
 } = require("../controllers/jobController.js")
 
@@ -22,6 +24,12 @@ router.get("/:id", getJob)
 
 // POST a new job
 router.post("/", createJob)
+
+// Add applicant
+router.patch("/addApplicant/:id", addApplicant)
+
+// Remove applicant
+router.patch("/removeApplicant/:id", removeApplicant)
 
 // UPDATE a job
 router.patch("/:id", updateJob)

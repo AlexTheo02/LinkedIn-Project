@@ -4,10 +4,10 @@ const express = require("express")
 const mongoose = require("mongoose")
 
 // Routes
-const userRoutes = require("./routes/users.js")
-const postRoutes = require("./routes/posts.js")
-const jobRoutes = require("./routes/jobs.js")
-const conversationRoutes = require("./routes/conversations.js")
+const userRoutes = require("./Routes/users.js")
+const postRoutes = require("./Routes/posts.js")
+const jobRoutes = require("./Routes/jobs.js")
+const conversationRoutes = require("./Routes/conversations.js")
 
 // Create an express app
 const app = express()

@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const jobSchema = new Schema({
-    author: {type: Schema.Types.ObjectId, ref: "User", required: false}, // User id MAKE IT REQUIRED!!!
+    author: {type: Schema.Types.ObjectId, ref: "User", required: true},
 
     title: {type: String, required: true}, // String
 
