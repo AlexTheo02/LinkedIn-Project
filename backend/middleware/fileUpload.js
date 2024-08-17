@@ -30,7 +30,21 @@ const handleFileUpload = async (file) => {
     }
 };
 
+const deleteFile = async (fileURL) => {
+    try {
+      // Delete the file
+      // trim GS_PATH from fileName to keep the original fileName
+      const fileName = fileURL.replace(process.env.GS_PATH, "");
+
+      await lp_bucket.file(fileName).delete();
+      console.log(`File ${fileName} deleted successfully.`);
+    } catch (error) {
+      console.error('Error deleting file:', error);
+    }
+};
+
 module.exports = {
     upload,
-    handleFileUpload
+    handleFileUpload,
+    deleteFile
 }

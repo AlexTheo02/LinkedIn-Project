@@ -24,7 +24,7 @@ function InteractiveProfile({profilePicture, name, surname, user_id, altern, non
 
     const handleProfileClick = () => {
         // Navigate to user's profile based on the id
-        if (!nonInteractive) { navigate("/"); }
+        if (!nonInteractive) { navigate(`/Profile/${user_id}`); }
     }
 
     const style = altern ? s.alt_interactive_profile : s.interactive_profile

@@ -6,10 +6,10 @@ import InteractiveProfilePicture from "../../../Components/InteractiveProfilePic
 import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 function Message({message, receiver}){
-    const {user} = useAuthContext;
+    const {user} = useAuthContext();
     const timestampFormat = "EEE, dd MMM yyyy, HH:mm";
 
-    const isReceived = user === message.sender_id ? false : true;
+    const isReceived = user.userId === message.sender ? false : true;
     
     const sender_id = 0;
     if (isReceived)
