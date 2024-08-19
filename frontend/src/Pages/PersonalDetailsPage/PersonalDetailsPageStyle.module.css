@@ -180,9 +180,9 @@
 .error_message{
     text-align: start;
     padding: 13px 7px;
-    background: rgba(255, 0, 0, 0.247);
+    background: #ff00003f;
     border-radius: 15px;
-    border: 2px solid rgb(218, 0, 0);
+    border: 2px solid #da0000;
     margin-bottom: 15px;
 }
 

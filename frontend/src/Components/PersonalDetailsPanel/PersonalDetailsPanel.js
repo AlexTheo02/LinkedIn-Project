@@ -1,10 +1,12 @@
 import s from "./PersonalDetailsPanelStyle.module.css"
 import { InteractiveProfile } from "../PostComponent/PostComponents";
 import { HorizontalSeparator } from "../Separators/Separators";
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
-function PersonalDetailsPanel({userID}){
-    // fetch user data from database using userID
+function PersonalDetailsPanel({userData}){
     
+    const { user } = useAuthContext();
+
     const HandleNetworkShowMore = () => {
 
     }
@@ -14,12 +16,13 @@ function PersonalDetailsPanel({userID}){
             Personal Details Panel
             <HorizontalSeparator/>
 
-            <InteractiveProfile user_id={3} altern={true}/>
+            <InteractiveProfile profilePicture={userData.profilePicture} name={userData.name} surname={userData.surname} user_id={user.userId} altern={true}/>
 
             <HorizontalSeparator/>
 
             <div className={s.pdp_personal_details}>
                     Personal Details
+                    
             </div>
 
             <HorizontalSeparator/>
