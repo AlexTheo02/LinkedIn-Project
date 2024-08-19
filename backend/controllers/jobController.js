@@ -137,7 +137,7 @@ const removeApplicant = async (request, response) => {
 
         job.applicants = job.applicants.filter(applicant => applicant.toString() !== loggedInUserId);
 
-        await user.save();
+        await job.save();
 
         response.status(200).json({ message: "Applicant removed" });
     } catch (error) {

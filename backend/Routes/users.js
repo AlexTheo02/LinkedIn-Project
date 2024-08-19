@@ -1,5 +1,5 @@
 const express = require("express")
-const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+const { upload } = require("../middleware/fileUpload.js");
 
 // Controller functions
 const {
@@ -16,7 +16,10 @@ const {
     applyJob,
     removeApplyJob,
     requestConnection,
+    removeRequestConnection,
     removeConnection,
+    acceptRequest,
+    declineRequest,
     updateUser,
     loginUser,
     registerUser
@@ -73,9 +76,18 @@ router.patch("/removeApplyjob/:id", removeApplyJob);
 router.patch("/requestConnection/:id", requestConnection);
 
 // Remove Connection
+router.patch("/removeRequestConnection/:id", removeRequestConnection);
+
+// Remove Connection
 router.patch("/removeConnection/:id", removeConnection);
 
+// Accept request
+router.patch("/acceptRequest/:id", acceptRequest);
+
+// Decline request
+router.patch("/declineRequest/:id", declineRequest);
+
 // UPDATE a user
-router.patch("/:id", updateUser)
+router.patch("/:id", upload.single("file"), updateUser)
 
 module.exports = router

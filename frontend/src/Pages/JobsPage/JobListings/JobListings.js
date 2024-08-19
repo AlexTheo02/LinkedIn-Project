@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import JobListing from "../JobListing/JobListing";
 import s from "./JobListingsStyle.module.css"
 import { useAuthContext } from "../../../Hooks/useAuthContext";
+import {useJobsContext} from "../../../Hooks/useJobsContext"
 
 function JobListings({onClick}) {
     const {user} = useAuthContext()
+    const {dispatch} = useJobsContext()
 
     const [jobs, setJobs] = useState(null);
 
@@ -20,6 +22,12 @@ function JobListings({onClick}) {
 
             if (response.ok){
                 setJobs(json);
+
+                const appliedJobsIds = json
+                    .filter(job => job.applicants.includes(user.userId))
+                    .map(job => job._id);
+
+                dispatch({ type: 'SET_APPLIED_JOBS', payload: appliedJobsIds });
             }
         }
 
@@ -28,8 +36,7 @@ function JobListings({onClick}) {
         }
         
         // filter jobs for user's timeline
-    }, [user])
-
+    }, [dispatch, user])
 
     return(
         <div className={s.jobs}>

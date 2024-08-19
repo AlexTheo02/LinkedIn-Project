@@ -15,6 +15,8 @@ import { PostsContextProvider } from './Context/PostContext.js';
 import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
 import { useState, useEffect } from 'react';
+import { JobsContextProvider } from './Context/JobsContext.js';
+
 
 import {
   BrowserRouter,
@@ -34,7 +36,8 @@ function App() {
       } else {
           setIsAuthenticated(false);
       }
-  }, []);
+  }, [user]);
+
 
   if (isAuthenticated === null) {
       return <div>Loading...</div>;
@@ -63,7 +66,14 @@ function App() {
         <Route path="/Network" element={user ? <NetworkPage /> : <Navigate to="/" />} />
 
         {/* Jobs Route */}
-        <Route path="/Jobs" element={user ? <JobsPage /> : <Navigate to="/" />} />
+        <Route path="/Jobs" element={
+          user ? 
+          <JobsContextProvider>
+            <JobsPage /> 
+          </JobsContextProvider>
+          : 
+          <Navigate to="/" />
+        } />
 
         {/* Conversations Route */}
         <Route path="/Conversations" element={user ?

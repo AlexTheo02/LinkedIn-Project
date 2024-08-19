@@ -110,15 +110,32 @@
     color: #007bff;
 }
 
-.follow_button_icon{
+.button_icon{
     margin-left: 3px;
 }
 
-.message_button {
-    padding: 10px 20px;
+.message_button .button_icon{
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.message_button, .edit_personal_details_button {
     border: none;
     background-color: #a02500;
     color: white;
+    transition: 0.3s;
+}
+
+.message_button{
+   padding: 10px 15px; 
+}
+
+.edit_personal_details_button {
+    padding: 10px;
+}
+
+.message_button:hover, .edit_personal_details_button:hover {
+    background-color: #791c00;
 }
 
 .contact_info {
@@ -150,84 +167,12 @@
 
 .network {
     margin: 10px;
-    max-width: 25%;
+    width: 25%;
 }
 
 .network h2{
     margin-bottom: 10px;
     color: white;
-}
-
-.users_list {
-    width: 100%;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-height: 87vh;
-    overflow-y: auto;
-}
-
-.users_list::-webkit-scrollbar {
-    width: 8px;
-}
-
-.users_list::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
-}
-
-.users_list::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
-}
-
-.users_list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.users_list ul li {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.user_info{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
-    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
-}
-
-.user_info .position {
-    font-style: italic;
-    color: rgb(77, 77, 77);
-    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
-    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
-    max-width: 100%;
-}
-
-.users_list ul li:last-child {
-    border-bottom: none;
-}
-
-.users_list ul li:hover {
-    background: #d7e9ff;
-}
-
-.users_list img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    padding: 2px;
-    margin-right: 10px;
-    background: #a02500;
 }
 
 .empty_network{

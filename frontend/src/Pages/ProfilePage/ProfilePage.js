@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import s from "./ProfilePageStyle.module.css";
 import NavBar from '../../Components/NavBar/NavBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faUserPlus, faCheck, faPen, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { differenceInYears } from 'date-fns';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../Hooks/useAuthContext';
+import MessagePopup from './MessagePopup/MessagePopup';
+import NetworkUsersList from '../../Components/NetworkUsersList/NetworkUsersList';
 
 function calculateAge(birthDate) {
     const dateOfBirth = new Date(birthDate);
@@ -37,14 +39,15 @@ function ExpandableText({ text, maxWords = 50 }) {
 }
 
 function ProfilePage() {
-    const {user} = useAuthContext()
+    const {user} = useAuthContext();
+    const navigate = useNavigate();
 
     const { id } = useParams(); // Ανάκτηση του id από το URL
     const [userData, setUserData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
-    const [connectButtonLoading, setConnectButtonLoading] = useState(false)
+    const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
-    const navigate = useNavigate();
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το modal
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -93,6 +96,27 @@ function ProfilePage() {
         setConnectButtonLoading(false);
     };
     
+    const handleRemoveRequest = async () => {
+        setConnectButtonLoading(true);
+        try {
+            const response = await fetch(`/api/users/removeRequestConnection/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+    
+            if (response.ok) {
+                setIsRequested(false);
+            } else {
+                console.error('Error removing connection');
+            }
+        } catch (error) {
+            console.error('Error removing connection:', error);
+        }
+        setConnectButtonLoading(false);
+    };
 
     const handleDisconnectClick = async () => {
         setConnectButtonLoading(true);
@@ -107,7 +131,6 @@ function ProfilePage() {
     
             if (response.ok) {
                 setIsConnected(false);
-                setIsRequested(false);
             } else {
                 console.error('Error removing connection');
             }
@@ -116,10 +139,17 @@ function ProfilePage() {
         }
         setConnectButtonLoading(false);
     };
-    
 
-    const handleNetworkUserClick = (userId) => {
-        navigate(`/Profile/${userId}`);
+    const handleMessageClick = () => {
+        setIsPopupOpen(true); // Ανοίγει το modal
+    };
+
+    const handleEditPersonalDetails = () => {
+        navigate('/Personal Details/');
+    };
+
+    const handleModalClose = () => {
+        setIsPopupOpen(false); // Κλείνει το modal
     };
 
     return (
@@ -139,21 +169,33 @@ function ProfilePage() {
                         </div>
                         <div className={s.operations}>
                             <div className={s.buttons}>
-                                { isConnected || isRequested ?
-                                    <button disabled={connectButtonLoading}
-                                        className={s.followed_or_requested_button} onClick={handleDisconnectClick}>
-                                        {isConnected ? 'Connected' : 'Sent Request'}
-                                        <FontAwesomeIcon className={s.follow_button_icon} icon={faCheck} />
-                                    </button>
+                                { userData._id !== user.userId ?
+                                    <>
+                                    { isConnected || isRequested ?
+                                        <button disabled={connectButtonLoading}
+                                            className={s.followed_or_requested_button} onClick={isConnected ? handleDisconnectClick : handleRemoveRequest}>
+                                            {isConnected ? 'Connected' : 'Sent Request'}
+                                            <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
+                                        </button>
+                                        :
+                                        <button
+                                            className={s.follow_button} onClick={handleConnectClick}>
+                                            Connect
+                                            <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
+                                        </button>
+                                    }
+                                    { 
+                                        <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
+                                            Message
+                                            <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
+                                        </button>
+                                    }
+                                    </>
                                     :
-                                    <button
-                                        className={s.follow_button} onClick={handleConnectClick}>
-                                        Connect
-                                        <FontAwesomeIcon className={s.follow_button_icon} icon={faUserPlus} />
+                                    <button  disabled={connectButtonLoading} className={s.edit_personal_details_button} onClick={handleEditPersonalDetails}>
+                                        Edit personal details
+                                        <FontAwesomeIcon className={s.button_icon} icon={faPen} />
                                     </button>
-                                }
-                                { isConnected &&
-                                    <button  disabled={connectButtonLoading} className={s.message_button}>Message</button>
                                 }
                             </div>
                             <div className={s.contact_info}>
@@ -189,19 +231,7 @@ function ProfilePage() {
                     <div className={s.network}>
                         <h2>Network:</h2>
                         {userData.network.length > 0 ? 
-                            <div className={s.users_list}>
-                                <ul>
-                                    {userData.network.map((connected_user, index) => (
-                                        <li key={index} onClick={() => handleNetworkUserClick(connected_user._id)}>
-                                            <img src={connected_user.profilePic} alt={`${connected_user.name} ${connected_user.surname}`} />
-                                            <div className={s.user_info}>
-                                                <b>{connected_user.name} {connected_user.surname}</b>
-                                                <b className={s.position}>{connected_user.workingPosition} at {connected_user.employmentOrganization}</b>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <NetworkUsersList network={userData.network} />
                             :
                             <div className={s.empty_network}>
                                 <h3>This user has not connected with any other user yet</h3>
@@ -210,6 +240,10 @@ function ProfilePage() {
                     </div>
                 }
             </div>
+
+            {isPopupOpen && (
+                <MessagePopup userData={userData} onClose={handleModalClose} />
+            )}
         </div>
     );
 }
