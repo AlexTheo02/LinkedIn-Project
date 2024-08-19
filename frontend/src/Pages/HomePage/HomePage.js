@@ -1,49 +1,25 @@
 import s from "./HomePageStyle.module.css";
 import NavBar from "../../Components/NavBar/NavBar";
 import PersonalDetailsPanel from "../../Components/PersonalDetailsPanel/PersonalDetailsPanel.js"
-import Post from "../../Components/PostComponent/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImage, faFileVideo, faFileAudio  } from "@fortawesome/free-solid-svg-icons";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { CommentsPopup } from "../../Components/PostComponent/PostComponents.js";
-import tsipras from "../../Images/tsipras.jpg"
-import mitsotakis from "../../Images/mitsotakis.jpg"
 import TextAreaAutosize from "react-textarea-autosize"
 import { FileUploader } from "react-drag-drop-files";
 import TimelinePosts from "./TimelinePosts/TimelinePosts.js"
 import { usePostsContext } from "../../Hooks/usePostsContext.js";
 import { useAuthContext } from "../../Hooks/useAuthContext.js";
 
-function CreatePost({user_id}) {
-    const { dispatch } = usePostsContext()
+function CreatePost({userData}) {
+    const { postDispatch } = usePostsContext()
     const {user} = useAuthContext()
 
     const imgFileTypes = ["JPG", "PNG"];
     const vidFileTypes = ["MP4", "MOV"];
     const audFileTypes = ["MP3", "WAV"];
-    
-    const getUserProfilePicture = (user_id) =>{
-        // Database access
-        if (user_id === 3){
-            return tsipras;
-        }
-        if (user_id === 2){
-            return mitsotakis;
-        }
-    }
-
-    const getUserUsername = (user_id) =>{
-        // Database access
-        if (user_id === 3){
-            return "Alexis Tsipras";
-        }
-        if (user_id === 2){
-            return "Kyriakos Mitsotakis";
-        }
-    }
 
     // Caption control
-    const [author, setAuthor] = useState("3");
     const [caption, setCaption] = useState("");
     const [commentsList, setCommentsList] = useState([]);
     const [likesList, setLikesList] = useState([]);
@@ -88,7 +64,7 @@ function CreatePost({user_id}) {
         if (caption !== ""){
 
             const formData = new FormData();
-            // formData.append("author", author);
+            formData.append("author", user.userId);
             formData.append("caption", caption);
             formData.append("commentsList", JSON.stringify(commentsList));
             formData.append("likesList", JSON.stringify(likesList));
@@ -112,7 +88,6 @@ function CreatePost({user_id}) {
             if (response.ok){
 
                 // Clear fields
-                setAuthor('');
                 setCaption('');
                 setMultimedia(null);
                 setMultimediaPreview(null);
@@ -125,14 +100,10 @@ function CreatePost({user_id}) {
 
                 console.log("Post published successfully", json);
 
-                dispatch({type: 'CREATE_POST', payload: json});
+                postDispatch({type: 'CREATE_POST', payload: json});
             }
         }
     }
-
-    const usr_pfp = getUserProfilePicture(user_id);
-    const usr_username = getUserUsername(user_id);
-
 
     const handleCaptionChange = (event) => {
         setCaption(event.target.value);
@@ -202,8 +173,8 @@ function CreatePost({user_id}) {
 
             <div className={s.create_post_preview}>
                 <div className={s.post_preview_header}>
-                    <img className={s.user_pfp} src={usr_pfp} alt="user pfp"/>
-                    <span className={s.user_username}> {usr_username} </span>
+                    <img className={s.user_pfp} src={userData.profilePicture} alt="user pfp"/>
+                    <span className={s.user_username}> {`${userData.name} ${userData.surname}`} </span>
                 </div>
 
                 <div className={ multimediaType === null ? s.post_preview_content_container : `${s.post_preview_content_container} ${s.post_preview_content_container_expanded}`}>
@@ -254,20 +225,46 @@ function CreatePost({user_id}) {
     );
 }
 
-function HomePage({user_id}) {
+function HomePage() {
+    const {user} = useAuthContext();
+    // Fetch user data
+    const [userData, setUserData] = useState(null);
+    const { activePostId, posts, postDispatch } = usePostsContext();
+
+    useEffect(() => {
+
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`/api/users/${user.userId}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+                const data = await response.json();
+                setUserData(data);
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, [user]);
 
     // Comments popup state
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    const [selectedPostId, setSelectedPostId] = useState(null);
+
+    if(!userData){
+        return <h1 className={s.loading_text}>Loading...</h1>;
+    }
+
 
     const showCommentsPopup = (post_id) => {
         setIsPopupVisible(true);
-        setSelectedPostId(post_id)
     };
 
-    const hideCommentsPopup = () => {
+    const hideCommentsPopup = async () => {
         setIsPopupVisible(false);
-        setSelectedPostId(null);            
     };
     
     // Struct for efficiency
@@ -275,18 +272,16 @@ function HomePage({user_id}) {
         showCommentsPopup,
         hideCommentsPopup,
         isPopupVisible,
-        selectedPostId
     }
 
     return(
         <div className={s.home_page}>
             <NavBar isHome={true} currentPage={"HomePage"}/>
             <div className={s.container}>
-                <PersonalDetailsPanel />
-                <CommentsPopup commentsPopupHandler={commentsPopupHandler}/>
+                <PersonalDetailsPanel userData={userData} />
+                <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
                 <div className={s.timeline}>
-                    <CreatePost user_id={user_id}/>
-                    {/* Replase Posts with map of TimelineList (fetched from database) */}
+                    <CreatePost userData={userData}/>
                     <TimelinePosts commentsPopupHandler={commentsPopupHandler}/>
                 </div>
                 

@@ -1,212 +1,16 @@
 import s from "./ConversationsPageStyle.module.css";
 import NavBar from "../../Components/NavBar/NavBar";
-import { HorizontalSeparator, VerticalSeparator } from "../../Components/Separators/Separators.js";
-import { InteractiveProfile } from "../../Components/PostComponent/PostComponents.js";
-import InteractiveProfilePicture from "../../Components/InteractiveProfilePicture/InteractiveProfilePicture.js";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { VerticalSeparator } from "../../Components/Separators/Separators.js";
+import CurrentConversationPanel from "./CurrentConversationPanel/CurrentConversationPanel.js";
+import { useEffect } from "react";
 import { useAuthContext } from "../../Hooks/useAuthContext.js";
 import { useConversationContext } from "../../Hooks/useConversationContext.js";
+import { useNavigate } from "react-router-dom";
 
-
-import tsipras from "../../Images/tsipras.jpg"
-import mitsotakis from "../../Images/mitsotakis.jpg"
-
-function getRecentConversationInfoByConversationId(conversation_id){
-    var user_id, lastMessageTimestamp;
-
-    if (conversation_id === 3){
-        user_id = 3;
-        lastMessageTimestamp = "17:08 22 Jul 2024"
-    }
-    if (conversation_id === 2){
-        user_id = 2;
-        lastMessageTimestamp = "08:46 11 Sept 2001"
-    }
-    return({user_id, lastMessageTimestamp});
-}
-
-// USE GLOBALLY, MOVE FROM HERE
-function getPfpUserNameByUserId(user_id){
-    var userName,pfp;
-    if (user_id === 3){
-        userName = "Alexis Tsipras";
-        pfp = tsipras;
-    }
-    if (user_id === 2){
-        userName = "Kyriakos Mitsotakis";
-        pfp = mitsotakis;
-    }
-
-    return ({userName,pfp})
-}
-
-function RecentConversation({conversation_id, conversationHandler}){
-    
-    // Database access to get information about recent conversation
-    const {user_id, lastMessageTimestamp} = getRecentConversationInfoByConversationId(conversation_id);
-    const {userName,pfp} = getPfpUserNameByUserId(user_id);
-
-    const handleRecentConversationClick = () => {
-        conversationHandler.setActiveConversation(conversation_id)
-    }
-
-    return (
-        <div className={s.recent_conversation} onClick={handleRecentConversationClick}>
-            <img src={pfp} className={s.recent_conversation_pfp}/>
-
-            <div className={s.usr_time_container}>
-                <span className={s.recent_conversation_username}> {userName} </span>
-                <span className={s.recent_conversation_timestamp}> {lastMessageTimestamp} </span>
-            </div>
-            
-        </div>
-    );
-}
-
-function RecentConversationsPanel({conversations, conversationHandler}){
-
-    // conversations is a list containing all of the user's recent conversations
-    // 
-
-
-    const {recentConversations,setRecentConversations,setActiveConversation} = conversationHandler;
-
-    // For each conversation:
-    // Check the other participant's id, (find the one you are not) and fetch name,surname,profilePicture,
-    // get timestamp, and send them to RecentConversation component, that will display profile picture, name surname and timestamp, and onClick,
-    // display the correct conversation (set Current Conversation to the messageLog)
-
-    // Use map to create different elements for recent conversations. create recent conversation component to go on the left panel
-
-    return(
-        <div className={s.recent_conversations_panel} >
-            <div className={s.recent_conversations_panel_header}>
-                Recent Conversations
-            </div>
-            <HorizontalSeparator/>
-            {/* Recent Conversations list (map) */}
-            <div className={s.recent_conversations_container}>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={3} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={3} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={3} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={2} conversationHandler={conversationHandler}/>
-                <RecentConversation conversation_id={3} conversationHandler={conversationHandler}/>
-            </div>
-        </div>
-    )
-}
-
-
-
-function Message({messageId}){
-
-    const getSenderByMessageId = (messageId) => {
-        if (messageId === 2)
-            return 2; // tsipras
-        if (messageId === 1)
-            return 3; // mitsotakis
-    }
-
-    const sender_id = getSenderByMessageId(messageId); // Database access
-    const isReceived = (messageId % 2 ) ? true : false;
-    const content = isReceived ? "Hello there, i saw your post about joining linkedin and i would like to welcome you personally ;)" : "Χαχα 6/7 δουλειά χεχε";
-
-    if (isReceived)
-        return (
-        <div className={s.message_container}>
-            <InteractiveProfilePicture user_id={sender_id} nonInter={true}/>
-            <div className={`${s.message} ${s.message_received}`}>
-                {content}
-            </div>
-        </div>
-        
-        );
-
-    return (
-        <div className={`${s.message} ${s.message_sent}`}>
-            {content}
-        </div>
-    );
-}
-
-function getInfoFromConversationById(conv_id){
-    // Access database and fetch data
-    if (conv_id === 3)
-        return 3;
-    return 2;
-}
-
-function CurrentConversationPanel({conversationHandler}){
-
-    const getMessageLog = (conversation_id) => {
-        // Access database and return a list of message ids
-        if (conversation_id === 3){
-            return ([1,2,1,2,1,2,1,2,1,2,1,2]);
-        }
-        if (conversation_id === 2){
-            return ([2,1,2]);
-        }
-    }
-
-    // Get data from conversation handler
-
-    const activeConversation = conversationHandler.activeConversation;
-
-    const receiver_id = getInfoFromConversationById(activeConversation)
-
-    // const receiver_id = 3; // fetch from database
-
-    const [message, setMessage] = useState("");
-
-    const handleInputChange = (event) => {
-        setMessage(event.target.value);
-    };
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-          event.preventDefault();
-          handleSendMessage();
-        }
-      };
-
-    const handleSendMessage = () => {
-        setMessage("");
-    };
-
-    // When a message is sent. add it to the messageLog list of the conversation, and update the container to include that message
-    return(
-        <div className={s.current_conversation_panel}>
-            <div className={s.conversation_header}>
-                <InteractiveProfile user_id={receiver_id} altern={true}/>
-            </div>
-
-            <div className={s.conversation}>
-                {getMessageLog(activeConversation).map(mid => (
-                    <Message messageId={mid} />
-                ))}
-            </div>
-
-            <div className={s.control_bar}>
-                <input className={s.message_field} placeholder="Aa" value={message} onKeyDown={handleKeyDown} onChange={handleInputChange}/>
-                <FontAwesomeIcon className={s.send_message_button} icon={faPaperPlane} onClick={handleSendMessage}/>
-            </div>
-        </div>
-    );
-}
-
-function getRecentConversationsByUserId(user_id){
-    // Access the database and fetch the user's conversations in most recent order
-    return ([3,2,1,4]);
-}
+import RecentConversationsPanel from "./RecentConversationsPanel/RecentConversationsPanel.js";
 
 function ConversationsPage({user_id}){
+    const navigate = useNavigate();
     // Get current logged in user
     const {user} = useAuthContext();
 
@@ -219,62 +23,75 @@ function ConversationsPage({user_id}){
             // Get user's recent conversation ids
             const response = await fetch(`api/conversations/`, {
                 headers: {
-                    "Authorization": `Bearer ${user.token}`
+                    "Authorization": `Bearer ${user.token}`,
                 }
             });
             const json = await response.json();
 
-            if (response.ok){
+            if (response.ok && json.length){
                 // Update conversation context to contain the actual conversation objects
-                const conversationsList = []
-
-                json.forEach(async (conv_id) => {
-                    // Fetch conversation and add it to the list
-                    const resp = await fetch(`api/conversations/${conv_id}`, {
-                        headers: {
-                            "Authorization": `Bearer ${user.token}`
-                        }
-                    })
-                    const conv = await resp.json();
-                    if (resp.ok){
-                        conversationsList.push(conv);
+                const resp = await fetch(`api/conversations/multiple?ids=${json.join(',')}`, {
+                    headers: {
+                        "Authorization": `Bearer ${user.token}`
                     }
-                });
-                // Update the context
-                conversationDispatch({type:"SET_CONVERSATIONS", payload: conversationsList})
-                console.log(conversations)
-            }   
+                })
+                const jsn = await resp.json();
+                if (resp.ok){
+                    // Update the context
+                    const mrc = jsn[0]; // most recent conversation
+                    // Find out who the receiver is
+                    const receiverId = user.userId === mrc.participant_1 ? mrc.participant_2 : mrc.participant_1
+                    // Gather their data and update the receiver context
+                    const getUserData = async () => {
+
+                        // Get receiver's data
+                        const response = await fetch(`api/users/${receiverId}`, {
+                            headers: {
+                                "Authorization": `Bearer ${user.token}`
+                            }
+                        });
+                        const userData = await response.json();
+            
+                        if (response.ok){
+                            conversationDispatch({type: 'SET_RECEIVER', payload: {
+                                id: receiverId,
+                                profilePicture: userData.profilePicture,
+                                name: userData.name,
+                                surname: userData.surname,
+                            }})
+                        }
+                    }
+            
+                    getUserData(); // will update the receiver on the context also
+                    conversationDispatch({type:"SET_CONVERSATIONS", payload: jsn})
+                    conversationDispatch({type:"SET_ACTIVE_CONVERSATION", payload: mrc}) // Most recent conversation
+                }
+            }
         }
 
         if (user){
             getRecentConversations();
         }
-
-    }, [user]);
-
-
-    // Based on user id, fetch recent conversations and most recent conversation
-
-    const [recentConversations,setRecentConversations] = useState(getRecentConversationsByUserId(user_id))
-
-    const [activeConversation, setActiveConversation] = useState(recentConversations[0])
-
-    // Create a handler struct
-    const conversationHandler = {
-        recentConversations,
-        setRecentConversations,
-        activeConversation,
-        setActiveConversation
-    }
+    }, [user])
 
     return(
         <div className="conversations-page">
             <NavBar currentPage={"Conversations"}/>
             <div className={s.container}>
-                <RecentConversationsPanel conversations={conversations} conversationHandler={conversationHandler}/>
-                <VerticalSeparator />
-                <CurrentConversationPanel conversationHandler={conversationHandler}/>
+                {conversations.length ?
+                    <>
+                        <RecentConversationsPanel conversations={conversations}/>
+                        <VerticalSeparator />
+                        <CurrentConversationPanel />
+                    </>
+                    : 
+                    <div className={s.error_message_container}>
+                        <h2>No Recent Conversations</h2>
+                        <button onClick={() => {navigate("/Network")}}>Start one</button>
+                    </div>
+                }
             </div>
+
             
         </div>
     );

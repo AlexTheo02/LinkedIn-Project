@@ -4,18 +4,17 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
 const postSchema = new Schema({
-    // author: {type: Schema.Types.ObjectId, ref: "User", required: true},
+    author: {type: Schema.Types.ObjectId, ref: "User", required: true}, // User id
 
     caption: {type: String, required: true},
 
     multimediaURL: {type: String}, // google cloud URL
 
-    multimediaType: {type: String},
+    multimediaType: {type: String}, // image, video, audio
+    
+    commentsList : {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // List of commentIds
 
-    // Modify to {author, content}
-    commentsList : {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true},
-
-    likesList : {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}
+    likesList : {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true} // List of userIds
     
 }, { timestamps: true})
 

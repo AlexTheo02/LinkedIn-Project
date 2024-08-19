@@ -5,7 +5,7 @@ import { usePostsContext } from "../../../Hooks/usePostsContext";
 import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 function TimelinePosts({commentsPopupHandler}) {
-    const {posts, dispatch} = usePostsContext()
+    const {posts, activeCommentsList, postDispatch} = usePostsContext()
     const {user} = useAuthContext()
 
     // Fetch posts from database
@@ -19,7 +19,7 @@ function TimelinePosts({commentsPopupHandler}) {
             const json = await response.json();
 
             if (response.ok){
-                dispatch({type: 'SET_POSTS', payload: json})
+                postDispatch({type: 'SET_POSTS', payload: json})
             }
         }
 
@@ -27,13 +27,13 @@ function TimelinePosts({commentsPopupHandler}) {
             fetchPosts()
         }
         // filter posts for user's timeline
-    }, [dispatch, user])
+    }, [postDispatch, user])
 
 
     return(
         <div className={s.posts}>
             {posts && posts.map((post) => (
-                <Post key={post._id} post={post} commentsPopupHandler={commentsPopupHandler}/>
+                <Post key={post._id} postData={post} commentsPopupHandler={commentsPopupHandler}/>
             ))}
             
         </div>

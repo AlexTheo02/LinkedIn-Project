@@ -5,9 +5,13 @@ const { upload } = require("../middleware/fileUpload.js");
 const {
     getAllUsers,
     getUserById,
+    getUserProfileData,
     getUser,
     createUser,
     deleteUser,
+    confirmPassword,
+    changeEmail,
+    changePassword,
     publishJob,
     applyJob,
     removeApplyJob,
@@ -49,6 +53,15 @@ router.post("/", createUser)
 
 // DELETE a user
 router.delete("/:id", deleteUser)
+
+// Confirm login password
+router.post("/confirm-password", confirmPassword)
+
+// Change email
+router.post("/change-email", changeEmail);
+
+// Change Password
+router.post("/change-password", changePassword);
 
 // Publish job
 router.patch("/publishJob/:id", publishJob);

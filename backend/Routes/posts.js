@@ -5,7 +5,8 @@ const {
     getAllPosts,
     getPost,
     createPost,
-    updatePost
+    updatePost,
+    addComment
 } = require("../controllers/postController.js")
 
 const requireAuth = require('../middleware/requireAuth.js')
@@ -27,6 +28,9 @@ router.post("/", upload.single("file"), createPost)
 
 // UPDATE a post
 router.patch("/:id", updatePost)
+
+// Add comment to a post
+router.patch("/add-comment/:id", addComment);
 
 
 module.exports = router

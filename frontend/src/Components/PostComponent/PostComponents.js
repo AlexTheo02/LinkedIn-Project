@@ -1,40 +1,30 @@
 // This .js file contains every component needed to construct a Post
 
 import s from "./PostStyle.module.css";
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import { useNavigate } from "react-router-dom";
 import { HorizontalSeparator, VerticalSeparator } from "../Separators/Separators";
 
-import tsipras from "../../Images/tsipras.jpg"
-import mitsotakis from "../../Images/mitsotakis.jpg"
-
+import { formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons";
 import {faThumbsUp as faThumbsUpSolid} from "@fortawesome/free-solid-svg-icons";
 import {faComment} from "@fortawesome/free-regular-svg-icons";
 import {faThumbsUp as faThumbsUpRegular} from "@fortawesome/free-regular-svg-icons";
 import TextAreaAutosize from "react-textarea-autosize"
+import { useAuthContext } from "../../Hooks/useAuthContext";
+import { usePostsContext } from "../../Hooks/usePostsContext";
 
 
 
-function InteractiveProfile({user_id, altern, nonInteractive}){
-    // Replace with database access
-    var profilePicture,userName
-    if (user_id === 3){
-        profilePicture = tsipras;
-        userName = "Alexis Tsipras";
-    }
-    if (user_id === 2){
-        profilePicture = mitsotakis;
-        userName = "Kyriakos Mitsotakis"
-    }
-
+function InteractiveProfile({profilePicture, name, surname, user_id, altern, nonInteractive}){
 
     // Change arguments to user_id, then get pfp and username from database
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
-        if (!nonInteractive) { navigate("/"); }
+        // Navigate to user's profile based on the id
+        if (!nonInteractive) { navigate(`/Profile/${user_id}`); }
     }
 
     const style = altern ? s.alt_interactive_profile : s.interactive_profile
@@ -42,15 +32,15 @@ function InteractiveProfile({user_id, altern, nonInteractive}){
     return(
         // Should be clickable and redirect you to the user's profile
         <div onClick={handleProfileClick} className={`${style} ${nonInteractive ? s.non_interactive : ""}`}>
-            <img className= {s.post_profile_picture} src={profilePicture} alt="NO PROFILE PIC"/>
-            <strong className={s.username}>{userName}</strong>
+            <img className= {s.post_profile_picture} src={profilePicture} alt="User Profile"/>
+            <strong className={s.username}>{`${name} ${surname}`}</strong>
         </div>
     );
 }
 
 function Timestamp({timestamp}){
     return (
-        <small className={s.timestamp}>{timestamp}</small>
+        <small className={s.timestamp}>{formatDistanceToNow(timestamp,{addSuffix: true})}</small>
     );
 }
 
@@ -82,12 +72,38 @@ function PostInfoBar({likeCount, commentCount}){
     )
 }
 
-function LikeButton({ initialLiked }) {
-    const [isLiked, setIsLiked] = useState(initialLiked);
+function LikeButton({post_id, likesList}) {
+    const { user } = useAuthContext();
+    const { postDispatch } = usePostsContext();
+    const [isLiked, setIsLiked] = useState(false);
 
-    // Move state upwards and get the function
-    const toggleLike = () => {
+    useEffect(() => {
+        setIsLiked(likesList.includes(user.userId) ? true : false);
+    }, [user,likesList])
+
+    const toggleLike = async () => {
         setIsLiked(!isLiked);
+        if(isLiked){
+            const removeIndex = likesList.findIndex(i => i === user.userId);
+            // Remove user from likes list
+            likesList.splice(removeIndex, 1)
+        }
+        else{
+            // Add user to likes list
+            likesList.push(user.userId);            
+        }
+        // Update the local context
+        postDispatch({type: "UPDATE_POST_LIKE", payload: {post_id: post_id, likesList: likesList}});
+
+        // Send request to the server to update the likes list
+        const response = await fetch(`/api/posts/${post_id}`, {
+            headers: {
+                'Authorization': `Bearer ${user.token}`,
+                'Content-Type': 'application/json',
+            },
+            method: "PATCH",
+            body: JSON.stringify({likesList})
+        })
     };
 
     return (
@@ -97,48 +113,61 @@ function LikeButton({ initialLiked }) {
     );
 }
 
-function PostInteractionBar({isLiked, commentsPopupHandler}){
+function PostInteractionBar({post_id, commentsList, likesList, commentsPopupHandler}){
+
+    const { postDispatch } = usePostsContext();
+
+    const handleClick = () => {
+        postDispatch({type: "SET_ACTIVE_COMMENTS_LIST", payload: commentsList});
+        postDispatch({type: "SET_ACTIVE_POST_ID", payload: post_id});
+        commentsPopupHandler.showCommentsPopup();
+
+    }
+
     return (
         <div className={s.interaction_bar}>
-            <LikeButton />
+            <LikeButton post_id={post_id} likesList = {likesList}/>
             <VerticalSeparator/>
-            <FontAwesomeIcon icon={faComment} className={s.post_interaction_bar_button} onClick={commentsPopupHandler.showCommentsPopup}/>
+            <FontAwesomeIcon icon={faComment} className={s.post_interaction_bar_button} onClick={handleClick}/>
         </div>
     );
 }
 
-function PostPreviewComments({post_id, commentsPopupHandler}){
+function PostPreviewComments({post_id, commentsList, commentsPopupHandler}){
+    const {user} = useAuthContext();
 
-    const preview_comment_id = 3; // Use function to fetch from database using post_id
+    const previewCommentData = commentsList[0];
+    const previewAuthor = previewCommentData.author;
 
     return(
         <div className={s.post_preview_comments}>
-            <Comment comment_id={preview_comment_id}/>
-            <ShowAllCommentsButton post_id={post_id} commentsPopupHandler={commentsPopupHandler}/>
+            <Comment commentData={previewCommentData} author={previewAuthor}/>
+            <ShowAllCommentsButton post_id={post_id} commentsList={commentsList} commentsPopupHandler={commentsPopupHandler}/>
         </div>
     )
 }
 
-function Comment({comment_id}){
+function Comment({commentData, author}){
 
-    // const user_id = getUserByCommentId(comment_id) // Implement function on backend
-    // Add timestamp on top right
-    const user_id = 3;
-    const content = "I am very proud of you my dear friend Koulis!"
     return(
         <div className={s.comment}>
-            <InteractiveProfile user_id={user_id} altern={true}/>
+            <InteractiveProfile profilePicture={author.profilePicture} user_id={author._id} name={author.name} surname={author.surname} altern={true}/>
             <div className={s.comment_content}>
-                {content}
+                {commentData.content}
             </div>
+            <Timestamp timestamp={commentData.createdAt}/>
         </div>
     )
 }
 
-function ShowAllCommentsButton({post_id, commentsPopupHandler}){
+function ShowAllCommentsButton({post_id, commentsList, commentsPopupHandler}){
+
+    const { postDispatch } = usePostsContext();
 
     const handleClick = () => {
         commentsPopupHandler.showCommentsPopup(post_id)
+        postDispatch({type: "SET_ACTIVE_COMMENTS_LIST", payload: commentsList});
+        postDispatch({type: "SET_ACTIVE_POST_ID", payload: post_id});
     }
 
     return (
@@ -148,22 +177,66 @@ function ShowAllCommentsButton({post_id, commentsPopupHandler}){
     );
 }
 
-const AddComment = ({user}) => {
-    const user_id = 3;
+const AddComment = ({userData}) => {
+    const { activePostId, activeCommentsList, postDispatch } = usePostsContext();
+    const validCommentRegex = /\S/;
+    const {user} = useAuthContext();
     const [commentValue, setCommentValue] = useState("");
 
-    const postComment = () => {
-        setCommentValue("");    
+    const postComment = async () => {
+        if(validCommentRegex.test(commentValue)){
+            // Create the comment object
+
+            const trimmedComment = commentValue.trim();
+
+            const comment = {
+                author: user.userId,
+                content: trimmedComment.replace(/\s+/g, ' '), // Replace extra whitespace with a single space.
+            }
+        
+            // Maybe sort
+            setCommentValue("");
+            
+            const response = await fetch(`/api/posts/add-comment/${activePostId}`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                },
+                method: "PATCH",
+                body: JSON.stringify(comment)
+            })
+            
+            const json = await response.json();
+            console.log(json.populatedComment)
+
+            if (response.ok){
+                postDispatch({type: "SET_ACTIVE_COMMENTS_LIST", payload: [json.populatedComment, ...activeCommentsList]});
+
+                // Update post on posts context
+                postDispatch({type: "UPDATE_COMMENTS_LIST_ON_POST"})
+            }
+
+        }       
     }
+
+    // Press enter to post comment
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          postComment();
+        }
+      };
+
     return (
         <div className={s.add_comment_container}>
             <div className={s.comment}>
-                <InteractiveProfile user_id={user_id} altern={true} nonInteractive={true}/>
+                <InteractiveProfile user_id={user.userId} profilePicture={userData.profilePicture} name={userData.name} surname={userData.surname} altern={true} nonInteractive={true}/>
                 <div className={s.add_comment_field_container}>
                     <TextAreaAutosize
                         type="text"
                         value={commentValue}
                         onChange={(e) => {setCommentValue(e.target.value)}}
+                        onKeyDown={handleKeyDown}
                         className={s.add_comment_field} placeholder="Add comment"
                         
                     />
@@ -174,70 +247,34 @@ const AddComment = ({user}) => {
     )
 }
 
-function CommentsPopup({commentsPopupHandler}){
-    // Fetch from database
-    // const comments = commentsData[post_id] || [];
+function CommentsPopup({userData, commentsPopupHandler}){
 
-    // Fetch all comments and render them on a floating window
+    const {user} = useAuthContext();
+    // Use context to access active comments list
+    const { activeCommentsList, activePostId } = usePostsContext();
+    
 
-    // MODIFY TO GET THE COMMENTS IN A LIST, AND RENDER THEM HERE (i think use .map, check)
-    if (commentsPopupHandler.selectedPostId === 3)
-        return(
-            <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
-                <div className={s.comments_popup_header}>
-                    All Comments
-                    <button className={s.hide_comments_popup_button} onClick={commentsPopupHandler.hideCommentsPopup}>
-                        Hide comments
-                    </button>
-                </div>
-                <HorizontalSeparator />
-                <div className={s.comments_popup_container}>
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                </div>
-                <AddComment />
+    return(
+        <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
+            <div className={s.comments_popup_header}>
+                All Comments
+                <button className={s.hide_comments_popup_button} onClick={commentsPopupHandler.hideCommentsPopup}>
+                    Hide comments
+                </button>
             </div>
-        );
-    else
-        return(
-            <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
-                <div className={s.comments_popup_header}>
-                    All Comments
-                    <button className={s.hide_comments_popup_button} onClick={commentsPopupHandler.hideCommentsPopup}>
-                        Hide comments
-                    </button>
-                </div>
-                <HorizontalSeparator />
-                <div className={s.comments_popup_container}>
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                    <HorizontalSeparator />
-                    <Comment comment_id={3}/>
-                </div>
-                <AddComment />
+            <HorizontalSeparator />
+            {/* MAP COMMENTS LIST */}
+            <div className={s.comments_popup_container}>
+                {activeCommentsList && activeCommentsList.map((comment, index) => (
+                    <div key={`comment-map-${index}`}>
+                        <Comment commentData={comment} author={comment.author}/>
+                        <HorizontalSeparator />
+                    </div>
+                ))
+                }
             </div>
+            <AddComment userData={userData}/>
+        </div>
     );
 }
 

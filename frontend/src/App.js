@@ -17,6 +17,7 @@ import { useAuthContext } from './Hooks/useAuthContext.js';
 import { useState, useEffect } from 'react';
 import { JobsContextProvider } from './Context/JobsContext.js';
 
+
 import {
   BrowserRouter,
   Routes,
@@ -37,6 +38,7 @@ function App() {
       }
   }, [user]);
 
+
   if (isAuthenticated === null) {
       return <div>Loading...</div>;
   }
@@ -54,7 +56,7 @@ function App() {
         <Route path="/Home" element={
           user ?
           <PostsContextProvider>
-            <HomePage user_id={2} />
+            <HomePage />
           </PostsContextProvider>
           : 
           <Navigate to="/" />
@@ -92,7 +94,11 @@ function App() {
         <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
 
         {/* Post Page Route */}
-        <Route path="/Post" element={user ? <PostPage /> : <Navigate to="/" />} />
+          
+        <Route path="/Post/:post_id" element={user ?
+          <PostsContextProvider>
+            <PostPage /> 
+          </PostsContextProvider> : <Navigate to="/" />} />
 
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />

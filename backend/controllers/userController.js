@@ -1,6 +1,7 @@
 const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 const jwb = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
 const validator = require("validator")
 const { deleteFile, handleFileUpload } = require("../middleware/fileUpload.js")
 
@@ -163,6 +164,119 @@ const deleteUser = async (request, response) => {
     // User exists, send back deleted user
     response.status(200).json(user);
 }
+
+// Confirm login password
+const confirmPassword = async(request, response) => {
+    // Get password from request
+    const {password} = request.body;
+
+    // Get user and their password
+    const loggedInUserId = request.user.id;
+    const userPassword = await User.findById(loggedInUserId).select("password");
+
+    const match = await bcrypt.compare(password, userPassword.password);
+
+    if (!match){
+        const errorMessage = "Incorrect password";
+        const error = new Error(errorMessage);
+        return response.status(400).json({error: "Incorrect password"});
+    }
+
+    response.status(200).json({message: "Password confirm successful"});
+
+}
+
+// Change email
+const changeEmail = async (request, response) => {
+    const {email} = request.body;
+    // Convert to lowercase
+    const emailLowercase = email.toLowerCase()
+
+    try {
+        // Get user and their userData
+        const loggedInUserId = request.user.id;
+        const userData = await User.findById(loggedInUserId);
+
+        if (!emailLowercase){
+            return response.status(400).json({error: "Email address cannot be empty"})
+        }
+
+        // Not a valid email address
+        if (!validator.isEmail(emailLowercase)){
+            return response.status(400).json({error: "Invalid email address", email: emailLowercase});
+        }
+
+        // Email is the same as before
+        if (emailLowercase === userData.email){
+            return response.status(200).json({message: "Email is the same as current one", email: emailLowercase});
+        }
+
+        // Email already exists
+        if (await User.findOne({email: emailLowercase})){
+            return response.status(400).json({error: "Email already in use", email: emailLowercase});
+        }
+
+        // Change email address
+        userData.email = emailLowercase;
+
+        // Save to db
+        await userData.save();
+        response.status(200).json({message: "Email successfuly changed", email: emailLowercase});
+        
+    } catch(error){
+        console.error("Error changing email ", error);
+        response.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+// Change password
+const changePassword = async (request, response) => {
+    const {password, confirmPassword} = request.body;
+
+    console.log(password, confirmPassword)
+
+    try {
+        // Get user and their userData
+        const loggedInUserId = request.user.id;
+        const userData = await User.findById(loggedInUserId);
+        
+        // Password(s) are empty
+        if (!password || !confirmPassword){
+            return response.status(400).json({error: "Password field(s) cannot be empty"});
+        }
+
+        // Passwords do not match
+        if (password !== confirmPassword){
+            return response.status(400).json({error: "Passwords do not match"});
+        }
+
+        // Not a valid strong password
+        if (!validator.isStrongPassword(password)){
+            return response.status(400).json({error: "Invalid strong password"});
+        }
+
+        // Password is the same as before
+        if (await bcrypt.compare(password, userData.password)){
+            return response.status(200).json({message: "Password is the same as current one"});
+        }
+
+        // Change password address
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        userData.password = hash;
+
+        // Save to db
+        await userData.save();
+        response.status(200).json({message: "Password successfuly changed"})
+        
+    } catch(error){
+        console.error("Error changing password ", error);
+        response.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
 
 // Publish a Job
 const publishJob = async (request, response) => {
@@ -638,6 +752,9 @@ module.exports = {
     getUser,
     createUser,
     deleteUser,
+    confirmPassword,
+    changeEmail,
+    changePassword,
     publishJob,
     applyJob,
     removeApplyJob,

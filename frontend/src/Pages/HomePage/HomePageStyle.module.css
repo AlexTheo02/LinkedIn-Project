@@ -229,3 +229,12 @@
     width: 100% !important;
     height: 100% !important;
 }
+
+.loading_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: xx-large;
+    color: #333;
+}
