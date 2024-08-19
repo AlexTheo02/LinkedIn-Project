@@ -14,6 +14,8 @@ import NavBar from './Components/NavBar/NavBar.js';
 import { PostsContextProvider } from './Context/PostContext.js';
 import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
+import { useState, useEffect } from 'react';
+import { JobsContextProvider } from './Context/JobsContext.js';
 
 import {
   BrowserRouter,
@@ -24,6 +26,20 @@ import {
 
 function App() {
   const {user} = useAuthContext()
+
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // Initialize with null
+
+  useEffect(() => {
+      if (user) {
+          setIsAuthenticated(true);
+      } else {
+          setIsAuthenticated(false);
+      }
+  }, [user]);
+
+  if (isAuthenticated === null) {
+      return <div>Loading...</div>;
+  }
 
   return (
     <BrowserRouter>
@@ -48,7 +64,14 @@ function App() {
         <Route path="/Network" element={user ? <NetworkPage /> : <Navigate to="/" />} />
 
         {/* Jobs Route */}
-        <Route path="/Jobs" element={user ? <JobsPage /> : <Navigate to="/" />} />
+        <Route path="/Jobs" element={
+          user ? 
+          <JobsContextProvider>
+            <JobsPage /> 
+          </JobsContextProvider>
+          : 
+          <Navigate to="/" />
+        } />
 
         {/* Conversations Route */}
         <Route path="/Conversations" element={user ?

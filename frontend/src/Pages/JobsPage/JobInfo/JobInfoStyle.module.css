@@ -108,3 +108,13 @@
 .apply_button:hover{
     background: #c42e00;
 }
+
+.apply_button.applied{
+    background-color: #fff;
+    color: #a02500;
+    border: 2px solid #a02500;
+}
+
+.apply_button.applied:hover{
+    background-color: #a0250077;
+}

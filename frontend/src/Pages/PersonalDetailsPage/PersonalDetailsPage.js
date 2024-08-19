@@ -14,6 +14,8 @@ const {
 } = require("../../Components/GeneralFunctions.js")
 
 function PersonalDetails() {
+    const [profilePicture, setProfilePicture] = useState("");
+
     const [profilePic, setProfilePic] = useState(null);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -54,7 +56,6 @@ function PersonalDetails() {
 
         const fetchUserData = async () => {
             try {
-                // Εδώ μπορείς να κάνεις fetch δεδομένων από το API χρησιμοποιώντας το id
                 const response = await fetch(`/api/users/${user.userId}`,{
                     headers: {
                         'Authorization': `Bearer ${user.token}`
@@ -101,6 +102,7 @@ function PersonalDetails() {
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            setProfilePicture(file); // actual file
             setProfilePic(URL.createObjectURL(file));
         }
     };
@@ -144,42 +146,47 @@ function PersonalDetails() {
         setError(null);
         setErrorFields([]);
 
-        const updatedUserData = {
-            // ProfilePic here
-            name,
-            surname,
-            phoneNumber,
-            workingPosition,
-            employmentOrganization,
-            placeOfResidence,
-            professionalExperience,
-            education,
-            skills,
-            dateOfBirth: new Date(`${month} ${day}, ${year} 00:00:00 GMT`),
-            privateDetails: [
-                !isDateOfBirthPublic && "dateOfBirth",
-                !isPhonePublic && "phoneNumber",
-                !isPlaceOfResidencePublic && "placeOfResidence",
-                !isProfessionalExperiencePublic && "professionalExperience",
-                !isEducationPublic && "education",
-                !isSkillsPublic && "skills"
-            ].filter(Boolean), // Κραταμε μονο τα true values (τα privates)
-        };
+        const formDataPrivateDetails = [
+            !isDateOfBirthPublic && "dateOfBirth",
+            !isPhonePublic && "phoneNumber",
+            !isPlaceOfResidencePublic && "placeOfResidence",
+            !isProfessionalExperiencePublic && "professionalExperience",
+            !isEducationPublic && "education",
+            !isSkillsPublic && "skills"
+        ].filter(Boolean)
+
+        const formData = new FormData();
+        if (profilePicture !== userData.profilePicture){
+            console.log('ashnshnhsnhaaaaaaaaaaaaaa')
+            formData.append("file", profilePicture);
+        }
+        formData.append("name", name);
+        formData.append("surname", surname);
+        formData.append("phoneNumber", phoneNumber);
+        formData.append("workingPosition", workingPosition);
+        formData.append("employmentOrganization", employmentOrganization);
+        formData.append("placeOfResidence", placeOfResidence);
+        formData.append("professionalExperience", professionalExperience);
+        formData.append("education", education);
+        formData.append("skills", skills);
+        formData.append("dateOfBirth", new Date(`${month} ${day}, ${year} 00:00:00 GMT`));
+        formData.append("privateDetails", formDataPrivateDetails);
 
         try {
             const response = await fetch(`/api/users/${user.userId}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${user.token}`,
                 },
-                body: JSON.stringify(updatedUserData),
+                body: formData,
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.error)
+                console.log(data)
+                setError(data.error);
+                // setError(data.error)
                 setErrorFields(data.errorFields);
             }
             if (response.ok){
@@ -192,7 +199,6 @@ function PersonalDetails() {
         }
         setIsLoading(false);
     };
-
 
     return (
         <div>

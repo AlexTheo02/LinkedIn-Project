@@ -2,6 +2,7 @@ const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 const jwb = require("jsonwebtoken")
 const validator = require("validator")
+const { deleteFile, handleFileUpload } = require("../middleware/fileUpload.js")
 
 // Get all users
 const getAllUsers = async (request, response) => {
@@ -209,7 +210,7 @@ const applyJob = async (request, response) => {
 
         // Check if the user has already applied
         if (user.appliedJobs.includes(id)) {
-            return response.status(400).json({ error: "User has already applied for this job" });
+            return response.status(200).json({ message: "User has already applied for this job" });
         }
 
         user.appliedJobs.push(id);
@@ -240,7 +241,7 @@ const removeApplyJob = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Appliance removed" });
+        response.status(200).json({ message: "Application removed" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -276,6 +277,31 @@ const requestConnection = async (request, response) => {
 }
 
 // Remove connection
+const removeRequestConnection = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.linkUpRequests = user.linkUpRequests.filter(request => request.toString() !== loggedInUserId);
+
+        await user.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Remove connection
 const removeConnection = async (request, response) => {
     const { id } = request.params;
     const loggedInUserId = request.user.id;
@@ -291,7 +317,78 @@ const removeConnection = async (request, response) => {
         }
 
         user.network = user.network.filter(connection => connection.toString() !== loggedInUserId);
-        user.linkUpRequests = user.linkUpRequests.filter(request => request.toString() !== loggedInUserId);
+
+        await user.save();
+
+        const loggedInUser = await User.findById(loggedInUserId);
+        if (!loggedInUser) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        loggedInUser.network = loggedInUser.network.filter(connection => connection.toString() !== id);
+
+        await loggedInUser.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Accept Request
+const acceptRequest = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        // Logged in user connects with user
+        const loggedInuser = await User.findById(loggedInUserId);
+        if (!loggedInuser) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        loggedInuser.linkUpRequests = loggedInuser.linkUpRequests.filter(request => request.toString() !== id);
+
+        loggedInuser.network.push(id);
+
+        await loggedInuser.save();
+
+        // User connects with logged in user
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.network.push(loggedInUserId);
+
+        await user.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Decline Request
+const declineRequest = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.linkUpRequests = user.linkUpRequests.filter(request => request.toString() !== id);
 
         await user.save();
 
@@ -417,6 +514,11 @@ const updateUser = async (request, response) => {
     // Grab the id from the route parameters
     const { id } = request.params;
 
+    const userBodyData = request.body
+    const profilePicture = request.file ? await handleFileUpload(request.file) : null;
+
+    const userData = profilePicture ? {profilePicture, ...userBodyData} : userBodyData;
+
     // Check if id is a valid mongoose id
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return response.status(404).json({error: "User not found"});
@@ -424,21 +526,32 @@ const updateUser = async (request, response) => {
 
     try {
         await validateUserData(request.body, id);
-        
-        // Find user by id and update
-        const user = await User.findOneAndUpdate(
-            { _id: id },
-            { ...request.body },
-            { new: true } // Return the updated document
-        );
 
-        // User does not exist
+        const user = await User.findById(id);
         if (!user) {
             return response.status(404).json({ error: "User not found" });
         }
 
+        const oldProfilePic = profilePicture ? user.profilePicture : null;
+
+        // Find user by id and update
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: id },
+            { ...userData },
+            { new: true } // Return the updated document
+        );
+
+        // User does not exist
+        if (!updatedUser) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        if (oldProfilePic){
+            deleteFile(oldProfilePic);
+        }
+
         // User exists, send back updated user
-        response.status(200).json(user);
+        response.status(200).json(updatedUser);
     } catch (error) {
         // Αν το error περιεχει τα validFields
         if (error.fields) {
@@ -529,7 +642,10 @@ module.exports = {
     applyJob,
     removeApplyJob,
     requestConnection,
+    removeRequestConnection,
     removeConnection,
+    acceptRequest,
+    declineRequest,
     updateUser,
     loginUser,
     registerUser

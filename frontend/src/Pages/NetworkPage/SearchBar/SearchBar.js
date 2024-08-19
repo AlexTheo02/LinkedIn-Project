@@ -76,7 +76,7 @@ function SearchBar() {
         setShowResults(false);
 
         // Ανακατεύθυνση στο profile του χρήστη
-        navigate(`/profile/${keyword._id}`);
+        navigate(`/Profile/${keyword._id}`);
     };
 
     return (
