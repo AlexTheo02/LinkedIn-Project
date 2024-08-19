@@ -8,7 +8,7 @@ function InteractiveProfilePicture({user_id, userData, nonInter}){
     const navigate = useNavigate();
 
     const HandleImageClick = () => {
-        navigate("/");
+        navigate(`/Profile/${user_id}`);
     }
 
     // For alt, use the standard no pfp img

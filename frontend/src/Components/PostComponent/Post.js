@@ -12,113 +12,40 @@ import {
     PostInteractionBar,
     PostPreviewComments
 } from "./PostComponents.js";
-
-function getPostById(pid){
-    var user_id,timestamp,caption,multimedia,multimediaType,likeCount,commentCount,isLiked
-
-    // Access database and fetch variables
-    if (pid === 3){
-        user_id = 2;
-        timestamp = "8:46 AM 11/09/2001"
-        caption = "I am very excited to announce that i am joining Linkedin!"
-        multimedia = malakes;
-        multimediaType = "image"
-        likeCount = 1;
-        commentCount = 1;
-        isLiked = true; 
-    }
-    if (pid === 2){
-        user_id = 2;
-        timestamp = "5:06 PM 20/07/2024"
-        caption = "This is me in my office today. I guess you could say i am truly commited to what i do!"
-        multimedia = mitsotakis_desk;
-        multimediaType = "image"
-        likeCount = 666;
-        commentCount = 420;
-        isLiked = true; 
-    }
-
-    return(
-        {
-            user_id,
-            timestamp,
-            caption,
-            multimedia,
-            multimediaType,
-            likeCount,
-            commentCount,
-            isLiked
-        }
-    )
-}
-
-function Post({post, commentsPopupHandler}){
+import { useAuthContext } from "../../Hooks/useAuthContext.js";
+import { useEffect, useState } from "react";
 
 
-    // Fetch from database
-    // const {
-    //     user_id,
-    //     timestamp,
-    //     caption,
-    //     multimediaURL,
-    //     multimediaType,
-    //     likeCount,
-    //     commentCount,
-    //     isLiked
-    // } = getPostById(post_id);
-    
+function Post({postData, commentsPopupHandler}){
+    const {user} = useAuthContext();
+    const authorData = postData.author;
+    const [likeCount, setLikeCount] = useState("");
+    const [commentCount, setCommentCount] = useState("");
 
-    // Then create components
+    // Update counters when data changes
+    useEffect(() => {
+        setLikeCount(postData.likesList.length)
+        setCommentCount(postData.commentsList.length)
+    }, [user, postData])
 
-    // if (commentCount > 0)
-    //     return (
-    //         <div className={s.post}>
-                
-    //             <div className={s.post_header}>
-    //             <InteractiveProfile user_id={user_id}/>
-    //             <Timestamp timestamp={timestamp}/>
-    //             </div>
-                
-                
-    //             <PostCaption caption={caption}/>
-    //             <PostMultimedia multimedia={multimedia} multimediaType={multimediaType}/>
-    //             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
-    //             <HorizontalSeparator/>
-    //             <PostInteractionBar isLiked={isLiked}/>
-
-    //             If comments_num > 0, then render these, else, render none
-    //             <HorizontalSeparator/>
-    //             Comments
-    //             <PostPreviewComments post_id={post_id} commentsPopupHandler={commentsPopupHandler} />
-    //         </div>
-    //     );
-    const multimediaURL="https://storage.googleapis.com/linkedin_project_bucket/1722867620034-christmas%20small%20doge.png"
-    const multimediaType = "image";
-    const user1 = {
-        name: "kyr",
-        surname: "mits"
-    }
-    const commentsList = [{author: user1, content: "hello friend"}, {author: user1, content: "bye friend"}]
     return (
         <div className={s.post}>
             
-            {/* <div className={s.post_header}>
-            <InteractiveProfile user_id={user_id}/>
-            <Timestamp timestamp={timestamp}/>
-            </div> */}
+            <div className={s.post_header}>
+            <InteractiveProfile user_id={postData.author._id} profilePicture={authorData.profilePicture} name={authorData.name} surname={authorData.surname} />
+            <Timestamp timestamp={postData.createdAt}/>
+            </div>
             
             
-            <PostCaption caption={post.caption}/>
-            <PostMultimedia multimediaURL={multimediaURL} multimediaType={multimediaType}/>
-            {/* <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
-            <HorizontalSeparator/> */}
-            <PostInteractionBar isLiked={true} commentsPopupHandler={commentsPopupHandler}/>
-            {commentsList.length > 0 ?  
+            <PostCaption caption={postData.caption}/>
+            { postData.multimediaURL && <PostMultimedia multimediaURL={postData.multimediaURL} multimediaType={postData.multimediaType}/> }
+            <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
+            <HorizontalSeparator/>
+            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler}/>
+            {postData.commentsList.length > 0 ?  
                 <>
                     <HorizontalSeparator/>
-                    Comments Preview
-                    {/* Modify to get comments list */}
-                    {/* <PostPreviewComments post_id={post_id} commentsPopupHandler={commentsPopupHandler} /> */}
+                    <PostPreviewComments post_id={postData._id} commentsList={postData.commentsList} commentsPopupHandler={commentsPopupHandler} />
                 </> : <></>}
         </div>
     );

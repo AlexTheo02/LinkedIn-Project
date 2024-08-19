@@ -1,0 +1,48 @@
+.control_bar{
+    /* background-color: aqua; */
+    display: flex;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: top;
+}
+
+.control_bar_buttons_container{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 5px;
+}
+
+.control_bar button{
+    padding: 3px;
+    border-radius: 5px;
+    border: none;
+    background-color: #a02500;
+    max-height: 3.5vh;
+    color: #fff;
+}
+
+.control_bar button:hover{
+    background-color: #a02500cc;
+    cursor: pointer;
+}
+
+.control_bar_message{
+    border-radius: 5px;
+    padding: 5px;
+    border: 2px solid;
+    word-break: break-all;
+    max-width: 70%;
+    visibility: hidden;
+}
+
+.control_bar_message.successful{
+    visibility: visible;
+    border-color: #00a000;
+    background-color: #00ff003f;
+}
+
+.control_bar_message.failed{    
+    visibility: visible;
+    border-color: #da0000;
+    background-color: #ff00003f;
+}

@@ -1,13 +1,22 @@
 const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
 
 const Post = require("../models/postModel.js")
+const Comment = require("../models/commentModel.js")
 const mongoose = require("mongoose")
 
 
 // Get all posts
 const getAllPosts = async (request, response) => {
     // Get all posts, sorted by most recently created
-    const posts = await Post.find({}).sort({createdAt: -1});
+    const posts = await Post.find({}).sort({createdAt: -1})
+    .populate("author","name surname profilePicture")
+    .populate({
+        path: "commentsList",
+        populate: {
+            path: "author",
+            select: "name surname profilePicture"
+        }
+    });
 
     response.status(200).json(posts);
 }
@@ -36,7 +45,7 @@ const getPost = async (request, response) => {
 // Create a new post
 const createPost = async (request, response) => {
     const {
-        // author,
+        author,
         caption,
         commentsList,
         likesList
@@ -48,7 +57,7 @@ const createPost = async (request, response) => {
     // Add to mongodb database
     try {
         const post = await Post.create({
-            // author,
+            author,
             caption,
             multimediaURL,
             multimediaType,
@@ -83,9 +92,34 @@ const updatePost = async (request, response) => {
     response.status(200).json(post);
 }
 
+// Add comment to post
+const addComment = async (request, response) => {
+    // Grab the id from the route parameters
+    const { id: postId } = request.params;
+    const { author, content } = request.body;
+
+    // Create the comment
+    const comment = await Comment.create({
+        post: postId, // Post reference
+        author, // User reference
+        content // comment content
+    })
+
+    // Find the desired post
+    const post = await Post.findById(postId);
+    post.commentsList.unshift(comment); // add to the beggining of the list
+
+    post.save();
+    const populatedComment = await comment.populate("author", "name surname profilePicture");
+    console.log(populatedComment);
+
+    return response.status(200).json({populatedComment})
+}
+
 module.exports = {
     getAllPosts,
     getPost,
     createPost,
-    updatePost
+    updatePost,
+    addComment
 }

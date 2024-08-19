@@ -14,6 +14,7 @@ import NavBar from './Components/NavBar/NavBar.js';
 import { PostsContextProvider } from './Context/PostContext.js';
 import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
+import { useState, useEffect } from 'react';
 
 import {
   BrowserRouter,
@@ -24,6 +25,20 @@ import {
 
 function App() {
   const {user} = useAuthContext()
+
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // Initialize with null
+
+  useEffect(() => {
+      if (user) {
+          setIsAuthenticated(true);
+      } else {
+          setIsAuthenticated(false);
+      }
+  }, []);
+
+  if (isAuthenticated === null) {
+      return <div>Loading...</div>;
+  }
 
   return (
     <BrowserRouter>
@@ -38,7 +53,7 @@ function App() {
         <Route path="/Home" element={
           user ?
           <PostsContextProvider>
-            <HomePage user_id={2} />
+            <HomePage />
           </PostsContextProvider>
           : 
           <Navigate to="/" />
@@ -69,7 +84,11 @@ function App() {
         <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
 
         {/* Post Page Route */}
-        <Route path="/Post" element={user ? <PostPage /> : <Navigate to="/" />} />
+          
+        <Route path="/Post/:post_id" element={user ?
+          <PostsContextProvider>
+            <PostPage /> 
+          </PostsContextProvider> : <Navigate to="/" />} />
 
         {/* Default redirect to welcome page*/}
         <Route path="*" element={<Navigate to="/" />} />

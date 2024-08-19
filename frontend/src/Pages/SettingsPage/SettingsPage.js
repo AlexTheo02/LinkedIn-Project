@@ -1,232 +1,197 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import s from './SettingsPageStyle.module.css';
+
+import SettingControlBar from './SettingControlBar/SettingControlBar.js';
+import ConfirmPassword from './ConfirmPassword/ConfirmPassword.js';
 
 import NavBar from './../../Components/NavBar/NavBar.js';
 
 import { useAuthContext } from '../../Hooks/useAuthContext.js';
 
-const ConfirmPassword = ({correctPassword, IsConfirmingPassword, setIsConfirmingPassword}) => {
-
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [wrongInput, setWrongInput] = useState(false);
-    const [wrongInputCounter, setWrongInputCounter] = useState(0);
-    const [placeholderText, setPlaceholderText] = useState("Confirm your password");
-
-    const handleChange = (e) => {
-        setPlaceholderText("Confirm your password");
-        setCurrentPassword(e.target.value);
-        setWrongInput(false);
-    };
-
-    const handleConfirmPassword = () => {
-        // Correct password
-        if (correctPassword === currentPassword)
-            setIsConfirmingPassword(false);
-
-        // Wrong password
-        else if (currentPassword !== ""){
-            setWrongInput(true);
-            setCurrentPassword("")
-            const counter = wrongInputCounter + 1
-            setWrongInputCounter(counter);
-            (counter >= 3) ? setPlaceholderText("Too many attempts. Please try again later") : setPlaceholderText("Incorrect password");
-        }
-    };
-
-    const handleKeyDown = (e) =>{
-        if (e.key === "Enter"){
-            e.preventDefault();
-            handleConfirmPassword();
-        }
-    };
-
-    return (
-        <div className={s.setting_container}>
-            <label>Please confirm your password before you continue:</label>
-            <div className={s.password_field}>
-                <input 
-                    className={`${s.input_field} ${s.password_field} ${wrongInput ? s.wrong_input : ""}`}
-                    type={isPasswordVisible ? "text" : "password"}
-                    value={currentPassword}
-                    onChange={handleChange}
-                    onClick={handleChange}
-                    onKeyDown={handleKeyDown}
-                    placeholder={placeholderText}
-                    disabled={(wrongInputCounter >= 3) ? true : false}
-                />
-                <FontAwesomeIcon
-                    className={s.password_visibility_icon}
-                    onClick={() => {setIsPasswordVisible(!isPasswordVisible)}}
-                    icon={isPasswordVisible ? faEyeSlash : faEye}
-                    title={isPasswordVisible ? "Hide Password" : "Show Password"}
-                />
-            </div>
-            <button className={s.confirm_password_button} onClick={handleConfirmPassword}>
-                Confirm Password
-            </button>
-        </div>
-    )
-}
-
-const SettingControlBar = ({settingName, settingHandler}) => {
-    
-    console.log(settingHandler);
-
-    const {initial, previous, setPrevious, current,setCurrent, isChanging, setIsChanging, isWrong, setIsWrong, onConfirm, onCancel} = settingHandler;
-    
-    const handleSettingChange = () =>{
-        setPrevious(current);
-        setCurrent("");
-        setIsChanging(true);
-        setIsWrong(false);
-    };
-
-    return (
-        <div className={s.control_bar}>
-            {!isChanging ? (
-                <button onClick={handleSettingChange}>
-                    Change {settingName}
-                </button>
-            ) : 
-            (<>
-                <button onClick={onCancel}>
-                    Cancel
-                </button>
-                <button onClick={onConfirm}>
-                    Confirm
-                </button>
-            </>)}
-            
-        </div>
-    )
-}
-
 function SettingsPage() {
     const {user} = useAuthContext();
-    // Fetch user's data
 
+    const [initialPassword, setInitialPassword] = useState("");
+    const [previousPassword, setPreviousPassword] = useState("");
+
+    // Fetch user's data
+    const [userData, setUserData] = useState(null);
     const [isConfirmingPassword, setIsConfirmingPassword] = useState(true);
 
-    const {initialEmail,initialPassword} = "";
-
-    const [previousEmail, setPreviousEmail] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
     const [isEmailChanging, setIsEmailChanging] = useState(false);
     const [isEmailWrong, setIsEmailWrong] = useState(false);
-
-    // If there is going to be a message display for errors, split these cases and use setPasswordErrorMessage()
-    const confirmEmailChange = () => {
-        // if is not email, setIsEmailWrong(true)
-        // if(isEmail(currentEmail)) (isEmail = function that returns if a string is considered an email (use regex))
-        if (currentEmail === "not an email" || currentEmail === ""){
-            setIsEmailWrong(true);
-        }
-        else{
-            setIsEmailChanging(false);
-            setPreviousEmail(currentEmail);
-        }
-    };
-
-    const cancelEmailChange = () => {
-        setIsEmailWrong(false);
-        setIsEmailChanging(false);
-        setCurrentEmail(previousEmail);
-    }
-
-    // Struct for efficiency
-    const emailHandler = {
-        initial: initialEmail,
-        previous: previousEmail,
-        setPrevious: setPreviousEmail,
-        current: currentEmail,
-        setCurrent: setCurrentEmail,
-        isChanging: isEmailChanging,
-        setIsChanging: setIsEmailChanging,
-        isWrong: isEmailWrong,
-        setIsWrong: setIsEmailWrong,
-        onConfirm: confirmEmailChange,
-        onCancel: cancelEmailChange
-    }
-
-    const [previousPassword, setPreviousPassword] = useState("")
+    const [emailMessage, setEmailMessage] = useState({status: null, message: ""});
+    
     const [currentPassword, setCurrentPassword] = useState("");
     const [currentConfirmPassword, setCurrentConfirmPassword] = useState("");
     const [isPasswordChanging, setIsPasswordChanging] = useState(false);
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isPasswordWrong, setIsPasswordWrong] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [passwordMessage, setPasswordMessage] = useState({status: null, message: ""});
 
-    // Returns wether a value is considered a strong password or not
-    const isStrongPassword = (value) => {
-    // A strong password is a string that has a length of 8 - 16 characters and contains at least:
-    // > One capital letter
-    // > One lowercase letter
-    // > One number
-    // > One special character={!, @, $, %, ^, &, *, +, #}
+    
+    useEffect(() => {
 
-    // Use regex
-        return true;
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`/api/users/${user.userId}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+                const data = await response.json();
+                setUserData(data);
+                setCurrentEmail(data.email);
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, [user]);
+
+    useEffect(() => {
+        setCurrentPassword(initialPassword);
+        setCurrentConfirmPassword(initialPassword);
+        setPreviousPassword(initialPassword);
+    }, [initialPassword]);
+
+
+    if (!userData) {
+        return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
-    // If there is going to be a message display for errors, split these cases and use setPasswordErrorMessage()
-    const confirmPasswordChange = () =>{
-        // Invalid password, not confirmed or same as previous
-        if (currentConfirmPassword !== currentPassword || currentPassword === "" || !isStrongPassword(currentPassword) || currentPassword === previousPassword){
-            setIsPasswordWrong(true);
+
+    const confirmEmailChange = async () => {
+
+        const response = await fetch("/api/users/change-email", {
+            headers: {
+                "Authorization": `Bearer ${user.token}`,
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify({email: currentEmail})
+        })
+
+        const json = await response.json();
+        console.log(json);
+        if (response.ok){
+            // User has changed on db, change current value to Lowercase
+            setCurrentEmail(currentEmail.toLowerCase());
+            
+            // Update email on local userData object
+            const newUserData = userData;
+            newUserData.email = json.email;
+            setUserData(newUserData);
+
+            console.log(userData)
+            setIsEmailChanging(false);
+            setEmailMessage({status: true, message: json.message});
         }
-        // Valid password + confirmed, continue
-        else{
-            setIsPasswordChanging(false);
-            setPreviousPassword(currentPassword);
-            setCurrentConfirmPassword("");
+        
+        if (!response.ok){
+            // Read errors and handle accordingly
+            setIsEmailWrong(true);
+            setCurrentEmail("");
+            setEmailMessage({status: false, message: json.error});
         }
         
     };
+    
+    const confirmPasswordChange = async () => {
+        const response = await fetch("/api/users/change-password", {
+            headers: {
+                "Authorization": `Bearer ${user.token}`,
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify({password: currentPassword, confirmPassword: currentConfirmPassword})
+        })
 
-    const cancelPasswordChange = () => {
+        const json = await response.json();
+        console.log(json);
+        if (response.ok){
+
+            setPreviousPassword(currentPassword);
+            
+            // Update password on local userData object
+            const newUserData = userData;
+            newUserData.password = json.password;
+            setUserData(newUserData);
+
+            setIsPasswordChanging(false);
+            setPasswordMessage({status: true, message: json.message});
+        }
         
+        if (!response.ok){
+            // Read errors and handle accordingly
+            setIsPasswordWrong(true);
+            setCurrentPassword("");
+            setCurrentConfirmPassword("");
+            setPasswordMessage({status: false, message: json.error});
+        }
+        
+    };
+    
+    const handleEmailCancel = () => {
+        setIsEmailWrong(false);
+    setIsEmailChanging(false);
+    setCurrentEmail(userData.email);
+    setEmailMessage({status: null, message:""});
+    }
+
+    const handlePasswordCancel = () => {
         setIsPasswordWrong(false);
         setIsPasswordChanging(false);
         setCurrentPassword(previousPassword);
-        setCurrentConfirmPassword("");
+        setCurrentConfirmPassword(previousPassword);
+        setPasswordMessage({status: null, message:""});
     }
-
-    // Struct for efficiency
-    const passwordHandler = {
-        initial: initialPassword,
-        previous: previousPassword,
-        setPrevious: setPreviousPassword,
-        current: currentPassword,
-        setCurrent: setCurrentPassword,
-        isChanging: isPasswordChanging,
-        setIsChanging: setIsPasswordChanging,
-        isWrong: isPasswordWrong,
-        setIsWrong: setIsPasswordWrong,
-        onConfirm: confirmPasswordChange,
-        onCancel: cancelPasswordChange
-    }
-
-    const profilePic = "";
-    const userName = "";
 
     const handlePwdChange = (e) => {
+        setPasswordMessage({status: null, message: ""});
         setIsPasswordWrong(false);
         setCurrentPassword(e.target.value);
     };
 
     const handleConPwdChange = (e) => {
+        setPasswordMessage({status: null, message: ""});
         setIsPasswordWrong(false);
         setCurrentConfirmPassword(e.target.value);
     };
 
     const handleEmailChange = (e) => {
+        setEmailMessage({status: null, message: ""});
         setIsEmailWrong(false);
         setCurrentEmail(e.target.value);
     }
 
-    
+    const emailHandler = {
+        setCurrent: setCurrentEmail,
+        isChanging: isEmailChanging,
+        setIsChanging: setIsEmailChanging,
+        setIsWrong: setIsEmailWrong,
+        handleCancel: handleEmailCancel,
+        onConfirm: confirmEmailChange,
+        message: emailMessage,
+        setMessage: setEmailMessage
+    };
+
+    const passwordHandler = {
+        setCurrent: setCurrentPassword,
+        setCurrentConfirm: setCurrentConfirmPassword,
+        isChanging: isPasswordChanging,
+        setIsChanging: setIsPasswordChanging,
+        setIsWrong: setIsPasswordWrong,
+        handleCancel: handlePasswordCancel,
+        onConfirm: confirmPasswordChange,
+        message: passwordMessage,
+        setMessage: setPasswordMessage
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter"){
@@ -238,7 +203,6 @@ function SettingsPage() {
         }
     }
     
-
     return (
         <div>
             <NavBar currentPage={"Settings"}/>
@@ -246,23 +210,24 @@ function SettingsPage() {
                 <div className={s.container}>
 
                     <div className={s.profile_container} id="profileContainer">
-                        <img src={profilePic} alt="Profile Picture" id="profilePic" />
-                        <h2>{userName}</h2>
+                        <img src={userData.profilePicture} alt="Profile Picture" id="profilePic" />
+                        <h2>{`${userData.name} ${userData.surname}`}</h2>
                     </div>
 
                     <div className={s.settings_container}>
                         {isConfirmingPassword ? 
                             (
-                            <ConfirmPassword correctPassword={initialPassword} isConfirmingPassword={isConfirmingPassword} setIsConfirmingPassword={setIsConfirmingPassword} />
+                            <ConfirmPassword setIsConfirmingPassword={setIsConfirmingPassword} setInitialPassword={setInitialPassword}/>
                         ) : (
                             <>
+                            {/* Email field */}
                             <div className={s.setting_container}>
                                 <label htmlFor="emailInput">Email address:</label>
                                 <input
                                     type="text"
                                     id="emailInput"
                                     className={`${s.input_field} ${isEmailWrong ? s.wrong_input : ""}`} 
-                                    placeholder={"Enter email address"} 
+                                    placeholder={"Enter new email address"} 
                                     value={currentEmail}
                                     onClick={handleEmailChange}
                                     onChange={handleEmailChange}

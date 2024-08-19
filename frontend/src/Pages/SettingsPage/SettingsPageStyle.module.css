@@ -4,6 +4,14 @@
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
 }
+.loading_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: xx-large;
+    color: #333;
+}
 
 .background_image{
     width: 100%;
@@ -115,47 +123,6 @@
 .wrong_input{
     border: 2px solid red !important;
 }
-
-.control_bar{
-    /* background-color: aqua; */
-    display: flex;
-    padding: 5px;
-    /* justify-content: space-evenly; */
-    gap: 5%;
-    margin-left: auto;
-    margin-right: 5%;
-}
-
-.control_bar button{
-    padding: 3px;
-    border-radius: 5px;
-    border: none;
-    background-color: #a02500;
-    color: #fff;
-}
-
-.control_bar button:hover{
-    background-color: #a02500cc;
-    cursor: pointer;
-}
-
-.confirm_password_button{
-    padding: 3px;
-    border-radius: 5px;
-    border: none;
-    background-color: #a02500;
-    color: #fff;
-    margin: auto;
-    margin-top: 5px;
-    margin-right:4%;
-    width: fit-content;
-}
-
-.confirm_password_button:hover{
-    background-color: #a02500cc;
-    cursor: pointer;
-}
-
 
 .password_visibility_icon{
     color: #a02500;
