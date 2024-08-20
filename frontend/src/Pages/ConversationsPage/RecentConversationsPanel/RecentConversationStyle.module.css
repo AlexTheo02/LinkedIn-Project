@@ -1,14 +1,19 @@
 .recent_conversation{
-    margin: auto;
+    margin-right: 0px;
     width: 100%;
     border-radius: 5px;
-    padding: 3px;
+    padding: 5px;
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: medium;
     font-weight: 600;
     background-color: #fff;
+}
+
+.recent_conversation.active{
+    background-color: #e2dada;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 .usr_time_container{

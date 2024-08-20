@@ -5,12 +5,28 @@ const mongoose = require("mongoose")
 // Get all conversations for logged in user
 const getAllConversations = async (request, response) => {
     // Get current user's Recent Conversations List
-    const recentConversations = await User.findById(request.user._id).select("recentConversations")
+    const recentConv = await User.findById(request.user._id)
+    .populate({
+        path: "recentConversations",
+        select: "participant_1 participant_2 messageLog",
+        populate: {
+            path: "participant_1 participant_2",
+            select: "name surname profilePicture"
+        }
+    })
+    .select("recentConversations");
+
+    const recentConversations = recentConv.recentConversations;
+    // console.log(recentConversations)
 
     // Sort by timestamp
-    // recentConversations.recentConversations.sort((a, b) => b.createdAt - a.createdAt)
+    const sortedConversations = recentConversations.sort((a,b) => {
+        return (b.messageLog[0].timestamp - a.messageLog[0].timestamp)
+    })
 
-    response.status(200).json(recentConversations.recentConversations);
+    // console.log(sortedConversations)
+
+    response.status(200).json(sortedConversations);
 }
 
 // Get multiple conversations (not ids) based on ids
@@ -60,22 +76,43 @@ const getConversation = async (request, response) => {
 
 // Create a new conversation
 const createConversation = async (request, response) => {
+    console.log('Request body:', request.body);
     const {
         participant_1,
         participant_2,
-        messageLog
+        initialMessage
     } = request.body;
 
-    console.log('Request body:', request.body);
+    
+    const messageLog = [initialMessage]
+
+    const conv = {
+        participant_1,
+        participant_2,
+        messageLog
+    }
     
     // Add to mongodb database
     try {
-        const conversation = await Conversation.create({
-            participant_1,
-            participant_2,
-            messageLog
-    });
-        response.status(200).json(conversation)
+        const conversation = await Conversation.create(conv);
+
+        // Find both users and add this conversation to their recentConversations
+        const part1 = await User.findById(participant_1);
+        const part2 = await User.findById(participant_2);
+
+        part1.recentConversations = [conversation._id, ... part1.recentConversations]
+        part2.recentConversations = [conversation._id, ... part2.recentConversations]
+
+        part1.save()
+        part2.save()
+
+        const populatedConversation = await conversation.populate({
+            path: "participant_1 participant_2",
+            select: "name surname profilePicture"
+        })
+        console.log(populatedConversation);
+        return response.status(200).json({populatedConversation})
+
     } catch (error) {
         response.status(400).json({error: error.message})
     }
@@ -103,10 +140,60 @@ const updateConversation = async (request, response) => {
     response.status(200).json(conversation);
 }
 
+const findConversationBetweenUsers = async (request, response) => {
+    // Grab the id from the route parameters
+    const { id } = request.params;
+
+    // Check if id is a valid mongoose id
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({error: "User not found"})
+    }
+
+    const userId = request.user.id;
+
+    try {
+
+        // Find user's recent conversation list and populate it
+        const user = await User.findById(userId)
+        .populate({
+            path: "recentConversations",
+            select: "participant_1 participant_2 messageLog"
+        })
+        .select("recentConversations");
+
+        const recentConversations = user.recentConversations;
+
+        console.log(recentConversations[0].participant_1)
+
+        // Search for conversation between the two users
+        const conversation = recentConversations.find(conv => {
+            const participants = [conv.participant_1.toString(), conv.participant_2._id.toString()];
+            return participants.includes(userId.toString() && id.toString());
+        })
+
+        if (conversation){
+            const populatedConversation = await conversation.populate({
+                path: "participant_1 participant_2",
+                select: "name surname profilePicture"
+            })
+            return response.status(200).json({populatedConversation})
+        }
+        else{
+            return response.status(404).json({error: "Conversation between users not found"});
+        }
+
+
+    } catch (error){
+        console.error("Error finding conversation between users");
+    }
+    
+}
+
 module.exports = {
     getAllConversations,
     getMultipleConversations,
     getConversation,
     createConversation,
-    updateConversation
+    updateConversation,
+    findConversationBetweenUsers
 }

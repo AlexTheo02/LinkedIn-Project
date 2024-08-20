@@ -5,7 +5,8 @@ const {
     getMultipleConversations,
     getConversation,
     createConversation,
-    updateConversation
+    updateConversation,
+    findConversationBetweenUsers
 } = require("../controllers/conversationController.js")
 
 const requireAuth = require('../middleware/requireAuth.js')
@@ -30,6 +31,9 @@ router.post("/", createConversation)
 
 // UPDATE a conversation
 router.patch("/:id", updateConversation)
+
+// Get a conversation with participants: logged in user & parameter
+router.get("/find-conversation/:id", findConversationBetweenUsers)
 
 
 module.exports = router

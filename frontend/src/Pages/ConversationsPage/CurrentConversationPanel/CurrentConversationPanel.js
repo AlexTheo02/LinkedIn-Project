@@ -10,7 +10,7 @@ import { useAuthContext } from "../../../Hooks/useAuthContext";
 function CurrentConversationPanel(){
 
     const {user} = useAuthContext();
-    const {receiver, activeConversation, conversationDispatch} = useConversationContext();
+    const {activeReceiver, activeConversation, conversationDispatch} = useConversationContext();
 
     const [message, setMessage] = useState("");
 
@@ -26,17 +26,18 @@ function CurrentConversationPanel(){
       };
 
     const handleSendMessage = async () => {
-        const validMessageRegex = /\S/;
+        const validMessageRegex = /\S/; // matches any non whitespace character
         if(validMessageRegex.test(message)){
+            const trimmedMessage = message.trim()
             // Create new message object
-            const msg = {sender: user.userId, content: message, timestamp: new Date(), failedToSend: false}
+            const msg = {sender: user.userId, content: trimmedMessage.replace(/\s/g, ' '), timestamp: new Date(), failedToSend: false}
 
             // Clear input field
             setMessage("");
 
             // Update local messageLog state
-            activeConversation.messageLog = [msg, ...activeConversation.messageLog]
-            console.log(activeConversation)
+            activeConversation.messageLog = [msg, ...activeConversation.messageLog];
+            console.log(activeConversation);
 
             // Update the conversation on the database
             const filteredMessageLog = activeConversation.messageLog.filter(msg => msg.failedToSend !== true);
@@ -64,6 +65,7 @@ function CurrentConversationPanel(){
                 }
             }
             conversationDispatch({type: "SET_ACTIVE_CONVERSATION", payload: activeConversation})
+            conversationDispatch({type: "UPDATE_CONVERSATIONS"})
             
         }
     };
@@ -72,10 +74,10 @@ function CurrentConversationPanel(){
         <div className={s.current_conversation_panel}>
             <div className={s.conversation_header}>
                 <InteractiveProfile
-                    user_id={receiver.id}
-                    profilePicture={receiver.profilePicture}
-                    name={receiver.name}
-                    surname={receiver.surname}
+                    user_id={activeReceiver._id}
+                    profilePicture={activeReceiver.profilePicture}
+                    name={activeReceiver.name}
+                    surname={activeReceiver.surname}
                     altern={true}
                 />
             </div>
@@ -83,7 +85,7 @@ function CurrentConversationPanel(){
             <div className={s.conversation}>
                 {/* Change to map the activeConversation.messageLog field */}
                 {activeConversation.messageLog.map((msg, index) => (
-                    <Message key={`message-${index}`} message={msg} receiver={receiver}/>
+                    <Message key={`message-${index}`} message={msg} receiver={activeReceiver}/>
                 ))}
             </div>
 

@@ -5,7 +5,6 @@ const { upload } = require("../middleware/fileUpload.js");
 const {
     getAllUsers,
     getUserById,
-    getUserProfileData,
     getUser,
     createUser,
     deleteUser,

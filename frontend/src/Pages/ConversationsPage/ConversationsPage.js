@@ -9,13 +9,13 @@ import { useNavigate } from "react-router-dom";
 
 import RecentConversationsPanel from "./RecentConversationsPanel/RecentConversationsPanel.js";
 
-function ConversationsPage({user_id}){
+function ConversationsPage(){
     const navigate = useNavigate();
     // Get current logged in user
     const {user} = useAuthContext();
 
     // Fetch current user's recent conversations
-    const {conversations, conversationDispatch} = useConversationContext();
+    const {fromProfile, conversations, conversationDispatch} = useConversationContext();
 
     useEffect(() => {
         const getRecentConversations = async () => {
@@ -29,42 +29,16 @@ function ConversationsPage({user_id}){
             const json = await response.json();
 
             if (response.ok && json.length){
-                // Update conversation context to contain the actual conversation objects
-                const resp = await fetch(`api/conversations/multiple?ids=${json.join(',')}`, {
-                    headers: {
-                        "Authorization": `Bearer ${user.token}`
-                    }
-                })
-                const jsn = await resp.json();
-                if (resp.ok){
-                    // Update the context
-                    const mrc = jsn[0]; // most recent conversation
-                    // Find out who the receiver is
-                    const receiverId = user.userId === mrc.participant_1 ? mrc.participant_2 : mrc.participant_1
-                    // Gather their data and update the receiver context
-                    const getUserData = async () => {
-
-                        // Get receiver's data
-                        const response = await fetch(`api/users/${receiverId}`, {
-                            headers: {
-                                "Authorization": `Bearer ${user.token}`
-                            }
-                        });
-                        const userData = await response.json();
-            
-                        if (response.ok){
-                            conversationDispatch({type: 'SET_RECEIVER', payload: {
-                                id: receiverId,
-                                profilePicture: userData.profilePicture,
-                                name: userData.name,
-                                surname: userData.surname,
-                            }})
-                        }
-                    }
-            
-                    getUserData(); // will update the receiver on the context also
-                    conversationDispatch({type:"SET_CONVERSATIONS", payload: jsn})
-                    conversationDispatch({type:"SET_ACTIVE_CONVERSATION", payload: mrc}) // Most recent conversation
+                conversationDispatch({type:"SET_CONVERSATIONS", payload: json})
+                
+                // If redirected from profile page message, do not set most recent as active
+                if (!fromProfile){
+                    const mostRecentConversation = json[0];
+                    conversationDispatch({type:"SET_ACTIVE_CONVERSATION", payload: mostRecentConversation}) // Most recent conversation
+                    conversationDispatch({type: 'SET_ACTIVE_RECEIVER',
+                        payload: user.userId === mostRecentConversation.participant_1._id 
+                        ? mostRecentConversation.participant_2 : mostRecentConversation.participant_1
+                    });
                 }
             }
         }
@@ -73,6 +47,8 @@ function ConversationsPage({user_id}){
             getRecentConversations();
         }
     }, [user])
+
+
 
     return(
         <div className="conversations-page">

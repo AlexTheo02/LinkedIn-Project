@@ -42,6 +42,8 @@ const userSchema = new Schema({
     publishedJobListings: {type: [{type: Schema.Types.ObjectId, ref: "JobListing"}], required: true}, // Array of JobListing ObjectIds
 
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
+    
+    // postComments
 
     privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 
