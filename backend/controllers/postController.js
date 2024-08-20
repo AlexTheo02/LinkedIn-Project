@@ -31,7 +31,15 @@ const getPost = async (request, response) => {
         return response.status(404).json({error: "Post not found"})
     }
 
-    const post = await Post.findById(id);
+    const post = await Post.findById(id)
+        .populate("author","name surname profilePicture")
+        .populate({
+        path: "commentsList",
+        populate: {
+            path: "author",
+            select: "name surname profilePicture"
+        }
+    });
 
     // Post does not exist
     if (!post) {

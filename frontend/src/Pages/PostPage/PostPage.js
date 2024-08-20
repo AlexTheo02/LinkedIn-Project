@@ -16,8 +16,9 @@ function PostPage() {
     const { post_id } = useParams(); // Ανάκτηση του post_id από το URL
 
     const [postData, setPostData] = useState(null);
+    const [userData, setUserData] = useState(null);
 
-    const {activeComments, postDispatch} = usePostsContext();
+    const {activeComments, posts, postDispatch} = usePostsContext();
 
     useEffect(() => {
         const fetchPostData = async () => {
@@ -29,8 +30,9 @@ function PostPage() {
             const post = await response.json();
 
             if (response.ok){
-                setPostData(post)
-                postDispatch({type: "SET_ACTIVE_COMMENTS", payload: post.commentsList});
+                // postDispatch({type: "SET_ACTIVE_COMMENTS", payload: post.commentsList});
+                // postDispatch({type: "SET_ACTIVE_POST_ID", payload: post._id});
+                postDispatch({type: "SET_POSTS", payload: [post]})
             }
             else{
                 setPostData(false);
@@ -39,26 +41,40 @@ function PostPage() {
             }
         }
 
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`/api/users/${user.userId}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+                const data = await response.json();
+                setUserData(data);
+
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
         fetchPostData();
+        fetchUserData();
+
     }, [post_id, user])
 
     // Comments popup state
     const [isPopupVisible, setIsPopupVisible] = useState(false);
-    const [selectedPostId, setSelectedPostId] = useState(post_id);
 
-    if(!postData){
-        return postData === null ? <h1 className={s.loading_text}>Loading...</h1> : <h1 className={s.loading_text}>Error 404, post not found.</h1>;;
+    if(!posts || !userData){
+        return <h1 className={s.loading_text}>Loading...</h1>
     }
 
 
     const showCommentsPopup = (post_id) => {
         setIsPopupVisible(true);
-        setSelectedPostId(post_id)
     };
 
     const hideCommentsPopup = () => {
-        setIsPopupVisible(false);
-        setSelectedPostId(null);            
+        setIsPopupVisible(false);          
     };
     
     // Struct for efficiency
@@ -66,7 +82,6 @@ function PostPage() {
         showCommentsPopup,
         hideCommentsPopup,
         isPopupVisible,
-        selectedPostId
     }
 
     return (
@@ -75,8 +90,8 @@ function PostPage() {
             {
                 isLoading ? <h1 className={s.loading_text}>Loading...</h1> :
                 <div className={s.post_page_contents_container}>
-                <CommentsPopup commentsPopupHandler={commentsPopupHandler}/>
-                <Post postData={postData} commentsPopupHandler={commentsPopupHandler}/>
+                <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
+                <Post postData={posts[0]} commentsPopupHandler={commentsPopupHandler}/>
                 </div>
             }
         </div>
