@@ -63,6 +63,7 @@ function CreatePost({userData}) {
         // Check if post is not empty
         if (caption !== ""){
 
+            // Create post on database
             const formData = new FormData();
             formData.append("author", user.userId);
             formData.append("caption", caption);
@@ -70,13 +71,13 @@ function CreatePost({userData}) {
             formData.append("likesList", JSON.stringify(likesList));
             formData.append("file", multimedia);
 
-           const response = await fetch("/api/posts", {
-            method: "POST",
-            body: formData,
-            headers: {
-                'Authorization': `Bearer ${user.token}`
-            }
-           });
+            const response = await fetch("/api/posts", {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                },
+                method: "POST",
+                body: formData
+            });
 
            const json = await response.json();
 
@@ -101,6 +102,14 @@ function CreatePost({userData}) {
                 console.log("Post published successfully", json);
 
                 postDispatch({type: 'CREATE_POST', payload: json});
+
+                // Add post's id to user's publishedPosts list
+                const publishPostResponse = await fetch(`/api/users/publishPost/${json._id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    },
+                    method: "PATCH",
+                });
             }
         }
     }

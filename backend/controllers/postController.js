@@ -72,7 +72,10 @@ const createPost = async (request, response) => {
             commentsList: JSON.parse(commentsList),
             likesList: JSON.parse(likesList)
         });
-        response.status(200).json(post)
+
+        const populatedPost = await post.populate("author","name surname profilePicture")
+
+        response.status(200).json(populatedPost)
     } catch (error) {
         response.status(400).json({error: error.message})
     }
