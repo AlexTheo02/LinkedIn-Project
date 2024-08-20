@@ -1,21 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import s from "./PostNotificationsStyle.module.css";
 import Notification from '../Notification/Notification';
+import { useAuthContext } from '../../../Hooks/useAuthContext';
 
-function PostNotifications({ notifications }) {
+function PostNotifications() {
+    const {user} = useAuthContext()
+    const [notifications, setNotifications] = useState(null);
+
+    // Fetch posts from database
+    useEffect(() => {
+        const fetchPosts = async() => {
+            const response = await fetch('/api/notifications', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+            const json = await response.json();
+
+            if (response.ok){
+                setNotifications(json);
+                console.log(json);
+            }
+        }
+
+        if (user){
+            fetchPosts()
+        }
+        
+    }, [user])
+
+    if (!notifications) {
+        return;
+    }
 
     return (
         <div className={s.notifications_list}>
             {notifications.map(notification => (
                 <Notification 
-                    key={notification.id} 
-                    profilePic={notification.profilePic} 
-                    name={notification.name} 
-                    surname={notification.surname} 
-                    isInterestOrComment={notification.isInterestOrComment}
-                    comment={notification.comment}
-                    postPic={notification.postPic}
-                    postCaption={notification.postCaption} 
+                    key={notification} 
+                    id={notification}
                 />
             ))}
         </div>

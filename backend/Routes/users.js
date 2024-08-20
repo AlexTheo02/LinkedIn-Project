@@ -20,6 +20,7 @@ const {
     removeConnection,
     acceptRequest,
     declineRequest,
+    postNotify,
     updateUser,
     loginUser,
     registerUser
@@ -86,6 +87,9 @@ router.patch("/acceptRequest/:id", acceptRequest);
 
 // Decline request
 router.patch("/declineRequest/:id", declineRequest);
+
+// Post notification to user's notifications
+router.patch("/postNotify/:notificationid/:id", postNotify);
 
 // UPDATE a user
 router.patch("/:id", upload.single("file"), updateUser)
