@@ -177,14 +177,14 @@ function ProfilePage() {
                                             {isConnected ? 'Connected' : 'Sent Request'}
                                             <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
                                         </button>
-                                        :
+                                    :
                                         <button
                                             className={s.follow_button} onClick={handleConnectClick}>
                                             Connect
                                             <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
                                         </button>
                                     }
-                                    { 
+                                    { isConnected &&
                                         <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
                                             Message
                                             <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
