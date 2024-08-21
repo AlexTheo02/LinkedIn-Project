@@ -16,7 +16,7 @@ import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
 import { useState, useEffect } from 'react';
 import { JobsContextProvider } from './Context/JobsContext.js';
-
+import AdminPage from './Pages/AdminPage/AdminPage.js';
 
 import {
   BrowserRouter,
