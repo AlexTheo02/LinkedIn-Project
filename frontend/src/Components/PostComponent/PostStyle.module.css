@@ -76,21 +76,24 @@
 
 .multimedia {
     margin-bottom: 3px;
-    background-color: #e2dada;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     margin: auto;
+    min-height: 50px;
 }
 
 .multimedia img, .multimedia video, .multimedia audio {
     width: 100%;
     height: auto;
+    /* MULTIMEDIA RESIZE HERE <================================================= */
 }
 
 .post_info_bar, .interaction_bar {
     display: flex;
     justify-content: space-between;
     margin: auto;
+    margin-top: 3px;
     margin-bottom: 3px;
     padding:2px 2.5%;
 }

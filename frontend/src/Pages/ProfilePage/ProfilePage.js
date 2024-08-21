@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../Hooks/useAuthContext';
 import MessagePopup from './MessagePopup/MessagePopup';
 import NetworkUsersList from '../../Components/NetworkUsersList/NetworkUsersList';
+import { useConversationContext } from '../../Hooks/useConversationContext';
 
 function calculateAge(birthDate) {
     const dateOfBirth = new Date(birthDate);
@@ -41,13 +42,15 @@ function ExpandableText({ text, maxWords = 50 }) {
 function ProfilePage() {
     const {user} = useAuthContext();
     const navigate = useNavigate();
-
+    
     const { id } = useParams(); // Ανάκτηση του id από το URL
     const [userData, setUserData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το modal
+    
+    const { conversationDispatch } = useConversationContext();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -140,8 +143,29 @@ function ProfilePage() {
         setConnectButtonLoading(false);
     };
 
-    const handleMessageClick = () => {
-        setIsPopupOpen(true); // Ανοίγει το modal
+    const handleMessageClick = async () => {
+        // If conversation exists, navigate to conversations
+        const response = await fetch(`/api/conversations/find-conversation/${userData._id}`, {
+            headers: {
+                "Authorization": `Bearer ${user.token}`,
+            }
+        })
+        
+        const {populatedConversation:conversation} = await response.json();
+        console.log(conversation)
+
+        if (response.ok){
+            conversationDispatch({type: "SET_FROM_PROFILE", payload: true})
+            conversationDispatch({type: "SET_ACTIVE_CONVERSATION", payload: conversation})
+            conversationDispatch({type: 'SET_ACTIVE_RECEIVER',
+                payload: user.userId === conversation.participant_1._id 
+                ? conversation.participant_2 : conversation.participant_1
+            });
+            navigate("/Conversations");
+        }
+        else{
+            setIsPopupOpen(true); // Ανοίγει το modal
+        }   
     };
 
     const handleEditPersonalDetails = () => {

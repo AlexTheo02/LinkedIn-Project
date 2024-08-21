@@ -5,7 +5,6 @@ const { upload } = require("../middleware/fileUpload.js");
 const {
     getAllUsers,
     getUserById,
-    getUserProfileData,
     getUser,
     createUser,
     deleteUser,
@@ -13,6 +12,8 @@ const {
     changeEmail,
     changePassword,
     publishJob,
+    publishPost,
+    toggleLikePost,
     applyJob,
     removeApplyJob,
     requestConnection,
@@ -65,6 +66,12 @@ router.post("/change-password", changePassword);
 
 // Publish job
 router.patch("/publishJob/:id", publishJob);
+
+// Publish post
+router.patch("/publishPost/:id", publishPost);
+
+// Like post
+router.patch("/toggleLikePost/:id", toggleLikePost);
 
 // Apply for job
 router.patch("/applyJob/:id", applyJob);
