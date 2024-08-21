@@ -44,8 +44,8 @@ function Notification({ id }) {
                 }
             })
         }
-
-        navigate(`Post/${notification.post_id}`)
+        console.log(notification)
+        navigate(`/Post/${notification.post_id._id}`)
     };
 
     return (

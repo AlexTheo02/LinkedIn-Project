@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const validator = require("validator")
 const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+const Comment = require("./commentModel.js");
 
 // Define the schema for the model
 const Schema = mongoose.Schema
@@ -44,6 +45,7 @@ const userSchema = new Schema({
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
     
     // postComments
+    // publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true},
 
     privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 
