@@ -1,0 +1,56 @@
+.many_input_fields_container{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.many_fields_container{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.many_input_fields_interaction_bar{
+    display: flex;
+    gap: 10px;
+    margin: auto;
+    margin-right: 0px;
+
+}
+
+.many_input_fields_interaction_bar button{
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: medium;
+    border-radius: 30px;
+    border: 2.5px solid #a02500;
+    background-color: #fff;
+    color: #a02500;
+}
+
+.many_input_fields_interaction_bar button.main{
+    background-color: #a02500;
+    color: #fff;
+}
+
+.many_input_fields_interaction_bar button:hover{
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.many_input_fields_interaction_bar button:active{
+    opacity: 1;
+}
+
+.many_fields_container input{
+    width: 100%;
+    padding: 1vh;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.many_fields_container input:focus{
+    border-color: #a02500;
+    outline: none;
+}

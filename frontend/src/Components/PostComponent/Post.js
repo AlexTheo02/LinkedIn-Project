@@ -41,7 +41,7 @@ function Post({postData, commentsPopupHandler}){
             { postData.multimediaURL && <PostMultimedia multimediaURL={postData.multimediaURL} multimediaType={postData.multimediaType}/> }
             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
             <HorizontalSeparator/>
-            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler}/>
+            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler} author={postData.author._id}/>
             {postData.commentsList.length > 0 ?  
                 <>
                     <HorizontalSeparator/>

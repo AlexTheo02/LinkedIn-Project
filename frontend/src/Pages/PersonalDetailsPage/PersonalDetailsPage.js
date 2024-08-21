@@ -6,6 +6,7 @@ import Select from "react-dropdown-select";
 import NavBar from './../../Components/NavBar/NavBar.js';
 import "../../Components/SelectStyle.css"
 import { useAuthContext } from '../../Hooks/useAuthContext.js';
+import ManyInputFields from '../../Components/ManyInputFields/ManyInputFields.js';
 
 const {
     createYearOptions,
@@ -14,6 +15,7 @@ const {
 } = require("../../Components/GeneralFunctions.js")
 
 function PersonalDetails() {
+    const [dummy, setDummy] = useState([{value: ""},{value: ""},{value: ""}]);
     const [profilePicture, setProfilePicture] = useState("");
 
     const [profilePic, setProfilePic] = useState(null);
@@ -442,6 +444,25 @@ function PersonalDetails() {
                             disabled={!isEditing}
                         />
                     </div>
+                    <div className={s.input_field}>
+                        <div className={s.label_with_icon}>
+                            <label htmlFor="skillsInput">Skills</label>
+                            {isEditing && (
+                                <div className={s.icons_container}>
+                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
+                                    <FontAwesomeIcon
+                                        icon={isSkillsPublic ? faToggleOn : faToggleOff}
+                                        className={s.toggle_icon}
+                                        onClick={() => setIsSkillsPublic(!isSkillsPublic)}
+                                        title={isSkillsPublic ? 'Set to private' : 'Set to public'}
+                                    />
+                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
+                                </div>
+                            )}
+                        </div>
+                        <ManyInputFields id="manyInputFields" name={'Skill'} list={dummy} setList={setDummy} limit={10} isEditing={isEditing}/>
+                    </div>
+                    
                     {/* Display error message */}
                     {error && (
                         <div className={s.error_message}>

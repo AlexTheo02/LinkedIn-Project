@@ -573,6 +573,34 @@ const declineRequest = async (request, response) => {
     }
 }
 
+// Post Notification to user's notifications
+const postNotify = async (request, response) => {
+    const { notificationid, id } = request.params;  // Notification id and Author id
+
+    if (!mongoose.Types.ObjectId.isValid(notificationid)) {
+        return response.status(404).json({ error: "Notification not found" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "User not found" });
+    }
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        user.postNotifications.push(notificationid);
+
+        await user.save();
+
+        response.status(200).json({ message: "Connection removed" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
 function formatFieldName(fieldName) {
     return fieldName
         .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
@@ -826,6 +854,7 @@ module.exports = {
     removeConnection,
     acceptRequest,
     declineRequest,
+    postNotify,
     updateUser,
     loginUser,
     registerUser

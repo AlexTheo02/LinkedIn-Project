@@ -1,9 +1,7 @@
 const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
-
+const mongoose = require("mongoose")
 const Post = require("../models/postModel.js")
 const Comment = require("../models/commentModel.js")
-const mongoose = require("mongoose")
-
 
 // Get all posts
 const getAllPosts = async (request, response) => {
