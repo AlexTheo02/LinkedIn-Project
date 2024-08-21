@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import s from './NotificationStyle.module.css';
 import { useAuthContext } from '../../../Hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
+import { formatDistanceToNow } from 'date-fns';
 
 function Notification({ id }) {
     const {user} = useAuthContext();
@@ -62,17 +63,20 @@ function Notification({ id }) {
                 </div>
                 {!notification.isLike && <div className={s.comment}> " {notification.commentContent} " </div>}
             </div>
-            <div className={s.postContainer}>
-                {notification.post_id.multimediaURL &&
-                    <>
-                    { notification.post_id.multimediaType === "video" &&
-                        <video src={notification.post_id.multimediaURL} alt="Post" className={s.postPic} ></video>
+            <div className={s.column}>
+                <div className={s.postContainer}>
+                    {notification.post_id.multimediaURL &&
+                        <>
+                        { notification.post_id.multimediaType === "video" &&
+                            <video src={notification.post_id.multimediaURL} alt="Post" className={s.postPic} ></video>
+                        }
+                        { notification.post_id.multimediaType === "image" &&
+                            <img src={notification.post_id.multimediaURL} alt="Post" className={s.postPic} />
+                        }
+                        </>
                     }
-                    { notification.post_id.multimediaType === "image" &&
-                        <img src={notification.post_id.multimediaURL} alt="Post" className={s.postPic} />
-                    }
-                    </>
-                }
+                </div>
+                <small className={s.timestamp}>{formatDistanceToNow(notification.createdAt,{addSuffix: true})}</small>
             </div>
         </div>
     );

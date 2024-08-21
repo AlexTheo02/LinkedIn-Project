@@ -44,14 +44,13 @@ const userSchema = new Schema({
 
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
     
-    // postComments
-    // publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true},
+    // publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // Array of Comment ObjectIds (comments the user has published)
 
     privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 
     appliedJobs: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], required: true}, // Array of job ids that the user has applied to
 
-    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "Notification"}], required: true}, // Array of Post Notification ids
+    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true}, // Array of Post Notification ids
 
     linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}, // Array of Link Up Requests ids
 })
