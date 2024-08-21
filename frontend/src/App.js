@@ -91,7 +91,10 @@ function App() {
         <Route path="/Settings" element={user ? <SettingsPage /> : <Navigate to="/" />} />
           
         {/* Profile Route */}
-        <Route path="/Profile/:id" element={user ? <ProfilePage /> : <Navigate to="/" />} />
+        <Route path="/Profile/:id" element={user ? 
+          <ConversationContextProvider>
+            <ProfilePage />
+          </ConversationContextProvider> : <Navigate to="/" />} />
 
         {/* Post Page Route */}
           

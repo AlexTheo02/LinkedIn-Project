@@ -307,6 +307,67 @@ const publishJob = async (request, response) => {
     }
 }
 
+// Publish a post
+const publishPost = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Post not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the post is already published
+        if (user.publishedPosts.includes(id)) {
+            return response.status(400).json({ error: "Post already published" });
+        }
+
+        user.publishedPosts.push(id);
+        await user.save();
+
+        response.status(200).json({ message: "User published Post" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
+// Like a post
+const toggleLikePost = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Post not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the post is already liked
+        console.log(user.likedPosts, id)
+        if (user.likedPosts.includes(id)) {
+            // Remove post from likedPosts list
+            user.likedPosts = user.likedPosts.filter(postId => postId.toString() !== id.toString())
+        }
+        else{
+            user.likedPosts.push(id);
+        }
+        await user.save();
+
+        response.status(200).json({ message: "User liked Post" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
 // Apply for job
 const applyJob = async (request, response) => {
     const { id } = request.params;
@@ -784,6 +845,8 @@ module.exports = {
     changeEmail,
     changePassword,
     publishJob,
+    publishPost,
+    toggleLikePost,
     applyJob,
     removeApplyJob,
     requestConnection,

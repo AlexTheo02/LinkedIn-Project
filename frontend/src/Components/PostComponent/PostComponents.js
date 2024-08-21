@@ -76,12 +76,14 @@ function LikeButton({post_id, likesList, author}) {
     const { user } = useAuthContext();
     const { postDispatch } = usePostsContext();
     const [isLiked, setIsLiked] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         setIsLiked(likesList.includes(user.userId) ? true : false);
     }, [user,likesList])
 
     const toggleLike = async () => {
+        setIsLoading(true);
         setIsLiked(!isLiked);
         if(isLiked){
             const removeIndex = likesList.findIndex(i => i === user.userId);
@@ -107,14 +109,24 @@ function LikeButton({post_id, likesList, author}) {
             })
 
             if (postResponse.ok){
-                // Create dummy job
+            
+                // Send request to the server to update the likedPosts on user
+                const userLikeResponse = await fetch(`/api/users/toggleLikePost/${post_id}`, {
+                  headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                  },
+                  method: "PATCH",
+                })
+              
+                // Create notification object
                 if (!isLiked && user.userId !== author){
                     const notification = {
                         post_id,
                         isLike: true,
                         commentContent: ""
                     }
-    
+                    
+                    // Send request to create notification on the database
                     const notificationResponse = await fetch("/api/notifications/", {
                         method: "POST",
                         body: JSON.stringify(notification),
@@ -128,6 +140,7 @@ function LikeButton({post_id, likesList, author}) {
     
                     if (notificationResponse.ok){
                         try{
+                            // Notify author
                             const userResponse = await fetch(`/api/users/postNotify/${json._id}/${author}`, {
                                 method: 'PATCH',
                                 headers: {
@@ -157,11 +170,16 @@ function LikeButton({post_id, likesList, author}) {
         } catch (error) {
             console.error('Error liking the post:', error);
         }
+        setIsLoading(false);
     };
 
     return (
         <>
-            {isLiked ? <FontAwesomeIcon icon={faThumbsUpSolid} onClick={toggleLike} className={s.post_interaction_bar_button}/> : <FontAwesomeIcon icon={faThumbsUpRegular} onClick={toggleLike} className={s.post_interaction_bar_button}/>}
+            {isLiked ?
+                <FontAwesomeIcon icon={faThumbsUpSolid} onClick={!isLoading ? toggleLike : undefined} className={s.post_interaction_bar_button}/>
+                :
+                <FontAwesomeIcon icon={faThumbsUpRegular} onClick={!isLoading ? toggleLike : undefined} className={s.post_interaction_bar_button}/>
+            }
         </>
     );
 }
@@ -312,8 +330,7 @@ const AddComment = ({userData}) => {
                     console.error('Error creating notification');
                 }
             }
-
-            // Maybe sort
+          
             setCommentValue("");
         }       
     }

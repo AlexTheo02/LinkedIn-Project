@@ -19,10 +19,25 @@ export const conversationReducer = (state, action) => {
                 ...state,
                 activeConversation: action.payload
             }
-        case 'SET_RECEIVER':
+        case 'SET_ACTIVE_RECEIVER':
             return{
                 ...state,
-                receiver: action.payload
+                activeReceiver: action.payload
+            }
+        case 'UPDATE_CONVERSATIONS':
+            const conversation = state.activeConversation;
+
+            // Remove conversation from conversations list
+            const filteredConversations = state.conversations.filter(c => c._id !== conversation._id)
+
+            return{
+                ...state,
+                conversations: [conversation, ...filteredConversations]
+            }
+        case 'SET_FROM_PROFILE':
+            return {
+                ...state,
+                fromProfile: action.payload
             }
         default:
             return state
@@ -33,7 +48,8 @@ export const ConversationContextProvider = ( {children} ) => {
     const [state, conversationDispatch] = useReducer(conversationReducer, {
         conversations: [],
         activeConversation: null,
-        receiver: {id: "", profilePicture: "", name: "Name", surname: "Surname"}
+        activeReceiver: {id: "", profilePicture: "", name: "Name", surname: "Surname"},
+        fromProfile: false
     })
 
     return(
