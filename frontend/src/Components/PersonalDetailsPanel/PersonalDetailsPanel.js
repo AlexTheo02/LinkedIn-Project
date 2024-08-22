@@ -5,6 +5,15 @@ import { useAuthContext } from "../../Hooks/useAuthContext";
 import NetworkUsersList from "../NetworkUsersList/NetworkUsersList"
 import { useNavigate } from "react-router-dom";
 
+function formatListWithNewlines(list) {
+    // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
+    console.log(list);
+    const formattedList = list.map(item => `• ${item}`);
+    
+    // Ενώνουμε όλα τα στοιχεία της λίστας με newline
+    return formattedList.join('\n');
+}
+
 function PersonalDetailsPanel({userData}){
     const { user } = useAuthContext();
     const navigate = useNavigate();
@@ -35,7 +44,7 @@ function PersonalDetailsPanel({userData}){
                 <div className={s.options_bar}>
                     <h3>Personal Details</h3>
                     <button onClick={handlePersonalDetailsShowMore}>
-                        Go to my Personal Details
+                        Go to Personal Details
                     </button>
                 </div>
                 <h4>{userData.workingPosition} at {userData.employmentOrganization}</h4>
@@ -43,9 +52,7 @@ function PersonalDetailsPanel({userData}){
                 <h4>Your Skills:</h4>
                 {userData.skills.length > 0 ? (
                     <p>
-                        Mpla mpla1
-                        Mpla mpla2
-                        Mpla mpla3 jcjdncednchneyhcbhewbhrgb bhcbercbchrbchbcyhebchgbryhbcv c yrecedcbheucbiehric ne irnvjenu jnjv nj 
+                        {formatListWithNewlines(userData.skills)}
                     </p>
                 ) : (
                     <p className={s.skills_empty}>You have not filled in your skills yet. Go to your personal details to set it up.</p>

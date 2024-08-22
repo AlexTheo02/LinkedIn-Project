@@ -6,31 +6,13 @@ import JobListings from "./JobListings/JobListings";
 import CreateJobListing from './CreateJobListing/CreateJobListing'
 
 function JobsPage(){
-
-    const sample_job = {
-        title: "",
-        employer: "",
-        location: "",
-        description: "",
-        requirements: [],
-        benefits: [],
-        responsibilities: [],
-        timestamp: new Date("January 1, 1900"),
-        applicantsNumber: 0,
-        workingArrangement: "",
-        employmentType: "",
-        employeesRange: 0,
-    };
-
     const [showingMoreInfo, setShowingMoreInfo] = useState(false);
-    const [selectedJob, setSelectedJob] = useState(sample_job);
     const [isCreatingJob, setIsCreatingJob] = useState(false);
 
     // Create handler struct and pass it into each job listing
     // Handler will contain selected job listing, is showing, is not showing ...
 
-    const handleJobClick = (job) => {
-        setSelectedJob(job);
+    const handleJobClick = () => {
         setShowingMoreInfo(true);
     }
 
@@ -44,7 +26,8 @@ function JobsPage(){
     }
 
     const jobListingsHandler = {
-        handleCancel: handleCancelCreateJobClick
+        handleCancel: handleCancelCreateJobClick,
+        setIsCreatingJob
     };
 
     const exitJobInfo = () => {
@@ -82,7 +65,7 @@ function JobsPage(){
                     }
                         
                 </div>
-                <JobInfo job={selectedJob} isExpanded={showingMoreInfo} onExit={exitJobInfo}/>
+                <JobInfo isExpanded={showingMoreInfo} onExit={exitJobInfo}/>
             </div>
         </div>
     );

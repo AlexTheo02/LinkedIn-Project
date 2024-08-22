@@ -18,6 +18,7 @@ function calculateAge(birthDate) {
 
 function formatListWithNewlines(list) {
     // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
+    console.log(list);
     const formattedList = list.map(item => `• ${item}`);
     
     // Ενώνουμε όλα τα στοιχεία της λίστας με newline
@@ -248,19 +249,19 @@ function ProfilePage() {
                     {!userData.privateDetails.includes("professionalExperience") || isConnected ? (
                         <div className={s.container}>
                             <h3>Professional Experience:</h3>
-                            <ExpandableText text={userData.professionalExperience} />
+                            <ExpandableText list={userData.professionalExperience} />
                         </div>
                     ) : null}
                     {!userData.privateDetails.includes("education") || isConnected ? (
                         <div className={s.container}>
                             <h3>Educational Experience:</h3>
-                            <ExpandableText text={userData.education} />
+                            <ExpandableText list={userData.education} />
                         </div>
                     ) : null}
                     {!userData.privateDetails.includes("skills") || isConnected ? (
                         <div className={s.container}>
                             <h3>Skills:</h3>
-                            <ExpandableText text={userData.skills} />
+                            <ExpandableText list={userData.skills} />
                         </div>
                     ) : null}
                 </div>

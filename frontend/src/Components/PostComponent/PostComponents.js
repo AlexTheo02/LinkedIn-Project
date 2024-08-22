@@ -117,7 +117,7 @@ function LikeButton({post_id, likesList, author}) {
                 })
 
                 // Create notification object
-                if (!isLiked && user.userId !== author){
+                if (userLikeResponse.ok && !isLiked && user.userId !== author){
                     const notification = {
                         post_id,
                         isLike: true,
@@ -199,7 +199,6 @@ function PostInteractionBar({post_id, commentsList, likesList, commentsPopupHand
 }
 
 function PostPreviewComments({post_id, commentsList, commentsPopupHandler}){
-    const {user} = useAuthContext();
 
     const previewCommentData = commentsList[0];
     const previewAuthor = previewCommentData.author;
@@ -371,10 +370,8 @@ const AddComment = ({userData}) => {
 }
 
 function CommentsPopup({userData, commentsPopupHandler}){
-
-    const {user} = useAuthContext();
     // Use context to access active comments list
-    const { activeCommentsList, activePostId } = usePostsContext();
+    const { activeCommentsList } = usePostsContext();
     
 
     return(

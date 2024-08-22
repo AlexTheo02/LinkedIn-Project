@@ -14,6 +14,7 @@
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     height: calc(100vh - 65px);
+    white-space: pre-line;
 }
 
 .horizontal_separator{

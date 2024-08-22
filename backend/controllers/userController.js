@@ -747,7 +747,13 @@ const updateUser = async (request, response) => {
     // Grab the id from the route parameters
     const { id } = request.params;
 
-    const userBodyData = request.body
+    const userBodyData = {
+        ...request.body,
+        professionalExperience: JSON.parse(request.body.professionalExperience || "[]"),
+        education: JSON.parse(request.body.education || "[]"),
+        skills: JSON.parse(request.body.skills || "[]"),
+    };
+
     const profilePicture = request.file ? await handleFileUpload(request.file) : null;
 
     const userData = profilePicture ? {profilePicture, ...userBodyData} : userBodyData;

@@ -17,9 +17,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
     const [workingArrangement, setWorkingArrangement] = useState(0);
     const [employmentType, setEmploymentType] = useState(0);
     const [employeesRange, setEmployeesRange] = useState({value: 0, label: "1-10"});
-    const [requirementsList, setRequirementsList] = useState([{value: ""},{value: ""},{value: ""}]);
-    const [responsibilitiesList, setResponsibilitiesList] = useState([{value: ""},{value: ""},{value: ""}]);
-    const [benefitsList, setBenefitsList] = useState([{value: ""},{value: ""},{value: ""}]);
+    const [requirementsList, setRequirementsList] = useState(["","",""]);
+    const [responsibilitiesList, setResponsibilitiesList] = useState(["","",""]);
+    const [benefitsList, setBenefitsList] = useState(["","",""]);
 
     const [emptyFields, setEmptyFields] = useState([]);
 
@@ -38,10 +38,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
         const applicants = [];
 
         // Μετατροπή των λιστών σε πίνακες από strings και φιλτράρισμα των κενών strings
-        const requirements = requirementsList.map(item => item.value).filter(item => item.trim() !== "");
-        const responsibilities = responsibilitiesList.map(item => item.value).filter(item => item.trim() !== "");
-        const benefits = benefitsList.map(item => item.value).filter(item => item.trim() !== "");
-
+        const requirements = requirementsList.filter(item => item.trim() !== "");
+        const responsibilities = responsibilitiesList.filter(item => item.trim() !== "");
+        const benefits = benefitsList.filter(item => item.trim() !== "");
         // Create dummy job
         const job = {
             title,
@@ -99,9 +98,9 @@ const CreateJobListing = ({jobListingsHandler}) => {
             setEmployer("");
             setLocation("");
             setDescription("");
-            setRequirementsList([{value: ""}, {value: ""}, {value: ""}]);
-            setBenefitsList([{value: ""}, {value: ""}, {value: ""}]);
-            setResponsibilitiesList([{value: ""}, {value: ""}, {value: ""}]);
+            setRequirementsList(["","",""]);
+            setBenefitsList(["","",""]);
+            setResponsibilitiesList(["","",""]);
             setWorkingArrangement(0);
             setEmploymentType(0);
             setEmployeesRange({value: 0, label: "1-10"});
@@ -113,6 +112,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
             console.log("Job published successfully", json);
         }
         setIsLoading(false);
+        jobListingsHandler.setIsCreatingJob(false);
     }
 
     return(
