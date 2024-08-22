@@ -74,12 +74,14 @@ function LikeButton({post_id, likesList, author}) {
     const { user } = useAuthContext();
     const { postDispatch } = usePostsContext();
     const [isLiked, setIsLiked] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         setIsLiked(likesList.includes(user.userId) ? true : false);
     }, [user,likesList])
 
     const toggleLike = async () => {
+        setIsLoading(true);
         setIsLiked(!isLiked);
         if(isLiked){
             const removeIndex = likesList.findIndex(i => i === user.userId);
@@ -105,14 +107,24 @@ function LikeButton({post_id, likesList, author}) {
             })
 
             if (postResponse.ok){
-                // Create dummy job
+
+                // Send request to the server to update the likedPosts on user
+                const userLikeResponse = await fetch(`/api/users/toggleLikePost/${post_id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`,
+                    },
+                    method: "PATCH",
+                })
+
+                // Create notification object
                 if (!isLiked && user.userId !== author){
                     const notification = {
                         post_id,
                         isLike: true,
                         commentContent: ""
                     }
-    
+
+                    // Send request to create notification on the database
                     const notificationResponse = await fetch("/api/notifications/", {
                         method: "POST",
                         body: JSON.stringify(notification),
@@ -126,6 +138,7 @@ function LikeButton({post_id, likesList, author}) {
     
                     if (notificationResponse.ok){
                         try{
+                            // Notify author
                             const userResponse = await fetch(`/api/users/postNotify/${json._id}/${author}`, {
                                 method: 'PATCH',
                                 headers: {
@@ -155,6 +168,7 @@ function LikeButton({post_id, likesList, author}) {
         } catch (error) {
             console.error('Error liking the post:', error);
         }
+        setIsLoading(false);
     };
 
     return (
@@ -244,6 +258,8 @@ const AddComment = ({userData}) => {
                 author: user.userId,
                 content: trimmedComment.replace(/\s+/g, ' '), // Replace extra whitespace with a single space.
             }
+
+            setCommentValue("")
             
             const response = await fetch(`/api/posts/add-comment/${activePostId}`, {
                 headers: {
@@ -257,7 +273,18 @@ const AddComment = ({userData}) => {
             const json = await response.json();
             console.log(json.populatedComment)
 
-            if (response.ok){
+
+
+            // Add comment to user's publishedComments list
+            const userCommentResponse = await fetch(`/api/users/publishComment/${json.populatedComment._id}`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                },
+                method: "PATCH"
+            })
+
+            if (response.ok && userCommentResponse.ok){
                 postDispatch({type: "SET_ACTIVE_COMMENTS_LIST", payload: [json.populatedComment, ...activeCommentsList]});
 
                 // Update post on posts context
@@ -269,7 +296,7 @@ const AddComment = ({userData}) => {
                     }
                 });
                 const post_json = await postResponse.json();
-
+                
                 if (user.userId !== post_json.author._id){
                     const notification = {
                         post_id: activePostId,
@@ -312,9 +339,6 @@ const AddComment = ({userData}) => {
                     }
                 }
             }
-
-            // Maybe sort
-            setCommentValue("");
         }       
     }
 

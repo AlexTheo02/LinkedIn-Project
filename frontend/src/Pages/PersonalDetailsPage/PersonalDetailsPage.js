@@ -25,9 +25,9 @@ function PersonalDetails() {
     const [workingPosition, setWorkingPosition] = useState('');
     const [employmentOrganization, setEmploymentOrganization] = useState('');
     const [placeOfResidence, setPlaceOfResidence] = useState('');
-    const [professionalExperience, setProfessionalExperience] = useState('');
-    const [education, setEducation] = useState('');
-    const [skills, setSkills] = useState('');
+    const [professionalExperience, setProfessionalExperience] = useState([{value: ""}]);
+    const [education, setEducation] = useState([{value: ""}]);
+    const [skills, setSkills] = useState([{value: ""}]);
 
     const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const yearOptions = createYearOptions();
@@ -148,6 +148,11 @@ function PersonalDetails() {
         setError(null);
         setErrorFields([]);
 
+        
+        const professionalExperienceList = professionalExperience.map(item => item.value).filter(item => item.trim() !== "");
+        const educationList = education.map(item => item.value).filter(item => item.trim() !== "");
+        const skillsList = skills.map(item => item.value).filter(item => item.trim() !== "");
+
         const formDataPrivateDetails = [
             !isDateOfBirthPublic && "dateOfBirth",
             !isPhonePublic && "phoneNumber",
@@ -159,7 +164,6 @@ function PersonalDetails() {
 
         const formData = new FormData();
         if (profilePicture !== userData.profilePicture){
-            console.log('ashnshnhsnhaaaaaaaaaaaaaa')
             formData.append("file", profilePicture);
         }
         formData.append("name", name);
@@ -168,9 +172,9 @@ function PersonalDetails() {
         formData.append("workingPosition", workingPosition);
         formData.append("employmentOrganization", employmentOrganization);
         formData.append("placeOfResidence", placeOfResidence);
-        formData.append("professionalExperience", professionalExperience);
-        formData.append("education", education);
-        formData.append("skills", skills);
+        formData.append("professionalExperience", professionalExperienceList);
+        formData.append("education", educationList);
+        formData.append("skills", skillsList);
         formData.append("dateOfBirth", new Date(`${month} ${day}, ${year} 00:00:00 GMT`));
         formData.append("privateDetails", formDataPrivateDetails);
 
@@ -374,7 +378,7 @@ function PersonalDetails() {
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
-                            <label htmlFor="professionalExperienceInput">Professional Experience</label>
+                            <label htmlFor="professionalExperienceInput">Proffesional Experience</label>
                             {isEditing && (
                                 <div className={s.icons_container}>
                                     <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
@@ -388,13 +392,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <textarea
-                            id="professionalExperienceInput"
-                            value={professionalExperience}
-                            onChange={(e) => setProfessionalExperience(e.target.value)}
-                            rows="4"
-                            disabled={!isEditing}
-                        />
+                        <ManyInputFields id="professionalExperienceInput" name={'Proffesional experience field'} list={professionalExperience} setList={setProfessionalExperience} limit={10} isEditing={isEditing}/>
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
@@ -412,13 +410,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <textarea
-                            id="educationInput"
-                            value={education}
-                            onChange={(e) => setEducation(e.target.value)}
-                            rows="4"
-                            disabled={!isEditing}
-                        />
+                        <ManyInputFields id="educationInput" name={'Education field'} list={education} setList={setEducation} limit={10} isEditing={isEditing}/>
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
@@ -436,31 +428,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <textarea
-                            id="skillsInput"
-                            value={skills}
-                            onChange={(e) => setSkills(e.target.value)}
-                            rows="4"
-                            disabled={!isEditing}
-                        />
-                    </div>
-                    <div className={s.input_field}>
-                        <div className={s.label_with_icon}>
-                            <label htmlFor="skillsInput">Skills</label>
-                            {isEditing && (
-                                <div className={s.icons_container}>
-                                    <FontAwesomeIcon icon={faUserGroup} className={s.additional_icon} />
-                                    <FontAwesomeIcon
-                                        icon={isSkillsPublic ? faToggleOn : faToggleOff}
-                                        className={s.toggle_icon}
-                                        onClick={() => setIsSkillsPublic(!isSkillsPublic)}
-                                        title={isSkillsPublic ? 'Set to private' : 'Set to public'}
-                                    />
-                                    <FontAwesomeIcon icon={faUsers} className={s.additional_icon} />
-                                </div>
-                            )}
-                        </div>
-                        <ManyInputFields id="manyInputFields" name={'Skill'} list={dummy} setList={setDummy} limit={10} isEditing={isEditing}/>
+                        <ManyInputFields id="skillsInput" name={'Skill field'} list={skills} setList={setSkills} limit={10} isEditing={isEditing}/>
                     </div>
                     
                     {/* Display error message */}

@@ -28,11 +28,11 @@ const userSchema = new Schema({
 
     employmentOrganization: {type: String, required: true},
 
-    professionalExperience: {type: String}, // String
+    professionalExperience: {type: [String]}, // Array String
 
-    education: {type: String}, // String
+    education: {type: [String]}, // Array String
 
-    skills: {type: String}, // String
+    skills: {type: [String]}, // Array String
 
     recentConversations: {type: [{type: Schema.Types.ObjectId, ref: "Conversation"}], required: true}, // Array of Conversation ObjectIds
 
@@ -44,7 +44,7 @@ const userSchema = new Schema({
 
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
     
-    // publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // Array of Comment ObjectIds (comments the user has published)
+    publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // Array of Comment ObjectIds (comments the user has published)
 
     privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 

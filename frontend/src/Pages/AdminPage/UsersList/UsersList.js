@@ -1,21 +1,17 @@
 import React from 'react';
-import s from './NetworkUsersListStyle.module.css';
-import NetworkUser from './NetworkUser/NetworkUser';
+import s from './UsersListStyle.module.css';
 import { useNavigate } from 'react-router-dom';
+import User from '../User/User';
 
-function NetworkUsersList({ network }) {
+function UsersList({ users }) {
     const navigate = useNavigate();
-
-    const handleNetworkUserClick = (userId) => {
-        navigate(`/Profile/${userId}`);
-    };
 
     return (
         <div className={s.users_list}>
             <ul>
-                {network.map((connected_user_id, index) => (
-                    <li key={index} onClick={() => handleNetworkUserClick(connected_user_id)}>
-                        
+                {users.map((user, index) => (
+                    <li key={index}>
+                        <User user={user} />
                     </li>
                 ))}
             </ul>
@@ -23,4 +19,4 @@ function NetworkUsersList({ network }) {
     );
 }
 
-export default NetworkUsersList;
+export default UsersList;

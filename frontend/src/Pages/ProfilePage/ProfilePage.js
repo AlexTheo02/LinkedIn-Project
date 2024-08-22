@@ -16,16 +16,29 @@ function calculateAge(birthDate) {
     return age;
 }
 
-function ExpandableText({ text, maxWords = 50 }) {
+function formatListWithNewlines(list) {
+    // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
+    const formattedList = list.map(item => `• ${item}`);
+    
+    // Ενώνουμε όλα τα στοιχεία της λίστας με newline
+    return formattedList.join('\n');
+}
+
+function ExpandableText({ list, maxLines = 4 }) {
     const [expanded, setExpanded] = useState(false);
+
+    const text = formatListWithNewlines(list);
 
     const toggleExpansion = () => {
         setExpanded(!expanded);
     };
 
-    const words = text.split(' ');
-    const isTruncated = words.length > maxWords;
-    const displayedText = isTruncated && !expanded ? words.slice(0, maxWords).join(' ') + '...' : text;
+    // Split text into lines
+    const lines = text.split('\n');
+    const isTruncated = lines.length > maxLines;
+    const displayedText = isTruncated && !expanded
+        ? lines.slice(0, maxLines).join('\n') + '...'
+        : text;
 
     return (
         <div>
