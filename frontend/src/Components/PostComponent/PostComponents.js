@@ -173,7 +173,7 @@ function LikeButton({post_id, likesList, author}) {
 
     return (
         <>
-            {isLiked ? <FontAwesomeIcon icon={faThumbsUpSolid} onClick={toggleLike} className={s.post_interaction_bar_button}/> : <FontAwesomeIcon icon={faThumbsUpRegular} onClick={toggleLike} className={s.post_interaction_bar_button}/>}
+            {isLiked ? <FontAwesomeIcon icon={faThumbsUpSolid} onClick={!isLoading ? toggleLike : () => {}} className={s.post_interaction_bar_button}/> : <FontAwesomeIcon icon={faThumbsUpRegular} onClick={!isLoading ? toggleLike : () => {}} className={s.post_interaction_bar_button}/>}
         </>
     );
 }
