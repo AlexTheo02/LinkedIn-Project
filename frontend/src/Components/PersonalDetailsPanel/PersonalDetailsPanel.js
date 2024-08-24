@@ -39,41 +39,47 @@ function PersonalDetailsPanel({userData}){
             <div className={s.horizontal_separator}>
                 <HorizontalSeparator/>
             </div>
-            
-            <div className={s.pdp_personal_details}>
-                <div className={s.options_bar}>
-                    <h3>Personal Details</h3>
-                    <button onClick={handlePersonalDetailsShowMore}>
-                        Go to Personal Details
-                    </button>
+            <div className={s.pd_network}>
+
+                <div className={s.pdp_personal_details}>
+                    <div className={s.options_bar}>
+                        <h3>Personal Details</h3>
+                        <button onClick={handlePersonalDetailsShowMore}>
+                            Go to Personal Details
+                        </button>
+                    </div>
+                    <div className={s.pdp_personal_details_content}>
+                        
+                        <h4>{userData.workingPosition} at {userData.employmentOrganization}</h4>
+                        <h4 className={s.place_of_residence_text}>Located at {userData.placeOfResidence}</h4>
+                        <h4>Your Skills:</h4>
+                        <div className={s.skills_container}>
+                            {userData.skills.length > 0 ? (
+                                <p>
+                                    {formatListWithNewlines(userData.skills)}
+                                </p>
+                            ) : (
+                                <p className={s.skills_empty}>You have not filled in your skills yet. Go to your personal details to set it up.</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                <h4>{userData.workingPosition} at {userData.employmentOrganization}</h4>
-                <h4 className={s.place_of_residence_text}>Located at {userData.placeOfResidence}</h4>
-                <h4>Your Skills:</h4>
-                {userData.skills.length > 0 ? (
-                    <p>
-                        {formatListWithNewlines(userData.skills)}
-                    </p>
-                ) : (
-                    <p className={s.skills_empty}>You have not filled in your skills yet. Go to your personal details to set it up.</p>
-                )}
-            </div>
 
-            <div className={s.horizontal_separator}>
-                <HorizontalSeparator/>
-            </div>
-
-            <div className={s.pdp_network}>
-
-                <div className={s.options_bar}>
-                    <h3>Your Network</h3>
-                    <button onClick={handleNetworkShowMore}>
-                        Go to my Network
-                    </button>
+                <div className={s.horizontal_separator}>
+                    <HorizontalSeparator/>
                 </div>
-                <NetworkUsersList network={userData.network} />
-            </div>
 
+                <div className={s.pdp_network}>
+
+                    <div className={s.options_bar}>
+                        <h3>Your Network</h3>
+                        <button onClick={handleNetworkShowMore}>
+                            Go to my Network
+                        </button>
+                    </div>
+                    <NetworkUsersList network={userData.network} />
+                </div>
+            </div>
         </div>
     );
 }
