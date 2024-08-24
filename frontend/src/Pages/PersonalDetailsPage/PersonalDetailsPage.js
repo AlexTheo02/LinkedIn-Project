@@ -24,9 +24,9 @@ function PersonalDetails() {
     const [workingPosition, setWorkingPosition] = useState('');
     const [employmentOrganization, setEmploymentOrganization] = useState('');
     const [placeOfResidence, setPlaceOfResidence] = useState('');
-    const [professionalExperience, setProfessionalExperience] = useState([""]);
-    const [education, setEducation] = useState([""]);
-    const [skills, setSkills] = useState([""]);
+    const [professionalExperience, setProfessionalExperience] = useState([]);
+    const [education, setEducation] = useState([]);
+    const [skills, setSkills] = useState([]);
 
     const monthOptions = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const yearOptions = createYearOptions();
@@ -72,7 +72,7 @@ function PersonalDetails() {
                 setWorkingPosition(data.workingPosition);
                 setEmploymentOrganization(data.employmentOrganization);
                 setPlaceOfResidence(data.placeOfResidence);
-                setProfessionalExperience(data.professionalExperience);
+                setProfessionalExperience(data.professionalExperience.length === 0 ? [""] : data.professionalExperience);
                 setEducation(data.education.length === 0 ? [""] : data.education);
                 setSkills(data.skills.length === 0 ? [""] : data.skills);
 
@@ -123,9 +123,9 @@ function PersonalDetails() {
         setWorkingPosition(userData.workingPosition);
         setEmploymentOrganization(userData.employmentOrganization);
         setPlaceOfResidence(userData.placeOfResidence);
-        setProfessionalExperience(userData.professionalExperience);
-        setEducation(userData.education);
-        setSkills(userData.skills);
+        setProfessionalExperience(userData.professionalExperience.length === 0 ? [""] : userData.professionalExperience);
+        setEducation(userData.education.length === 0 ? [""] : userData.education);
+        setSkills(userData.skills.length === 0 ? [""] : userData.skills);
 
         const dob = new Date(userData.dateOfBirth);
         setDay(dob.getDate());
