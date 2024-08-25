@@ -20,6 +20,7 @@ function PersonalDetails() {
     const [profilePic, setProfilePic] = useState(null);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [bio, setBio] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [workingPosition, setWorkingPosition] = useState('');
     const [employmentOrganization, setEmploymentOrganization] = useState('');
@@ -68,6 +69,7 @@ function PersonalDetails() {
                 setProfilePic(data.profilePicture);
                 setName(data.name);
                 setSurname(data.surname);
+                setBio(data.bio);
                 setPhoneNumber(data.phoneNumber);
                 setWorkingPosition(data.workingPosition);
                 setEmploymentOrganization(data.employmentOrganization);
@@ -119,6 +121,7 @@ function PersonalDetails() {
         setProfilePic(userData.profilePicture);
         setName(userData.name);
         setSurname(userData.surname);
+        setBio(userData.bio);
         setPhoneNumber(userData.phoneNumber);
         setWorkingPosition(userData.workingPosition);
         setEmploymentOrganization(userData.employmentOrganization);
@@ -142,22 +145,30 @@ function PersonalDetails() {
         setIsEditing(false);
     };
 
+    const cleanList = (list) => {
+        // Trim items and filter out "" values
+        const filteredList = list.map(item => item.trim()).filter(item => item !== "");
+
+        // Return filtered list
+        return filteredList;
+    }
+
     const handleSaveChanges = async () => {
         setIsLoading(true);
         setError(null);
         setErrorFields([]);
-
-        console.log(professionalExperience);
-        console.log(education);
-        console.log(skills);
         
-        const professionalExperienceList = professionalExperience.filter(item => item.trim() !== "");
-        const educationList = education.filter(item => item.trim() !== "");
-        const skillsList = skills.filter(item => item.trim() !== "");
+        const professionalExperienceList = cleanList(professionalExperience);
+        const educationList = cleanList(education);
+        const skillsList = cleanList(skills);
 
-        console.log(professionalExperienceList);
-        console.log(educationList);
-        console.log(skillsList);
+        console.log("PROF EXP LIST", professionalExperienceList)
+        console.log("EDUCATION LIST", educationList)
+        console.log("SKILLS LIST", skillsList)
+        
+        // console.log("PROF EXP", professionalExperience)
+        // console.log("EDU", education)
+        // console.log("SKILLS", skills)
 
         const formDataPrivateDetails = [
             !isDateOfBirthPublic && "dateOfBirth",
@@ -174,6 +185,7 @@ function PersonalDetails() {
         }
         formData.append("name", name);
         formData.append("surname", surname);
+        formData.append("bio", bio);
         formData.append("phoneNumber", phoneNumber);
         formData.append("workingPosition", workingPosition);
         formData.append("employmentOrganization", employmentOrganization);
@@ -204,11 +216,16 @@ function PersonalDetails() {
             if (response.ok){
                 setUserData(data);
                 setIsEditing(false);
+
+                setProfessionalExperience(data.professionalExperience.length === 0 ? [""] : data.professionalExperience);
+                setEducation(data.education.length === 0 ? [""] : data.education);
+                setSkills(data.skills.length === 0 ? [""] : data.skills);
             }
-            
+
         } catch (error) {
             console.error('Error updating user data:', error);
         }
+
         setIsLoading(false);
     };
 
@@ -253,6 +270,16 @@ function PersonalDetails() {
                             onChange={(e) => setSurname(e.target.value)}
                             disabled={!isEditing}
                             className={errorFields.includes('Surname') ? s.error : ''}
+                        />
+                    </div>
+                    <div className={s.input_field}>
+                        <label htmlFor="bioInput">About me</label>
+                        <textarea
+                            id='bioInput'
+                            value={bio}
+                            rows={4}
+                            onChange={(e) => setBio(e.target.value)}
+                            disabled={!isEditing}
                         />
                     </div>
                     <div className={s.date_of_birth}>
@@ -398,7 +425,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <ManyInputFields id="professionalExperienceInput" name={'Professional experience field'} list={professionalExperience} setList={setProfessionalExperience} limit={10} isEditing={isEditing}/>
+                        <ManyInputFields id="professionalExperienceInput" name={'Professional experience field'} list={professionalExperience} setList={setProfessionalExperience} limit={50} isEditing={isEditing}/>
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
@@ -417,7 +444,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <ManyInputFields id="educationInput" name={'Education field'} list={education} setList={setEducation} limit={10} isEditing={isEditing}/>
+                        <ManyInputFields id="educationInput" name={'Education field'} list={education} setList={setEducation} limit={50} isEditing={isEditing}/>
                     </div>
                     <div className={s.input_field}>
                         <div className={s.label_with_icon}>
@@ -435,7 +462,7 @@ function PersonalDetails() {
                                 </div>
                             )}
                         </div>
-                        <ManyInputFields id="skillsInput" name={'Skill field'} list={skills} setList={setSkills} limit={10} isEditing={isEditing}/>
+                        <ManyInputFields id="skillsInput" name={'Skill field'} list={skills} setList={setSkills} limit={50} isEditing={isEditing}/>
                     </div>
                     
                     {/* Display error message */}

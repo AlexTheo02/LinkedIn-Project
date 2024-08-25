@@ -25,10 +25,8 @@ function formatListWithNewlines(list) {
     return formattedList.join('\n');
 }
 
-function ExpandableText({ list, maxLines = 4 }) {
+function ExpandableText({ text, maxLines = 4, maxCharacters = 500 }) {
     const [expanded, setExpanded] = useState(false);
-
-    const text = formatListWithNewlines(list);
 
     const toggleExpansion = () => {
         setExpanded(!expanded);
@@ -36,15 +34,20 @@ function ExpandableText({ list, maxLines = 4 }) {
 
     // Split text into lines
     const lines = text.split('\n');
-    const isTruncated = lines.length > maxLines;
-    const displayedText = isTruncated && !expanded
+    const characters = text.length;
+    const isTruncatedByLines = lines.length > maxLines;
+    const isTruncatedByChars = characters > maxCharacters;
+    const displayedText = isTruncatedByLines && !expanded
         ? lines.slice(0, maxLines).join('\n') + '...'
+        : isTruncatedByChars && !expanded
+        ? text.substring(0, maxCharacters) + '...'
         : text;
+    
 
     return (
         <div>
             <p className={s.expandable_text}>{displayedText}</p>
-            {isTruncated && (
+            {(isTruncatedByLines || isTruncatedByChars) && (
                 <button className={s.show_more_button} onClick={toggleExpansion}>
                     {expanded ? 'Show Less' : 'Show More'}
                 </button>
@@ -251,22 +254,27 @@ function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    {!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin ? (
+                    {userData.bio && <div className={s.container}>
+                        <h3>About me:</h3>
+                        <ExpandableText text={userData.bio}/>
+                    </div>
+                    }
+                    { userData.professionalExperience.length > 0 && (!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin) ? (
                         <div className={s.container}>
                             <h3>Professional Experience:</h3>
-                            <ExpandableText list={userData.professionalExperience} />
+                            <ExpandableText text={formatListWithNewlines(userData.professionalExperience)} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("education") || isConnected || isAdmin ? (
+                    {userData.education.length > 0 && (!userData.privateDetails.includes("education") || isConnected || isAdmin) ? (
                         <div className={s.container}>
                             <h3>Educational Experience:</h3>
-                            <ExpandableText list={userData.education} />
+                            <ExpandableText text={formatListWithNewlines(userData.education)} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("skills") || isConnected || isAdmin ? (
+                    {userData.skills.length > 0 && (!userData.privateDetails.includes("skills") || isConnected || isAdmin) ? (
                         <div className={s.container}>
                             <h3>Skills:</h3>
-                            <ExpandableText list={userData.skills} />
+                            <ExpandableText text={formatListWithNewlines(userData.skills)} />
                         </div>
                     ) : null}
                 </div>

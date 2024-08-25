@@ -1,8 +1,7 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const validator = require("validator")
-const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
-const Comment = require("./commentModel.js");
+const { handleFileUpload } = require("../middleware/fileUpload.js");
 
 // Define the schema for the model
 const Schema = mongoose.Schema
@@ -22,37 +21,39 @@ const userSchema = new Schema({
 
     profilePicture: {type: String, required: true},
 
+    bio: {type: String, default: ""},
+
     placeOfResidence: {type: String, required: true},
 
     workingPosition: {type: String, required: true},
 
     employmentOrganization: {type: String, required: true},
 
-    professionalExperience: {type: [String], required: true}, // Array String
+    professionalExperience: {type: [String], default: [], required: true}, // Array String
 
-    education: {type: [String], required: true}, // Array String
+    education: {type: [String], default: [], required: true}, // Array String
 
-    skills: {type: [String], required: true}, // Array String
+    skills: {type: [String], default: [], required: true}, // Array String
 
-    recentConversations: {type: [{type: Schema.Types.ObjectId, ref: "Conversation"}], required: true}, // Array of Conversation ObjectIds
+    recentConversations: {type: [{type: Schema.Types.ObjectId, ref: "Conversation"}], default: [], required: true}, // Array of Conversation ObjectIds
 
-    network: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}, // Array of User ObjectIds
+    network: {type: [{type: Schema.Types.ObjectId, ref: "User"}], default: [], required: true}, // Array of User ObjectIds
 
-    publishedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds
+    publishedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], default: [], required: true}, // Array of Post ObjectIds
 
-    publishedJobListings: {type: [{type: Schema.Types.ObjectId, ref: "JobListing"}], required: true}, // Array of JobListing ObjectIds
+    publishedJobListings: {type: [{type: Schema.Types.ObjectId, ref: "JobListing"}], default: [], required: true}, // Array of JobListing ObjectIds
 
-    likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
+    likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], default: [], required: true}, // Array of Post ObjectIds (posts the user has liked)
     
-    publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // Array of Comment ObjectIds (comments the user has published)
+    publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], default: [], required: true}, // Array of Comment ObjectIds (comments the user has published)
 
-    privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
+    privateDetails: {type: [""], default: ["dateOfBirth", "phoneNumber"], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 
-    appliedJobs: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], required: true}, // Array of job ids that the user has applied to
+    appliedJobs: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], default: [], required: true}, // Array of job ids that the user has applied to
 
-    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true}, // Array of Post Notification ids
+    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], default: [], required: true}, // Array of Post Notification ids
 
-    linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}, // Array of Link Up Requests ids
+    linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], default: [], required: true}, // Array of Link Up Requests ids
 })
 
 function formatFieldName(fieldName) {
@@ -320,18 +321,6 @@ userSchema.statics.register = async function(userData) {
         placeOfResidence: userData.placeOfResidence,
         workingPosition: userData.workingPosition,
         employmentOrganization: userData.employmentOrganization,
-        professionalExperience: [],
-        education: [],
-        skills: [],
-        recentConversations: [],
-        network: [],
-        publishedPosts: [],
-        publishedJobListings: [],
-        likedPosts: [],
-        privateDetails: ["dateOfBirth", "phoneNumber"],
-        appliedJobs: [],
-        postNotifications: [],
-        linkUpRequests: [],
     });
 
     return user;

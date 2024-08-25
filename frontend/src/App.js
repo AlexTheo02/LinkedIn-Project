@@ -60,7 +60,7 @@ function App() {
 
         {/* Home Route */}
         <Route path="/Home" element={
-          user ?
+          user && !user.admin ?
           <PostsContextProvider>
             <HomePage />
           </PostsContextProvider>

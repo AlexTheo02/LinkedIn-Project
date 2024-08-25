@@ -10,7 +10,8 @@
     opacity: 0;
     overflow-y: auto;
     transition-duration: 0.5s;
-    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: pre-line;
 }
 
 .jobInfoContainer.expanded{
@@ -34,7 +35,6 @@
 .jobTitle {
     font-size: 1.5em;
     margin-bottom: 7px;
-    white-space: pre-line;
 }
 
 .companyName{

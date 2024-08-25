@@ -131,9 +131,12 @@
 
 .post_preview_comments{
     padding: 5px;
+    overflow-wrap: break-word;
 }
 
 .comment{
+    display: flex;
+    flex-direction: column;
     background-color: #e2dada;
     border-radius: 10px;
     padding: 5px;
@@ -148,8 +151,8 @@
 }
 
 .comment_content{
-    background-color: #e2dada;
-
+    word-break: break-all;
+    hyphens: auto;
     margin-left: 40px;
 }
 

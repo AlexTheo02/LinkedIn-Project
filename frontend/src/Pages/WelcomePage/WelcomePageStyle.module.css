@@ -145,6 +145,7 @@
     padding: 0;
     opacity: 0;
     margin: 0;
+    visibility: hidden;
 }
 
 .profile_field.hidden {
@@ -152,6 +153,7 @@
     padding: 0;
     opacity: 0;
     margin: 0;
+    visibility: hidden;
 }
 
 .date_of_birth{
@@ -230,6 +232,7 @@
     padding: 0;
     opacity: 0;
     margin: 0;
+    visibility: hidden;
 }
 
 .visible_icon, .not_visible_icon{

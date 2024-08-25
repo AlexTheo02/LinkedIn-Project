@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 function formatListWithNewlines(list) {
     // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
-    console.log(list);
     const formattedList = list.map(item => `• ${item}`);
     
     // Ενώνουμε όλα τα στοιχεία της λίστας με newline

@@ -4,6 +4,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 
 // Routes
+const adminRoutes = require("./Routes/admin.js")
 const userRoutes = require("./Routes/users.js")
 const postRoutes = require("./Routes/posts.js")
 const jobRoutes = require("./Routes/jobs.js")
@@ -22,6 +23,7 @@ app.use((request, response, next) => {
 })
 
 // Routes
+app.use("/api/admin", adminRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/jobs", jobRoutes)

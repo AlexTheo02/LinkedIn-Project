@@ -15,7 +15,7 @@ function User({ userData, isSelected, handleSelectUser }) {
             format: format
         };
 
-        const response = await fetch('/api/users/export', {
+        const response = await fetch('/api/admin/export', {
             method: 'POST',
             headers: {
                 "Content-Type" : "application/json",

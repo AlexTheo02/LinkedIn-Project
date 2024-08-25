@@ -184,6 +184,12 @@ function WelcomePage() {
                 <div className={s.password_field}>
                   <input type={isPasswordVisible ? "text" : "password"} className={errorFields.includes('Password') ? s.error : ''} value={password} onChange={(e) => {setPassword(e.target.value)}} placeholder="Password" required />
                 </div>
+                {!isRegistering && <FontAwesomeIcon
+                  className={isPasswordVisible ? s.visible_icon : s.not_visible_icon}
+                  onClick={() => {setIsPasswordVisible(!isPasswordVisible)}}
+                  icon={isPasswordVisible ? faEye : faEyeSlash}
+                  title={isPasswordVisible ? "Hide Password" : "Show Password"}
+                />}
               </div>
               <div className={`${s.row} ${isRegistering ? '' : s.hidden}`}>
                 <div className={s.password_field}>

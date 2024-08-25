@@ -26,6 +26,26 @@
     color: white;
 }
 
+.row{
+    width: 1000px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.row button{
+    border: none;
+    background: #a02500;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+.row button:hover{
+    background: #701a00;
+}
+
 .categories{
     display: flex;
     margin: 5px 0;

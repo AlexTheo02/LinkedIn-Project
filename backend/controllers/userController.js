@@ -1,4 +1,5 @@
 const User = require("../models/userModel.js")
+const Admin = require("../models/adminModel.js")
 const mongoose = require("mongoose")
 const jwb = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
@@ -87,90 +88,6 @@ const getUser = async (request, response) => {
         response.status(400).json({error: error.message})
     }
 }
-
-// Export users' info in json or xml file (for admin)
-const exportUsers = async (req, res) => {
-    const format = req.body.format;         // Παράμετρος format (json ή xml)
-    const selectedUsers = req.body.users;   // Οι επιλεγμενοι χρηστες
-
-    if (!selectedUsers || !format) {
-        return res.status(400).json({ error: 'Missing users or format' });
-    }
-
-    // Φιλτράρουμε τους επιλεγμένους χρήστες
-    const filteredUsers = await User.find({ _id: { $in: selectedUsers } });
-
-    // Εξαγωγή σε JSON ή XML
-    if (format === 'json') {
-        const exportData = JSON.stringify(filteredUsers, null, 2);
-        res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Content-Disposition', 'attachment; filename=users.json');
-        return res.send(exportData);
-    } else if (format === 'xml') {
-        const convertToStringIds = (arr) => arr.map(id => id.toString());
-
-        // Προετοιμάζουμε τα δεδομένα για XML
-        const xmlData = filteredUsers.map(user => ({
-            _id: user._id.toString(),  // Μετατροπή του _id σε string
-            name: user.name,
-            surname: user.surname,
-            dateOfBirth: user.dateOfBirth,
-            email: user.email,
-            password: user.password,
-            phoneNumber: user.phoneNumber,
-            profilePicture: user.profilePicture,
-            placeOfResidence: user.placeOfResidence,
-            workingPosition: user.workingPosition,
-            employmentOrganization: user.employmentOrganization,
-            professionalExperience: user.professionalExperience.length > 0 
-                ? { experience: user.professionalExperience }
-                : { professionalExperience: [] },
-            education: user.education.length > 0 
-                ? { education: user.education }
-                : { education: [] },
-            skills: user.skills.length > 0 
-                ? { skill: user.skills }
-                : { skills: [] },
-            recentConversations: user.recentConversations.length > 0 
-                ? { conversation: convertToStringIds(user.recentConversations) }
-                : { recentConversations: [] },
-            network: user.network.length > 0 
-                ? { connection: convertToStringIds(user.network) }
-                : { network: [] },
-            publishedPosts: user.publishedPosts.length > 0 
-                ? { post: convertToStringIds(user.publishedPosts) }
-                : { publishedPosts: [] },
-            publishedJobListings: user.publishedJobListings.length > 0 
-                ? { jobListing: convertToStringIds(user.publishedJobListings) }
-                : { publishedJobListings: [] },
-            likedPosts: user.likedPosts.length > 0 
-                ? { post: convertToStringIds(user.likedPosts) }
-                : { likedPosts: [] },
-            privateDetails: user.privateDetails.length > 0 
-                ? { detail: user.privateDetails }
-                : { privateDetails: [] },
-            appliedJobs: user.appliedJobs.length > 0 
-                ? { job: convertToStringIds(user.appliedJobs) }
-                : { appliedJobs: [] },
-            postNotifications: user.postNotifications.length > 0 
-                ? { notification: convertToStringIds(user.postNotifications) }
-                : { postNotifications: [] },
-            linkUpRequests: user.linkUpRequests.length > 0 
-                ? { request: convertToStringIds(user.linkUpRequests) }
-                : { linkUpRequests: [] },
-            publishedComments: user.publishedComments.length > 0 
-                ? { comment: convertToStringIds(user.publishedComments) }
-                : { publishedComments: [] }
-        }));
-
-        const exportData = js2xmlparser.parse('users', { user: xmlData });
-        res.setHeader('Content-Type', 'application/xml');
-        res.setHeader('Content-Disposition', 'attachment; filename=users.xml');
-        return res.send(exportData);
-    } else {
-        return res.status(400).json({ error: 'Unsupported format' });
-    }
-};
 
 // Create a new user
 const createUser = async (request, response) => {
@@ -758,10 +675,6 @@ async function validateUserData(userData, userId = null) {
     if (userData.placeOfResidence) validFields.placeOfResidence = 1;
     else { validFields.placeOfResidence = 0; isValid = false; }
 
-    // Profile picture validation
-    // if (userData.profilePicture) validFields.profilePicture = 1;
-    // else { validFields.profilePicture = 0; isValid = false; }
-
     // Phone Number validation
     if (!userData.phoneNumber) {
         validFields.phoneNumber = 0; isValid = false;
@@ -900,17 +813,22 @@ const loginUser = async (request, response) => {
     // Grab userData from the request body
     const userData = request.body
 
+    const adminUser = await Admin.login(userData);
+    if (adminUser){
+        const token = createToken(adminUser._id);
+
+        return response.status(200).json({ userId: adminUser._id, token: token, admin: true });
+    }
+
     // Login the user
     try {
         const user = await User.login(userData);
 
         const token = createToken(user._id);
 
-        const admin = user.email === "adminlinkedin@gmail.com";
-
         console.log(user);
 
-        response.status(200).json({ userId: user._id, token: token, admin: admin });
+        response.status(200).json({ userId: user._id, token: token, admin: false });
     } catch (error) {
         // Αν το error περιεχει τα validFields
         if (error.fields) {
@@ -932,7 +850,6 @@ const registerUser = async (request, response) => {
     const userBodyData = request.body
     const profilePicture = request.file;
     const userData = {profilePicture, ...userBodyData}
-    // console.log(userData);
 
     // Create the user
     try {
@@ -962,7 +879,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUser,
-    exportUsers,
     createUser,
     deleteUser,
     confirmPassword,
