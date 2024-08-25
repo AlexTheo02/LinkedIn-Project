@@ -35,7 +35,6 @@ function WelcomePage() {
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(require('./../../Images/profile_ergasiaSite.png'));
   const [profilePicture, setProfilePicture] = useState("");
 
@@ -185,22 +184,16 @@ function WelcomePage() {
                 <div className={s.password_field}>
                   <input type={isPasswordVisible ? "text" : "password"} className={errorFields.includes('Password') ? s.error : ''} value={password} onChange={(e) => {setPassword(e.target.value)}} placeholder="Password" required />
                 </div>
+              </div>
+              <div className={`${s.row} ${isRegistering ? '' : s.hidden}`}>
+                <div className={s.password_field}>
+                  <input type={isPasswordVisible ? "text" : "password"} className={errorFields.includes('Confirm Password') ? s.error : ''} value={confirmPassword} onChange={(e) => {setConfirmPassword(e.target.value)}} placeholder="Confirm Password" required={isRegistering}/>
+                </div>
                 <FontAwesomeIcon
                   className={isPasswordVisible ? s.visible_icon : s.not_visible_icon}
                   onClick={() => {setIsPasswordVisible(!isPasswordVisible)}}
                   icon={isPasswordVisible ? faEye : faEyeSlash}
                   title={isPasswordVisible ? "Hide Password" : "Show Password"}
-                />
-              </div>
-              <div className={`${s.row} ${isRegistering ? '' : s.hidden}`}>
-                <div className={s.password_field}>
-                  <input type={isConfirmPasswordVisible ? "text" : "password"} className={errorFields.includes('Confirm Password') ? s.error : ''} value={confirmPassword} onChange={(e) => {setConfirmPassword(e.target.value)}} placeholder="Confirm Password" required={isRegistering}/>
-                </div>
-                <FontAwesomeIcon
-                  className={isConfirmPasswordVisible ? s.visible_icon : s.not_visible_icon}
-                  onClick={() => {setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}}
-                  icon={isConfirmPasswordVisible ? faEye : faEyeSlash}
-                  title={isConfirmPasswordVisible ? "Hide Password" : "Show Password"}
                 />
               </div>
             </div>
