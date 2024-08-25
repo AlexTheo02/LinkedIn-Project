@@ -41,6 +41,7 @@ function ExpandableText({ text, maxWords = 50 }) {
 
 function ProfilePage() {
     const {user} = useAuthContext();
+    const isAdmin = user.admin;
     const navigate = useNavigate();
     
     const { id } = useParams(); // Ανάκτηση του id από το URL
@@ -178,8 +179,8 @@ function ProfilePage() {
 
     return (
         <div>
-            <NavBar />
-            <div className={s.background_image}>
+            {!isAdmin && <NavBar />}
+            <div className={`${s.background_image} ${isAdmin ? s.admin : ''}`}>
                 <div className={s.profile}>
                     <div className={s.container}>
                         <div className={s.profile_field}>
@@ -193,37 +194,41 @@ function ProfilePage() {
                         </div>
                         <div className={s.operations}>
                             <div className={s.buttons}>
-                                { userData._id !== user.userId ?
+                                {!isAdmin &&
                                     <>
-                                    { isConnected || isRequested ?
-                                        <button disabled={connectButtonLoading}
-                                            className={s.followed_or_requested_button} onClick={isConnected ? handleDisconnectClick : handleRemoveRequest}>
-                                            {isConnected ? 'Connected' : 'Sent Request'}
-                                            <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
-                                        </button>
+                                    { userData._id !== user.userId ?
+                                        <>
+                                        { isConnected || isRequested ?
+                                            <button disabled={connectButtonLoading}
+                                                className={s.followed_or_requested_button} onClick={isConnected ? handleDisconnectClick : handleRemoveRequest}>
+                                                {isConnected ? 'Connected' : 'Sent Request'}
+                                                <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
+                                            </button>
+                                        :
+                                            <button
+                                                className={s.follow_button} onClick={handleConnectClick}>
+                                                Connect
+                                                <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
+                                            </button>
+                                        }
+                                        { isConnected &&
+                                            <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
+                                                Message
+                                                <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
+                                            </button>
+                                        }
+                                        </>
                                     :
-                                        <button
-                                            className={s.follow_button} onClick={handleConnectClick}>
-                                            Connect
-                                            <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
-                                        </button>
-                                    }
-                                    { isConnected &&
-                                        <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
-                                            Message
-                                            <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
+                                        <button  disabled={connectButtonLoading} className={s.edit_personal_details_button} onClick={handleEditPersonalDetails}>
+                                            Edit personal details
+                                            <FontAwesomeIcon className={s.button_icon} icon={faPen} />
                                         </button>
                                     }
                                     </>
-                                    :
-                                    <button  disabled={connectButtonLoading} className={s.edit_personal_details_button} onClick={handleEditPersonalDetails}>
-                                        Edit personal details
-                                        <FontAwesomeIcon className={s.button_icon} icon={faPen} />
-                                    </button>
                                 }
                             </div>
                             <div className={s.contact_info}>
-                                {!userData.privateDetails.includes("phoneNumber") || isConnected ? (
+                                {!userData.privateDetails.includes("phoneNumber") || isConnected || isAdmin ? (
                                     <>
                                         <p>Phone Number:</p>
                                         <p>{userData.phoneNumber}</p>
@@ -232,26 +237,26 @@ function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                    {!userData.privateDetails.includes("professionalExperience") || isConnected ? (
+                    {!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin ? (
                         <div className={s.container}>
                             <h3>Professional Experience:</h3>
                             <ExpandableText text={userData.professionalExperience} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("education") || isConnected ? (
+                    {!userData.privateDetails.includes("education") || isConnected || isAdmin ? (
                         <div className={s.container}>
                             <h3>Educational Experience:</h3>
                             <ExpandableText text={userData.education} />
                         </div>
                     ) : null}
-                    {!userData.privateDetails.includes("skills") || isConnected ? (
+                    {!userData.privateDetails.includes("skills") || isConnected || isAdmin ? (
                         <div className={s.container}>
                             <h3>Skills:</h3>
                             <ExpandableText text={userData.skills} />
                         </div>
                     ) : null}
                 </div>
-                { isConnected &&
+                { (isConnected || isAdmin) &&
                     <div className={s.network}>
                         <h2>Network:</h2>
                         {userData.network.length > 0 ? 

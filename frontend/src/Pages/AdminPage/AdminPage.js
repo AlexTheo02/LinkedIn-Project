@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import s from './AdminPageStyle.module.css';
 import { useAuthContext } from '../../Hooks/useAuthContext';
+import UsersList from './UsersList/UsersList';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 
 function AdminPage() {
     const {user} = useAuthContext()
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const navigate = useNavigate();
+
+    const isSelectedUsersEmpty = selectedUsers.length === 0;
 
     // Fetch posts from database
     useEffect(() => {
@@ -42,14 +45,18 @@ function AdminPage() {
         );
     };
 
-    const handleExport = async (format) => {
+    const handleExportMany = async (format) => {
         const selectedData = {
-            users: selectedUsers
+            users: selectedUsers,
+            format: format
         };
 
-        const response = await fetch(`/api/users/export?format=${format}`, {
+        const response = await fetch('/api/users/export', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `Bearer ${user.token}`
+            },
             body: JSON.stringify(selectedData)
         });
 
@@ -61,14 +68,16 @@ function AdminPage() {
         document.body.appendChild(link);
         link.click();
         link.remove();
-    };
 
+        setSelectedUsers([]);
+    };
+    
     return (
         <div className={s.admin_page}>
             <h1>User Management</h1>
             <div className={s.categories}>
                 <div className={s.select_category}>
-                    <h2>Select</h2>
+                    <FontAwesomeIcon icon={faListCheck} />
                 </div>
                 <div className={s.category}>
                     <h2>Main Info</h2>
@@ -76,42 +85,16 @@ function AdminPage() {
                 <div className={s.category}>
                     <h2>Contact Info</h2>
                 </div>
+                <div className={s.options_category}>
+                    <h2>Actions</h2>
+                </div>
             </div>
-            
-            {/* <table>
-                <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(user => (
-                        <tr key={user._id}>
-                            <td>
-                                <input 
-                                    type="checkbox" 
-                                    checked={selectedUsers.includes(user._id)} 
-                                    onChange={() => handleSelectUser(user._id)} 
-                                />
-                            </td>
-                            <td>{user.name} {user.surname}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <button onClick={() => {}}>
-                                    View Details
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table> */}
-
+            <div className={s.users}>
+                <UsersList users={users} selectedUsers={selectedUsers} handleSelectUser={handleSelectUser}/>
+            </div>
             <div className={s.export_buttons}>
-                <button onClick={() => handleExport('json')}>Export as JSON</button>
-                <button onClick={() => handleExport('xml')}>Export as XML</button>
+                <button className={isSelectedUsersEmpty ? s.disabled : ''} disabled={isSelectedUsersEmpty} onClick={() => handleExportMany('xml')}>Export all selected as XML</button>
+                <button className={isSelectedUsersEmpty ? s.disabled : ''} disabled={isSelectedUsersEmpty} onClick={() => handleExportMany('json')}>Export all selected as JSON</button>
             </div>
         </div>
     );
