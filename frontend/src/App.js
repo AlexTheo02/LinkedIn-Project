@@ -50,7 +50,13 @@ function App() {
         <Routes>
 
         {/* Welcome Route */}
-        <Route path="/" element={!user ? <WelcomePage /> : <Navigate to="/Home" />} />
+        <Route
+          path="/"
+          element={
+            !user ? <WelcomePage /> :
+            user.admin ? <Navigate to="/Admin" /> : <Navigate to="/Home" />
+          } 
+        />
 
         {/* Home Route */}
         <Route path="/Home" element={
@@ -62,12 +68,15 @@ function App() {
           <Navigate to="/" />
         } />
 
+        {/* Admin Route */}
+        <Route path="/Admin" element={user && user.admin ? <AdminPage /> : <Navigate to="/" />} />
+
         {/* Network Route */}
-        <Route path="/Network" element={user ? <NetworkPage /> : <Navigate to="/" />} />
+        <Route path="/Network" element={user && !user.admin ? <NetworkPage /> : <Navigate to="/" />} />
 
         {/* Jobs Route */}
         <Route path="/Jobs" element={
-          user ? 
+          user && !user.admin ? 
           <JobsContextProvider>
             <JobsPage /> 
           </JobsContextProvider>
@@ -76,19 +85,21 @@ function App() {
         } />
 
         {/* Conversations Route */}
-        <Route path="/Conversations" element={user ?
-        <ConversationContextProvider>
-          <ConversationsPage />
-        </ConversationContextProvider>  : <Navigate to="/" />} />
+        <Route path="/Conversations" element={
+          user && !user.admin ?
+          <ConversationContextProvider>
+            <ConversationsPage />
+          </ConversationContextProvider>  : <Navigate to="/" />
+        } />
 
         {/* Notifications Route */}
-        <Route path="/Notifications" element={user ? <NotificationsPage /> : <Navigate to="/" />} />
+        <Route path="/Notifications" element={user && !user.admin ? <NotificationsPage /> : <Navigate to="/" />} />
 
         {/* Personal Details Route */}
-        <Route path="/Personal Details" element={user ? <PersonalDetailsPage /> : <Navigate to="/" />} />
+        <Route path="/Personal Details" element={user && !user.admin ? <PersonalDetailsPage /> : <Navigate to="/" />} />
 
         {/* Settings Route */}
-        <Route path="/Settings" element={user ? <SettingsPage /> : <Navigate to="/" />} />
+        <Route path="/Settings" element={user && !user.admin ? <SettingsPage /> : <Navigate to="/" />} />
           
         {/* Profile Route */}
         <Route path="/Profile/:id" element={user ? 
@@ -98,7 +109,7 @@ function App() {
 
         {/* Post Page Route */}
           
-        <Route path="/Post/:post_id" element={user ?
+        <Route path="/Post/:post_id" element={user && !user.admin ?
           <PostsContextProvider>
             <PostPage /> 
           </PostsContextProvider> : <Navigate to="/" />} />

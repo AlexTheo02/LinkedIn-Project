@@ -1,17 +1,14 @@
 import React from 'react';
 import s from './UsersListStyle.module.css';
-import { useNavigate } from 'react-router-dom';
 import User from '../User/User';
 
-function UsersList({ users }) {
-    const navigate = useNavigate();
-
+function UsersList({ users, selectedUsers, handleSelectUser }) {
     return (
         <div className={s.users_list}>
             <ul>
                 {users.map((user, index) => (
                     <li key={index}>
-                        <User user={user} />
+                        <User userData={user} isSelected={selectedUsers.includes(user._id)} handleSelectUser={handleSelectUser} />
                     </li>
                 ))}
             </ul>

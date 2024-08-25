@@ -6,6 +6,7 @@ const {
     getAllUsers,
     getUserById,
     getUser,
+    exportUsers,
     createUser,
     deleteUser,
     confirmPassword,
@@ -50,6 +51,9 @@ router.get("/find", getUser)
 
 // GET a signle user (by id)
 router.get("/:id", getUserById)
+
+// Export a users' info in json or xml file (for admin)
+router.post("/export", exportUsers);
 
 // POST a new user
 router.post("/", createUser)

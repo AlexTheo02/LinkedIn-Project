@@ -1,6 +1,7 @@
 .network_user{
     display: flex;
     align-items: center;
+    padding: 0 8px;
 }
 
 .network_user img {
@@ -13,6 +14,49 @@
     background: #a02500;
 }
 
+.section{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 250px;
+    height: 56px;
+    margin: -8px 0;
+    padding: 0 5px;
+    border-right: 2px solid #6d6d6d;
+}
+
+.main_section{
+    display: flex;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+.select_section{
+    width: 52px;
+    height: 56px;
+    margin: -8px 0;
+    margin-left: -8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 2px solid #6d6d6d;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+.select_section:hover, .main_section:hover {
+    background: #d7e9ff;
+}
+
+.select_section .select_icon{
+    width: 30px;
+    height: 30px;
+}
+
+.select_section .box_icon{
+    color: black;
+}
+
 .user_info, .contact_info{
     display: flex;
     flex-direction: column;
@@ -23,6 +67,15 @@
     white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
 }
 
+.contact_info b{
+    font-style: italic;
+    color: #3a3a3a;
+}
+
+.user_info{
+    width: 80%;
+}
+
 .user_info .position {
     font-style: italic;
     color: rgb(77, 77, 77);
@@ -30,4 +83,37 @@
     text-overflow: ellipsis;
     white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
     max-width: 100%;
+
+}
+
+.options_section{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 450px;
+}
+
+.options_section button {
+    padding: 10px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.options_section .profile_button {
+    background-color: #a02500;
+}
+
+.options_section .profile_button:hover {
+    background-color: #801e00;
+}
+
+.options_section .export_button {
+    background-color: #007bff;
+}
+
+.options_section .export_button:hover {
+    background-color: #0056b3;
 }
