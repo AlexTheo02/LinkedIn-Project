@@ -453,6 +453,36 @@ const toggleLikePost = async (request, response) => {
     }
 }
 
+// Publish comment
+const publishComment = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Post not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        // Check if the comment is already published
+        if (user.publishedComments.includes(id)) {
+            return response.status(400).json({ error: "Comment already published" });
+        }
+
+        user.publishedComments.push(id);
+        
+        await user.save();
+
+        response.status(200).json({ message: "User published comment" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
 // Apply for job
 const applyJob = async (request, response) => {
     const { id } = request.params;
@@ -802,7 +832,13 @@ const updateUser = async (request, response) => {
     // Grab the id from the route parameters
     const { id } = request.params;
 
-    const userBodyData = request.body
+    const userBodyData = {
+        ...request.body,
+        professionalExperience: JSON.parse(request.body.professionalExperience || "[]"),
+        education: JSON.parse(request.body.education || "[]"),
+        skills: JSON.parse(request.body.skills || "[]"),
+    };
+
     const profilePicture = request.file ? await handleFileUpload(request.file) : null;
 
     const userData = profilePicture ? {profilePicture, ...userBodyData} : userBodyData;
@@ -935,6 +971,7 @@ module.exports = {
     publishJob,
     publishPost,
     toggleLikePost,
+    publishComment,
     applyJob,
     removeApplyJob,
     requestConnection,

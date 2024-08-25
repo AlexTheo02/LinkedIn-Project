@@ -83,6 +83,7 @@
     text-overflow: ellipsis;
     white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
     max-width: 100%;
+
 }
 
 .options_section{

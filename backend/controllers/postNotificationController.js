@@ -2,17 +2,19 @@ const PostNotification = require("../models/postNotificationModel.js")
 const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 
+
 // Get all notifications
 const getAllNotifications = async (request, response) => {
     const loggedInUserId = request.user.id;
     
     try {
-        const user = await User.findById(loggedInUserId);
+        const user = await User.findById(loggedInUserId).populate("postNotifications", "createdAt");
         if (!user) {
             return response.status(404).json({ error: "User not found" });
         }
 
         // Ταξινομούμε τα postNotifications με βάση το createdAt από το πιο πρόσφατο στο πιο παλιό
+        console.log(user.postNotifications)
         const sortedNotifications = user.postNotifications.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });

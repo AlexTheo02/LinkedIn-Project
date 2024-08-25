@@ -8,7 +8,7 @@ const ManyInputFields = ({name, list, setList, limit = 10, isEditing = true}) =>
         const newList = [...list];
 
         // Update value on specific index
-        newList[index].value = event.target.value;
+        newList[index] = event.target.value;
 
         // Update actual list
         setList(newList);
@@ -17,7 +17,7 @@ const ManyInputFields = ({name, list, setList, limit = 10, isEditing = true}) =>
     // Add element at the end of the list (up to 10 total elements)
     const addElement = () => {
         if (list.length < limit)
-            setList([...list, {value: ""}])
+            setList([...list, ""])
     }
 
     // Remove the top element from the list (not if it's the only one)
@@ -38,7 +38,7 @@ const ManyInputFields = ({name, list, setList, limit = 10, isEditing = true}) =>
                         id={`${name}Input${index}`}
                         placeholder={`${name} ${index + 1}`}
                         className={s.text_input}
-                        value={listElement.value}
+                        value={listElement}
                         onChange={(event) => {handleListChange(index, event)}}
                         disabled={!isEditing}
                     />

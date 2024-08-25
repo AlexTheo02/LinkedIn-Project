@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const validator = require("validator")
 const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+const Comment = require("./commentModel.js");
 
 // Define the schema for the model
 const Schema = mongoose.Schema
@@ -27,11 +28,11 @@ const userSchema = new Schema({
 
     employmentOrganization: {type: String, required: true},
 
-    professionalExperience: {type: String}, // String
+    professionalExperience: {type: [String], required: true}, // Array String
 
-    education: {type: String}, // String
+    education: {type: [String], required: true}, // Array String
 
-    skills: {type: String}, // String
+    skills: {type: [String], required: true}, // Array String
 
     recentConversations: {type: [{type: Schema.Types.ObjectId, ref: "Conversation"}], required: true}, // Array of Conversation ObjectIds
 
@@ -43,13 +44,13 @@ const userSchema = new Schema({
 
     likedPosts: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], required: true}, // Array of Post ObjectIds (posts the user has liked)
     
-    // postComments
+    publishedComments: {type: [{type: Schema.Types.ObjectId, ref: "Comment"}], required: true}, // Array of Comment ObjectIds (comments the user has published)
 
     privateDetails: {type: [""], required: true}, // Array of strings of fields that are private, ex. ["dateOfBirth", "placeOfResidence"]
 
     appliedJobs: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], required: true}, // Array of job ids that the user has applied to
 
-    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "Notification"}], required: true}, // Array of Post Notification ids
+    postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], required: true}, // Array of Post Notification ids
 
     linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], required: true}, // Array of Link Up Requests ids
 })
@@ -319,9 +320,9 @@ userSchema.statics.register = async function(userData) {
         placeOfResidence: userData.placeOfResidence,
         workingPosition: userData.workingPosition,
         employmentOrganization: userData.employmentOrganization,
-        professionalExperience: "",
-        education: "",
-        skills: "",
+        professionalExperience: [],
+        education: [],
+        skills: [],
         recentConversations: [],
         network: [],
         publishedPosts: [],

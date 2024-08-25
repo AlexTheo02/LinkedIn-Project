@@ -37,8 +37,8 @@ function PostNotifications() {
         <div className={s.notifications_list}>
             {notifications.map(notification => (
                 <Notification 
-                    key={notification} 
-                    id={notification}
+                    key={notification._id} 
+                    id={notification._id}
                 />
             ))}
         </div>
