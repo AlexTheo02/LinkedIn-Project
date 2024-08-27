@@ -49,6 +49,19 @@ export const useApplication = () => {
             console.error('Error adding applicant:', error);
         }
 
+        // Log the interaction on the user's jobInteractions table
+        const response = await fetch(`/api/users/log-job-interaction/${targetJob._id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `Bearer ${user.token}`
+            },
+            // body: JSON.stringify({remove: false})
+        });
+
+        const json = await response.json();
+        console.log(json)
+
         setIsLoading(false);
     }
 
@@ -94,6 +107,19 @@ export const useApplication = () => {
         } catch (error) {
             console.error('Error adding applicant:', error);
         }
+
+        // Log the interaction on the user's jobInteractions table
+        const response = await fetch(`/api/users/log-job-interaction/${targetJob._id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `Bearer ${user.token}`
+            },
+            // body: JSON.stringify({remove: true})
+        });
+
+        const json = await response.json();
+        console.log(json)
 
         setIsLoading(false);
     }

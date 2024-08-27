@@ -400,6 +400,38 @@ const publishComment = async (request, response) => {
     }
 }
 
+const logJobInteraction = async(request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+    // const { remove } = request.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Job not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({error: "User not found"})
+        }
+
+        if (user.jobInteractions.includes(id)) {
+            // if (remove){
+            //     const newJobInteractions = user.jobInteractions.filter(jobId => jobId != id)
+            //     user.jobInteractions = newJobInteractions;
+            //     await user.save();
+            //     return response.status(200).json({message: "User interaction successfuly removed"});
+            // }
+            return response.status(200).json({message: "User has already interacted with this job"});
+        }
+        user.jobInteractions.push(id);
+        await user.save();
+        response.status(200).json({message: "User-Job interaction logged successfuly"});
+    } catch (error) {
+        response.status(400).json({error: error.message})
+    }
+}
+
 // Apply for job
 const applyJob = async (request, response) => {
     const { id } = request.params;
@@ -888,6 +920,7 @@ module.exports = {
     publishPost,
     toggleLikePost,
     publishComment,
+    logJobInteraction,
     applyJob,
     removeApplyJob,
     requestConnection,

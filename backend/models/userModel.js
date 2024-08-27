@@ -54,6 +54,8 @@ const userSchema = new Schema({
     postNotifications: {type: [{type: Schema.Types.ObjectId, ref: "PostNotification"}], default: [], required: true}, // Array of Post Notification ids
 
     linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], default: [], required: true}, // Array of Link Up Requests ids
+
+    jobInteractions: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], default: [], required: true} // Array of jobIds the user has interacted with
 })
 
 function formatFieldName(fieldName) {

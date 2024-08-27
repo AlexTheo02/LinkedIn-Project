@@ -15,6 +15,7 @@ const {
     publishPost,
     toggleLikePost,
     publishComment,
+    logJobInteraction,
     applyJob,
     removeApplyJob,
     requestConnection,
@@ -77,6 +78,9 @@ router.patch("/toggleLikePost/:id", toggleLikePost);
 
 // Publish comment
 router.patch("/publishComment/:id", publishComment);
+
+// Log job interaction
+router.patch("/log-job-interaction/:id", logJobInteraction)
 
 // Apply for job
 router.patch("/applyJob/:id", applyJob);

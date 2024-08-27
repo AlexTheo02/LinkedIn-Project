@@ -4,16 +4,32 @@ import s from "./JobsPageStyle.module.css";
 import JobInfo from './JobInfo/JobInfo';
 import JobListings from "./JobListings/JobListings";
 import CreateJobListing from './CreateJobListing/CreateJobListing'
+import { useJobsContext } from "../../Hooks/useJobsContext";
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
 function JobsPage(){
     const [showingMoreInfo, setShowingMoreInfo] = useState(false);
     const [isCreatingJob, setIsCreatingJob] = useState(false);
+    const { dispatch } = useJobsContext();
+    const { user } = useAuthContext();
 
-    // Create handler struct and pass it into each job listing
-    // Handler will contain selected job listing, is showing, is not showing ...
-
-    const handleJobClick = () => {
+    const handleJobClick = async (job) => {
+        dispatch({type: 'SET_ACTIVE_JOB', payload: job});
         setShowingMoreInfo(true);
+        const jobId = job._id;
+
+        // Log the interaction on the user's jobInteractions table
+        const response = await fetch(`/api/users/log-job-interaction/${jobId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type" : "application/json",
+                'Authorization': `Bearer ${user.token}`
+            },
+            // body: JSON.stringify({remove: false})
+        });
+
+        const json = await response.json();
+        console.log(json)
     }
 
     const handleCreateJobClick = () => {

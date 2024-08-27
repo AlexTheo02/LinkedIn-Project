@@ -39,7 +39,7 @@ function JobListings({onClick}) {
     return(
         <div className={s.jobs}>
             {jobs && jobs.map((job) => (
-                <JobListing key={job._id} job={job} onClick={() => { onClick(); dispatch({type: 'SET_ACTIVE_JOB', payload: job}) }}/>
+                <JobListing key={job._id} job={job} onClick={() => { onClick(job) }}/>
             ))}
         </div>
         
