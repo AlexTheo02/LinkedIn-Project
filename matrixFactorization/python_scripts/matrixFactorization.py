@@ -34,9 +34,6 @@ class MF:
                     if rating > 0:
                         print("test")
 
-                    
-
-    
     # Error function
     def error(self, userId, itemId):
         print("Calculating error")
