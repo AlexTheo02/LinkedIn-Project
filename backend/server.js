@@ -2,6 +2,52 @@ require("dotenv").config()
 
 const express = require("express")
 const mongoose = require("mongoose")
+const { spawn } = require('child_process');
+
+const User = require("./models/userModel.js")
+const Job = require("./models/jobModel.js")
+const Post = require("./models/postModel.js")
+
+const jobMatrixFactorizationPath = "../matrixFactorization/python_scripts/jobMatrixFactorization.py"
+const postMatrixFactorizationPath = "../matrixFactorization/python_scripts/postMatrixFactorization.py"
+
+// Function to run a specific python script
+const matrixFactorization = async (path) => {
+
+    // Fetch data to send into matrix factorization algorithm
+
+    // Fetch users
+    const users = await User.find();
+    let response = undefined;
+
+    if (path === jobMatrixFactorizationPath){
+        // fetch jobs and assign them to response
+        response = await Job.find();
+    }
+
+    else if(path === postMatrixFactorizationPath){
+        // fetch posts and assign them to response
+        response = await Post.find();
+    }
+
+    // Start the execution process
+    console.log("Executing python script:",path)
+    const pythonProcess = spawn("python",[path, JSON.stringify(users), JSON.stringify(response)]);
+
+    // Output logging
+    pythonProcess.stdout.on("data", (data) => {
+    console.log(data.toString());
+    })
+
+    // Error logging
+    pythonProcess.stderr.on("data", (error) => {
+        console.log(`PYTHON ERROR:\n${error.toString()}`);
+    })
+}
+
+matrixFactorization(jobMatrixFactorizationPath)
+
+// setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 10000 ) // 10 seconds
 
 // Routes
 const adminRoutes = require("./Routes/admin.js")
