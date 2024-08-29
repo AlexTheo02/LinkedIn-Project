@@ -1,14 +1,15 @@
 import sys
 import json
 import matrixFactorization as mf
+import generalFunctions as gf
 
 # if len(sys.argv) != 2:
 #     print("Error: arguments not provided correctly")
 #     exit(0)
 
 # Parse json strings containing user and job data
-# users_list = json.loads(sys.argv[1])
-# jobs_list = json.loads(sys.argv[2])
+users_list = json.loads(sys.argv[1])
+jobs_list = json.loads(sys.argv[2])
 
 # Relations array
 R_dict = {
@@ -45,8 +46,22 @@ for row in R:
 print("User mapping", user_mapping)
 print("Job mapping", job_mapping)
 
+flipped_job_mapping = {value: key for key, value in job_mapping.items()}
+
 
 mf = mf.MF(R=R_dict, K=2)
 
-# No need to train a different model for each user
+# Train the global model
 mf.train()
+
+# Get the suggested jobs for each user
+for user in users_list:
+    # Get id and network from user's data
+    user_id = user['_id']
+    user_network = user['connectedUsers']
+    job_interactions = user['jobInteractions']
+
+    # Make prediction
+    jobSuggestions = mf.predict(user_id, user_network, job_interactions, user_mapping, itemMapping = job_mapping, flippedItemMapping = flipped_job_mapping)
+
+    # Somehow return the suggestions to the database, or save to mongoose

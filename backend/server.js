@@ -36,7 +36,11 @@ const matrixFactorization = async (path) => {
 
     // Output logging
     pythonProcess.stdout.on("data", (data) => {
-    console.log(data.toString());
+    const suggestions = JSON.parse(data.toString());
+    // if path === jobs add to jobs suggestions
+
+    // if path === posts add to posts suggestions
+    console.log(suggestions)
     })
 
     // Error logging
@@ -45,7 +49,9 @@ const matrixFactorization = async (path) => {
     })
 }
 
+
 matrixFactorization(jobMatrixFactorizationPath)
+matrixFactorization(postMatrixFactorizationPath)
 
 // setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 10000 ) // 10 seconds
 
