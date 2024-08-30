@@ -29,6 +29,7 @@ const matrixFactorization = async (path) => {
         // fetch posts and assign them to response
         response = await Post.find();
     }
+    else return;
 
     // Start the execution process
     console.log("Executing python script:",path)
@@ -36,11 +37,19 @@ const matrixFactorization = async (path) => {
 
     // Output logging
     pythonProcess.stdout.on("data", (data) => {
-    const suggestions = JSON.parse(data.toString());
-    // if path === jobs add to jobs suggestions
-
-    // if path === posts add to posts suggestions
-    console.log(suggestions)
+        console.log("RESPOSNE RECEIVED")
+        const suggestions = JSON.parse(data.toString());
+        console.log(suggestions)
+        // Job MF response
+        if (path === jobMatrixFactorizationPath){
+            // Add job suggestions to suggestedJobs on each user
+            
+            
+        }
+        // Post MF response
+        else if (path === postMatrixFactorizationPath){
+            // Add post suggestions to suggestedPosts on each user
+        }
     })
 
     // Error logging
@@ -48,12 +57,6 @@ const matrixFactorization = async (path) => {
         console.log(`PYTHON ERROR:\n${error.toString()}`);
     })
 }
-
-
-matrixFactorization(jobMatrixFactorizationPath)
-matrixFactorization(postMatrixFactorizationPath)
-
-// setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 10000 ) // 10 seconds
 
 // Routes
 const adminRoutes = require("./Routes/admin.js")
@@ -90,6 +93,14 @@ mongoose.connect(process.env.MONGO_URI)
         app.listen(process.env.PORTNUM, () => {
             console.log("Listening on port",process.env.PORTNUM)
         })
+
+        // Matrix factorization logic
+        matrixFactorization(jobMatrixFactorizationPath)
+        matrixFactorization(postMatrixFactorizationPath)
+
+        setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 600000 ) // 10 minutes
+        setInterval(() => {matrixFactorization(postMatrixFactorizationPath)}, 600000 ) // 10 minutes
+
     })
     .catch((error) => {console.log(error)})
 
