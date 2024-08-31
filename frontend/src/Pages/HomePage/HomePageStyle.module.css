@@ -66,6 +66,7 @@
     border-radius: 5px;
     box-shadow: 0px 2px 4px rgb(0,0,0,0.4);
     margin-left: 0px;
+    object-fit: cover;
 }
 
 .user_username{

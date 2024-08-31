@@ -3,7 +3,7 @@ import json
 import matrixFactorization as mf
 import generalFunctions as gf
 
-if len(sys.argv) != 2:
+if len(sys.argv) != 3:
     print("Error: arguments not provided correctly")
     exit(0)
 
@@ -54,7 +54,7 @@ R = [[R_dict[user][job] for job in job_mapping] for user in user_mapping]
 
 flipped_job_mapping = {value: key for key, value in job_mapping.items()}
 
-mf = mf.MF(R=R, K=5)
+mf = mf.MF(R=R, K=5) # number of latent features K = 5
 
 # Train the global model
 mf.train()
@@ -65,11 +65,11 @@ userJobSuggestions = {}
 for user in users_list:
     # Get id and network from user's data
     user_id = user['_id']
-    user_network = user['connectedUsers']
+    user_network = user['network']
     job_interactions = user['jobInteractions']
 
     # Make prediction
-    jobSuggestions = mf.predict(user_id, user_network, job_interactions, user_mapping, itemMapping = job_mapping, flippedItemMapping = flipped_job_mapping)
+    jobSuggestions = mf.predict(user_id, user_network, itemInteractions = job_interactions, userMappings = user_mapping, itemMapping = job_mapping, flippedItemMapping = flipped_job_mapping)
     # Assign suggested jobs to user
     userJobSuggestions[user_id] = jobSuggestions
 
