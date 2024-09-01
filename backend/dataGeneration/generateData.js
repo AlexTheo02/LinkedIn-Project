@@ -13,7 +13,7 @@ const workingPositions = [
     "Lawyer",
     "Chef",
     "Doctor",
-    "Influencer"
+    "Athlete"
 ]
 
 // Password123!
@@ -116,16 +116,12 @@ function createJob(authorId) {
 const configureNetwork = (user, network_to_push) => {
     // Προσθήκη τυχαίων χρηστών στο δίκτυο
     for (let i = 0; i < Math.floor(Math.random() * 10)/* + 5*/; i++) {  // ΞΕΣΧΟΛΙΑΣΕ ΤΟ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (network_to_push[user._id].length > 0){
-            user.network.push()
-            continue;
-        }
         let randomUserId;
         do {
             randomUserId = users[Math.floor(Math.random() * users.length)]._id;
         } while (randomUserId === user._id || user.network.includes(randomUserId));
         user.network.push(randomUserId);
-        randomUserId.network.push(user._id);
+        network_to_push[randomUserId].push(user._id);
     }
 }
 
@@ -144,9 +140,31 @@ const networkToPush = (user, network_to_push) => {
     })
 }
 
+const createJobInteractions = (user) => {
+    // Προσθήκη job interactions και applied jobs
+    for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
+        console.log("ITERATION GIA INTERACTIONS")
+        const randomJobIndex = Math.floor(Math.random() * jobs.length);
+        const job = jobs[randomJobIndex];
+
+        if (!user.jobInteractions.includes(job._id)) {
+            user.jobInteractions.push(job._id);
+
+            // Apply σε τυχαία jobs
+            if (Math.random() > 0.4) {  // So 2/5 chances they applied
+                user.appliedJobs.push(job._id);
+                job.applicants.push(user._id);
+            }
+        }
+    }
+}
+
 async function generateData() {
+    const n_users = 10;
+    const n_jobs = 10;
+
     // Δημιουργία χρηστών
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < n_users; i++) {
         const gender = Math.random() > 0.5 ? 'male' : 'female';
         const url = await createProfilePicture(gender);
         console.log(url)
@@ -155,7 +173,7 @@ async function generateData() {
     }
 
     // Δημιουργία θέσεων εργασίας
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < n_jobs; i++) {
         // Επιλογή τυχαίου χρήστη ως author
         const randomUserIndex = Math.floor(Math.random() * users.length);
         const authorId = users[randomUserIndex]._id;
@@ -167,32 +185,14 @@ async function generateData() {
         jobs.push(job);
     }
 
-    network_to_push = {}
+    let network_to_push = {}
     // Προσθήκη δικτύου χρηστών και interactions
     users.forEach(user => {
-        configureNetwork(user, network_to_push)
+        configureNetwork(user, network_to_push) // Να ξεσχολιασουμε το + 5 !!!!!!!!!!!!!!!!!!!!!!!!!!!
         networkToPush(user, network_to_push)
 
-        console.log("MEXRI EDW FTANW")
         // Προσθήκη job interactions και applied jobs
-        let randomJobInteractions = [];
-        for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
-            console.log("ITERATION GIA INTERACTIONS")
-            const randomJobIndex = Math.floor(Math.random() * jobs.length);
-            const job = jobs[randomJobIndex];
-
-            if (!randomJobInteractions.includes(job._id)) {
-                randomJobInteractions.push(job._id);
-                user.jobInteractions.push(job._id);
-
-                // Apply σε τυχαία jobs
-                if (Math.random() > 0.5) {
-                    user.appliedJobs.push(job._id);
-                    job.applicants.push(user._id);
-                }
-            }
-        }
-        console.log("TELOS?")
+        createJobInteractions(user)
     });
 
     // Γράψιμο των δεδομένων σε JSON αρχεία
