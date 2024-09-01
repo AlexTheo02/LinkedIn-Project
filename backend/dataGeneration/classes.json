@@ -1,0 +1,196 @@
+{
+    "ComputerScience": {
+        "WorkingPositions": [
+            "Frontend Developer", "Backend Developer", "Full Stack Developer", "Data Scientist",
+            "Machine Learning Engineer", "AI Researcher", "DevOps Engineer", "Systems Architect",
+            "Database Administrator", "Cybersecurity Analyst", "Software Tester", "Mobile App Developer",
+            "Game Developer", "Cloud Engineer", "Network Engineer", "UX/UI Designer", "IT Project Manager"
+        ],
+        "Skills": [
+            "C++", "JavaScript", "Machine Learning", "Python", "Java", "SQL", "Cybersecurity",
+            "Data Analysis", "Cloud Computing", "DevOps", "AI Development", "Software Testing",
+            "Mobile Development", "Game Design", "Network Configuration", "UX/UI Design", "Project Management"
+        ],
+        "Companies": [
+            "Apple", "Microsoft", "Google", "Amazon", "Facebook", "Netflix", "IBM", "Intel",
+            "Oracle", "Salesforce", "Cisco", "Adobe", "Tesla", "Nvidia", "Uber", "Spotify", "Airbnb"
+        ]
+    },
+    "Law": {
+        "WorkingPositions": [
+            "Environmental Lawyer", "Corporate Lawyer", "Family Lawyer", "Criminal Lawyer",
+            "Intellectual Property Lawyer", "Tax Lawyer", "Immigration Lawyer", "Labor Lawyer",
+            "Real Estate Lawyer", "Personal Injury Lawyer", "Bankruptcy Lawyer", "Health Care Lawyer",
+            "Civil Rights Lawyer", "Entertainment Lawyer", "International Lawyer", "Securities Lawyer", "Litigator"
+        ],
+        "Skills": [
+            "Legal Research", "Contract Drafting", "Litigation", "Negotiation", "Client Counseling",
+            "Legal Writing", "Regulatory Compliance", "Mediation", "Public Speaking", "Critical Thinking",
+            "Problem Solving", "Case Management", "Legal Analysis", "Document Review", "Court Procedures",
+            "Legal Ethics", "Dispute Resolution"
+        ],
+        "Companies": [
+            "Baker McKenzie", "DLA Piper", "Norton Rose Fulbright", "Skadden", "Latham & Watkins",
+            "Clifford Chance", "Linklaters", "White & Case", "Sidley Austin", "Allen & Overy",
+            "Jones Day", "Hogan Lovells", "Herbert Smith Freehills", "Freshfields Bruckhaus Deringer",
+            "Gibson Dunn", "Morgan Lewis", "Kirkland & Ellis"
+        ]
+    },
+    "Kitchen": {
+        "WorkingPositions": [
+            "Head Chef", "Sous Chef", "Pastry Chef", "Line Cook", "Prep Cook", "Garde Manger",
+            "Commis Chef", "Kitchen Porter", "Grill Cook", "Fry Cook", "Expediter", "Saucier",
+            "Banquet Chef", "Private Chef", "Catering Manager", "Food Stylist", "Restaurant Manager"
+        ],
+        "Skills": [
+            "Culinary Skills", "Food Safety", "Knife Skills", "Menu Planning", "Baking", "Grilling",
+            "Sautéing", "Pastry Making", "Time Management", "Sanitation", "Recipe Development",
+            "Nutrition Knowledge", "Inventory Management", "Plating", "Food Presentation", "Cost Control",
+            "Team Leadership"
+        ],
+        "Companies": [
+            "Gordon Ramsay Group", "The French Laundry", "Nobu", "Le Bernardin", "Momofuku",
+            "Blue Hill", "Alinea", "Per Se", "Eleven Madison Park", "The Fat Duck", "Chez Panisse",
+            "Jean-Georges", "Daniel", "The Ritz-Carlton", "Four Seasons", "Hilton", "Marriott"
+        ]
+    },
+    "Medical": {
+        "WorkingPositions": [
+            "Surgeon", "General Practitioner", "Pediatrician", "Nurse", "Anesthesiologist",
+            "Radiologist", "Pharmacist", "Dentist", "Orthopedic Surgeon", "Cardiologist",
+            "Dermatologist", "Neurologist", "Psychiatrist", "Physician Assistant", "Medical Technician",
+            "Physical Therapist", "Occupational Therapist"
+        ],
+        "Skills": [
+            "Patient Care", "Surgical Skills", "Medical Diagnosis", "Pharmacology", "Medical Research",
+            "Clinical Procedures", "Emergency Medicine", "Medical Imaging", "Patient Counseling",
+            "Healthcare Management", "Anatomy Knowledge", "Physiology", "Pathology", "Medical Ethics",
+            "Critical Care", "Infection Control", "Therapeutic Techniques"
+        ],
+        "Companies": [
+            "Mayo Clinic", "Cleveland Clinic", "Johns Hopkins Medicine", "UCLA Health", "Massachusetts General Hospital",
+            "Kaiser Permanente", "NewYork-Presbyterian Hospital", "Cedars-Sinai Medical Center", "MD Anderson Cancer Center",
+            "Stanford Health Care", "Mount Sinai Hospital", "Duke University Health System", "University of Michigan Hospitals",
+            "Northwestern Medicine", "Houston Methodist Hospital", "NYU Langone Health", "Baptist Health"
+        ]
+    },
+    "Sports": {
+        "WorkingPositions": [
+            "Professional Athlete", "Coach", "Sports Manager", "Athletic Trainer", "Sports Analyst",
+            "Sports Journalist", "Referee", "Sports Agent", "Physical Therapist", "Sports Psychologist",
+            "Strength and Conditioning Coach", "Event Coordinator", "Fitness Instructor", "Sports Marketing Manager",
+            "Scout", "Nutritionist", "Sports Photographer"
+        ],
+        "Skills": [
+            "Athletic Training", "Coaching", "Sports Management", "Sports Analysis", "Journalism",
+            "Physical Therapy", "Sports Psychology", "Conditioning", "Event Planning", "Marketing",
+            "Talent Scouting", "Nutrition", "Photography", "Public Relations", "Team Leadership",
+            "Fitness Training", "Game Strategy"
+        ],
+        "Companies": [
+            "ESPN", "Nike", "Adidas", "Under Armour", "Puma", "Gatorade", "NBC Sports", "Fox Sports",
+            "Bleacher Report", "CBS Sports", "Reebok", "Sky Sports", "Red Bull", "New Balance",
+            "Sports Illustrated", "WWE", "UFC"
+        ]
+    },
+    "Security": {
+        "WorkingPositions": [
+            "Security Guard", "Bodyguard", "Cybersecurity Analyst", "Security Consultant",
+            "Loss Prevention Specialist", "Surveillance Officer", "Private Investigator", "Security Manager",
+            "Police Officer", "Border Patrol Agent", "Fire Investigator", "Correctional Officer",
+            "Fraud Investigator", "Forensic Analyst", "Network Security Engineer", "Alarm Technician",
+            "Event Security Coordinator"
+        ],
+        "Skills": [
+            "Surveillance", "Cybersecurity", "Risk Assessment", "Emergency Response", "Physical Security",
+            "Loss Prevention", "Security Analysis", "Investigations", "Conflict Resolution",
+            "Crisis Management", "Firearms Training", "Martial Arts", "First Aid", "Network Security",
+            "Alarm Systems", "Incident Reporting", "Crowd Control"
+        ],
+        "Companies": [
+            "G4S", "Securitas", "Allied Universal", "ADT", "Brinks", "CyberArk", "Palo Alto Networks",
+            "Checkpoint", "Symantec", "McAfee", "FireEye", "CrowdStrike", "Northrop Grumman",
+            "Lockheed Martin", "Raytheon", "BAE Systems", "Booz Allen Hamilton"
+        ]
+    },
+    "Advertising": {
+        "WorkingPositions": [
+            "Copywriter", "Art Director", "Account Manager", "Media Planner", "Creative Director",
+            "Brand Manager", "Market Research Analyst", "Social Media Manager", "Content Strategist",
+            "Graphic Designer", "SEO Specialist", "PPC Specialist", "Advertising Sales Agent",
+            "Public Relations Specialist", "Event Coordinator", "Marketing Manager", "Client Services Manager"
+        ],
+        "Skills": [
+            "Copywriting", "Graphic Design", "Brand Management", "Market Research", "Social Media",
+            "Content Strategy", "SEO", "PPC Campaigns", "Sales", "Public Relations", "Event Planning",
+            "Client Relations", "Creative Thinking", "Project Management", "Data Analysis", "Communication",
+            "Negotiation"
+        ],
+        "Companies": [
+            "Ogilvy", "Wieden+Kennedy", "BBDO", "Leo Burnett", "McCann", "Saatchi & Saatchi",
+            "TBWA", "Grey", "DDB", "Young & Rubicam", "Publicis", "Havas", "Droga5", "JWT",
+            "Mindshare", "MediaCom", "Starcom"
+        ]
+    },
+    "Engineering": {
+        "WorkingPositions": [
+            "Civil Engineer", "Mechanical Engineer", "Electrical Engineer", "Software Engineer",
+            "Chemical Engineer", "Aerospace Engineer", "Environmental Engineer", "Industrial Engineer",
+            "Biomedical Engineer", "Structural Engineer", "Project Engineer", "Petroleum Engineer",
+            "Materials Engineer", "Geotechnical Engineer", "Automotive Engineer", "Robotics Engineer",
+            "Mining Engineer"
+        ],
+        "Skills": [
+            "CAD Design", "Project Management", "Problem Solving", "Analytical Skills", "Technical Writing",
+            "Mathematics", "Physics", "Chemistry", "Programming", "System Design", "Material Science",
+            "Thermodynamics", "Fluid Mechanics", "Electrical Circuit Design", "Mechanics", "Structural Analysis",
+            "Quality Control"
+        ],
+        "Companies": [
+            "Siemens", "General Electric", "Lockheed Martin", "Boeing", "Shell", "ExxonMobil", "Jacobs",
+            "Fluor", "ABB", "Schlumberger", "Arup", "WSP Global", "AECOM", "Tetra Tech", "Honeywell",
+            "Raytheon", "Bechtel"
+        ]
+    },
+    "Music": {
+        "WorkingPositions": [
+            "Music Producer", "Sound Engineer", "Composer", "Session Musician", "Music Teacher",
+            "Conductor", "DJ", "Music Therapist", "Lyricist", "Instrumentalist", "Vocal Coach",
+            "Music Director", "Choir Director", "Recording Engineer", "A&R Coordinator", "Live Sound Technician",
+            "Music Arranger"
+        ],
+        "Skills": [
+            "Music Composition", "Audio Engineering", "Sound Mixing", "Music Theory", "Instrument Proficiency",
+            "Vocal Techniques", "Music Production", "Arranging", "Conducting", "Songwriting",
+            "Recording Techniques", "Music Editing", "Music Notation", "Music Therapy", "Live Sound",
+            "Studio Management", "Performance Skills"
+        ],
+        "Companies": [
+            "Sony Music", "Universal Music Group", "Warner Music Group", "BMG", "EMI",
+            "Atlantic Records", "Capitol Records", "Def Jam Recordings", "RCA Records",
+            "Island Records", "Columbia Records", "Interscope Records", "Virgin Records",
+            "Motown Records", "Geffen Records", "Epic Records", "Blue Note Records"
+        ]
+    },
+    "Education": {
+        "WorkingPositions": [
+            "Primary School Teacher", "Secondary School Teacher", "University Professor", "Special Education Teacher",
+            "Education Consultant", "School Counselor", "Librarian", "Curriculum Developer", "ESL Teacher",
+            "Instructional Coordinator", "Education Administrator", "Teacher Assistant", "Kindergarten Teacher",
+            "Tutor", "Lecturer", "Academic Advisor", "Training and Development Specialist"
+        ],
+        "Skills": [
+            "Lesson Planning", "Classroom Management", "Curriculum Development", "Student Assessment",
+            "Instructional Design", "Educational Technology", "Differentiated Instruction",
+            "Special Education Techniques", "Counseling", "Educational Research", "Child Development",
+            "Communication Skills", "Critical Thinking", "Problem Solving", "Collaboration",
+            "Mentoring", "Professional Development"
+        ],
+        "Companies": [
+            "Pearson", "McGraw-Hill Education", "Houghton Mifflin Harcourt", "Scholastic",
+            "Kaplan", "The Princeton Review", "Cambridge University Press", "Oxford University Press",
+            "Blackboard", "Coursera", "Edmodo", "Khan Academy", "Edmentum", "Discovery Education",
+            "Hobsons", "Renaissance Learning", "Wiley"
+        ]
+    }
+}
