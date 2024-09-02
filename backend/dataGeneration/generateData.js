@@ -38,7 +38,6 @@ const createProfilePicture = async (gender) => {
     // Upload to google storage and return the path
 
     try {
-
         const uniqueFileName = `${Date.now()}-${gender}-${rand}`;
         const blob = lp_bucket.file(uniqueFileName);
         const blobStream = blob.createWriteStream({
@@ -46,12 +45,12 @@ const createProfilePicture = async (gender) => {
                 contentType: 'image/jpeg'  // Set the MIME type for the image
             }
         });
-
+        
         return new Promise((resolve, reject) => {
             blobStream.on("error", (err) => {
                 reject(err);
             });
-
+            
             blobStream.on("finish", () => {
                 const url = process.env.GS_PATH + uniqueFileName
                 resolve(url);
@@ -94,6 +93,7 @@ function createUser(id, gender, profilePic, workingPosition, employmentOrganizat
         postNotifications: [],
         linkUpRequests: [],
         jobInteractions: [],
+        postInteractions: [],
         createdAt: faker.date.past({years: 2, refDate: new Date(2000, 0, 1)}),
         updatedAt: faker.date.past({years: 2, refDate: new Date(2024, 0, 1)})
     };
@@ -120,14 +120,14 @@ function createJob(authorId, title, employer, requirements) {
     };
 }
 
-// Λειτουργία για τη δημιουργία θέσεων εργασίας (jobs)
-function createPost(authorId, fileURL, fileType) {
+// Create single post based on arguments
+function createPost(authorId, multimediaURL, multimediaType) {
     return {
         _id: new mongoose.Types.ObjectId(),
         author: authorId,
         caption: faker.lorem.paragraph(),
-        multimediaURL: fileURL,
-        multimediaType: fileType,
+        multimediaURL: multimediaURL,
+        multimediaType: multimediaType,
         commentsList : [], // List of commentIds
         likesList : [],
         createdAt: faker.date.past({years: 2, refDate: new Date(2000, 0, 1)}),
@@ -174,7 +174,6 @@ const networkToPush = (user, network_to_push) => {
 const createJobInteractions = (user) => {
     // Προσθήκη job interactions και applied jobs
     for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
-        console.log("ITERATION GIA INTERACTIONS")
         const randomJobIndex = Math.floor(Math.random() * jobs.length);
         const job = jobs[randomJobIndex];
 
@@ -205,6 +204,69 @@ const determineClass = (value) => {
     return undefined;
 }
 
+const createPostMutltimedia = async () => {
+        
+    let fileURL, fileType, fileExtension, multimediaFileRand = null, mimetype;
+    const multimediaTypeRand = Math.floor(Math.random() * 4) // 0: NO, 1: Image, 2: Video, 3: Audio
+    // Determine file type for post
+    if (multimediaTypeRand === 1){
+        fileType = "Image"
+        fileExtension = "jpg"
+        mimetype = "image/jpeg"
+        console.log("image for this post")
+    }
+    else if (multimediaTypeRand === 2){
+        fileType = "Video"
+        fileExtension = "mp4"
+        mimetype = "video/mp4"
+        console.log("video for this post")
+    }
+    else if (multimediaTypeRand === 3){
+        fileType = "Audio"
+        fileExtension = "mp3"
+        mimetype = "audio/mpeg"
+        console.log("audio for this post")
+    }
+    else{
+        console.log("No multimedia for this post")
+        return ""
+    }
+
+    // Upload to google storage
+    multimediaFileRand = Math.floor(Math.random() * 10) + 1
+    const multimediaPath = `./dataGeneration/PostMultimedia/${fileType}s/${multimediaFileRand}.${fileExtension}`;
+    console.log("reading file")
+    const fileBuffer = fs.readFileSync(multimediaPath);
+    console.log("file read success")
+    
+    try {
+
+        const uniqueFileName = `${Date.now()}-postMultimedia-${fileType}`;
+        const blob = lp_bucket.file(uniqueFileName);
+        const blobStream = blob.createWriteStream({
+            metadata: {
+                contentType: mimetype  // Set the MIME type for the file
+            }
+        });
+
+        return new Promise((resolve, reject) => {
+            blobStream.on("error", (err) => {
+                reject(err);
+            });
+
+            blobStream.on("finish", () => {
+                const url = process.env.GS_PATH + uniqueFileName
+                resolve(url);
+            });
+
+            blobStream.end(fileBuffer);
+        });
+    } catch (error) {
+        console.error("Error uploading file to google cloud:", error);
+        throw new Error("Error uploading file to google cloud");
+    }
+}
+
 async function generateData() {
     const n_users = 10;
     // const n_jobs = n_users * 0.2;
@@ -221,7 +283,6 @@ async function generateData() {
 
         const randValue = Math.random();
         const selectedClass = determineClass(randValue);
-
         if (!selectedClass){
             console.log(randValue)
             console.log("eimai malakas")
@@ -312,15 +373,18 @@ async function generateData() {
         // Επιλογή τυχαίου χρήστη ως author
         const randomUserIndex = Math.floor(Math.random() * users.length);
         const authorId = users[randomUserIndex]._id;
-        
-        let fileURL, fileType;
+        console.log("awaiting multimedia")
+        const postMultURL = await createPostMutltimedia()
+        const multimediaURL = postMultURL ? postMultURL : ""
+        console.log("multimedia generation finished")
+        const multimediaType = multimediaURL ? multimediaURL.match(/[^-]+$/)[0] : ""
 
-        const job = createJob(authorId, title, employer, requirements);
+        const post = createPost(authorId, multimediaURL, multimediaType);
         console.log("POST CREATED")
 
         // Προσθήκη του job στο πεδίο publishedJobListings του χρήστη
-        users[randomUserIndex].publishedJobListings.push(job._id);
-        jobs.push(job);
+        users[randomUserIndex].publishedPosts.push(post._id);
+        posts.push(post);
     }
 
     let network_to_push = {}
@@ -338,8 +402,9 @@ async function generateData() {
     // Γράψιμο των δεδομένων σε JSON αρχεία
     fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
     fs.writeFileSync('jobs.json', JSON.stringify(jobs, null, 2));
+    fs.writeFileSync('posts.json', JSON.stringify(posts, null, 2));
 
-    console.log('Users and jobs data generated successfully!');
+    console.log('Users, jobs and posts data generated successfully!');
 }
 
 generateData()

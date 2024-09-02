@@ -55,7 +55,11 @@ const userSchema = new Schema({
 
     linkUpRequests: {type: [{type: Schema.Types.ObjectId, ref: "User"}], default: [], required: true}, // Array of Link Up Requests ids
 
-    jobInteractions: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], default: [], required: true} // Array of jobIds the user has interacted with
+    jobInteractions: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], default: [], required: true}, // Array of jobIds the user has interacted with
+
+    postInteractions: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], default: [], required: true}, // Array of postIds the user has interacted with
+
+    interactionSource: {type: Boolean, default: false, required: true}  // false => views, true => likes and comments
 })
 
 function formatFieldName(fieldName) {
