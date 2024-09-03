@@ -10,12 +10,13 @@
     padding: 20px;
     padding-bottom: 70px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    /* justify-content: center;
+    align-items: flex-start; */
 }
 
 .background_image.admin{
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .background_image::-webkit-scrollbar {
@@ -29,6 +30,13 @@
 
 .background_image::-webkit-scrollbar-thumb:hover {
     background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+}
+
+.row{
+    width: 100%;
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: flex-start; */
 }
 
 .loading_text {
@@ -190,4 +198,8 @@
 .empty_network h3{
     font-style: italic;
     color: white;
+}
+
+.posts{
+    padding: 0 60px 0 15px;
 }

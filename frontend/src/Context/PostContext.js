@@ -15,7 +15,13 @@ export const postsReducer = (state, action) => {
         posts: action.payload,
         postDirectory: postsDirectory,
       };
-
+    
+    case "EMPTY_POSTS":
+      return {
+        ...state,
+        posts: null,
+      };
+  
     case "CREATE_POST":
       return {
         ...state,

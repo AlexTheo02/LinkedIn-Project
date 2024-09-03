@@ -1,20 +1,33 @@
 import { useEffect, useRef, useCallback } from "react";
-import Post from "../../../Components/PostComponent/Post";
+import Post from "../PostComponent/Post";
 import s from "./TimelinePostsStyle.module.css";
-import { usePostsContext } from "../../../Hooks/usePostsContext";
-import { useAuthContext } from "../../../Hooks/useAuthContext";
+import { usePostsContext } from "../../Hooks/usePostsContext";
+import { useAuthContext } from "../../Hooks/useAuthContext";
 
-function TimelinePosts({ commentsPopupHandler }) {
+function TimelinePosts({ commentsPopupHandler, comingFrom, postsToGet }) {
   const { posts, postDispatch } = usePostsContext();
   const { user } = useAuthContext();
   
   // Δημιουργούμε ένα ref για κάθε post
   const postRefs = useRef([]);
-
+  
   // Fetch posts from database
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("/api/posts", {
+      let url = "";
+
+      if (comingFrom === 'HomePage') {
+        url = "/api/posts";
+      } 
+      else {
+        postDispatch({ type: "EMPTY_POSTS" });
+
+        // Δημιουργία query string με τα post IDs
+        const idsQueryString = postsToGet.join(',');
+        url = `/api/posts?postIds=${idsQueryString}`;
+      }
+  
+      const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -29,7 +42,16 @@ function TimelinePosts({ commentsPopupHandler }) {
     if (user) {
       fetchPosts();
     }
-  }, [postDispatch, user]);
+  }, [postDispatch, user, comingFrom, postsToGet]);
+
+  // Empty posts when user leaves the page if not coming from HomePage
+  useEffect(() => {
+    return () => {
+      if (comingFrom !== 'HomePage') {
+        postDispatch({ type: "EMPTY_POSTS" });
+      }
+    };
+  }, [postDispatch, comingFrom]);
 
   const handleIntersection = useCallback((entries) => {
     entries.forEach( async (entry) => {
