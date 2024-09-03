@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt")
 const validator = require("validator")
 const { deleteFile, handleFileUpload } = require("../middleware/fileUpload.js")
 const js2xmlparser = require('js2xmlparser');
+const Comment = require("../models/commentModel.js")
 
 // Get all users
 const getAllUsers = async (request, response) => {
@@ -338,6 +339,31 @@ const publishPost = async (request, response) => {
     }
 }
 
+// View post interaction
+const viewInteraction = async (request, response) => {
+    const { id } = request.params;
+    const loggedInUserId = request.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(404).json({ error: "Post not found" });
+    }
+
+    try {
+        const user = await User.findById(loggedInUserId);
+        if (!user) {
+            return response.status(404).json({ error: "User not found" });
+        }
+
+        if (!user.postInteractions.includes(id)) user.postInteractions.push(id);
+
+        await user.save();
+
+        response.status(200).json({ message: "User liked Post" });
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+}
+
 // Like a post
 const toggleLikePost = async (request, response) => {
     const { id } = request.params;
@@ -354,7 +380,6 @@ const toggleLikePost = async (request, response) => {
         }
 
         // Check if the post is already liked
-        console.log(user.likedPosts, id)
         if (user.likedPosts.includes(id)) {
             // Remove post from likedPosts list
             user.likedPosts = user.likedPosts.filter(postId => postId.toString() !== id.toString())
@@ -362,6 +387,14 @@ const toggleLikePost = async (request, response) => {
         else{
             user.likedPosts.push(id);
         }
+        
+        if (!user.interactionSource){
+            user.interactionSource = true;
+            user.postInteractions = [];
+        }
+
+        if (!user.postInteractions.includes(id)) user.postInteractions.push(id);
+
         await user.save();
 
         response.status(200).json({ message: "User liked Post" });
@@ -372,11 +405,11 @@ const toggleLikePost = async (request, response) => {
 
 // Publish comment
 const publishComment = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Comment id
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return response.status(404).json({ error: "Post not found" });
+        return response.status(404).json({ error: "Comment not found" });
     }
 
     try {
@@ -389,9 +422,18 @@ const publishComment = async (request, response) => {
         if (user.publishedComments.includes(id)) {
             return response.status(400).json({ error: "Comment already published" });
         }
-
-        user.publishedComments.push(id);
         
+        user.publishedComments.push(id);
+
+        if (!user.interactionSource){
+            user.interactionSource = true;
+            user.postInteractions = [];
+        }
+
+        const comment = await Comment.findById(id)
+
+        if (!user.postInteractions.includes(comment.post)) user.postInteractions.push(comment.post);
+
         await user.save();
 
         response.status(200).json({ message: "User published comment" });
@@ -849,7 +891,7 @@ const loginUser = async (request, response) => {
     if (adminUser){
         const token = createToken(adminUser._id);
 
-        return response.status(200).json({ userId: adminUser._id, token: token, admin: true });
+        return response.status(200).json({ userId: adminUser._id, token: token, admin: true, interactionSource: false });
     }
 
     // Login the user
@@ -860,7 +902,7 @@ const loginUser = async (request, response) => {
 
         console.log(user);
 
-        response.status(200).json({ userId: user._id, token: token, admin: false });
+        response.status(200).json({ userId: user._id, token: token, admin: false, interactionSource: user.interactionSource });
     } catch (error) {
         // Αν το error περιεχει τα validFields
         if (error.fields) {
@@ -891,7 +933,7 @@ const registerUser = async (request, response) => {
 
         console.log(user);
 
-        response.status(200).json({ userId: user._id, token: token, admin: false });
+        response.status(200).json({ userId: user._id, token: token, admin: false, interactionSource: false });
     } catch (error) {
         // Αν το error περιεχει τα validFields
         if (error.fields) {
@@ -918,6 +960,7 @@ module.exports = {
     changePassword,
     publishJob,
     publishPost,
+    viewInteraction,
     toggleLikePost,
     publishComment,
     logJobInteraction,

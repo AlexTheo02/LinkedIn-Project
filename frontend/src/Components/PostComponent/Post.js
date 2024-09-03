@@ -1,7 +1,5 @@
 import s from "./PostStyle.module.css";
 import {HorizontalSeparator} from "../Separators/Separators.js"
-import malakes from "../../Images/ergasia_welcome_page_image.png"
-import mitsotakis_desk from "../../Images/mitsotakis_desk.jpg"
 
 import {
     InteractiveProfile,
@@ -41,7 +39,7 @@ function Post({postData, commentsPopupHandler}){
             { postData.multimediaURL && <PostMultimedia multimediaURL={postData.multimediaURL} multimediaType={postData.multimediaType}/> }
             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
             <HorizontalSeparator/>
-            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler} author={postData.author._id}/>
+            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler}/>
             {postData.commentsList.length > 0 ?  
                 <>
                     <HorizontalSeparator/>

@@ -19,7 +19,6 @@ function PostNotifications() {
 
             if (response.ok){
                 setNotifications(json);
-                console.log(json);
             }
         }
 

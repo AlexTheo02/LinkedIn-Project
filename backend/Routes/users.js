@@ -13,6 +13,7 @@ const {
     changePassword,
     publishJob,
     publishPost,
+    viewInteraction,
     toggleLikePost,
     publishComment,
     logJobInteraction,
@@ -72,6 +73,9 @@ router.patch("/publishJob/:id", publishJob);
 
 // Publish post
 router.patch("/publishPost/:id", publishPost);
+
+// View post interaction
+router.patch("/viewInteraction/:id", viewInteraction);
 
 // Like post
 router.patch("/toggleLikePost/:id", toggleLikePost);

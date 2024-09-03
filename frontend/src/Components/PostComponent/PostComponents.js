@@ -70,11 +70,13 @@ function PostInfoBar({likeCount, commentCount}){
     )
 }
 
-function LikeButton({post_id, likesList, author}) {
-    const { user } = useAuthContext();
-    const { postDispatch } = usePostsContext();
+function LikeButton({post_id, likesList}) {
+    const { user, dispatch } = useAuthContext();
+    const { postDirectory, postDispatch } = usePostsContext();
     const [isLiked, setIsLiked] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
+
+    const author = postDirectory[post_id].author._id;
 
     useEffect(() => {
         setIsLiked(likesList.includes(user.userId) ? true : false);
@@ -92,8 +94,6 @@ function LikeButton({post_id, likesList, author}) {
             // Add user to likes list
             likesList.push(user.userId);            
         }
-        // Update the local context
-        postDispatch({type: "UPDATE_POST_LIKE", payload: {post_id: post_id, likesList: likesList}});
 
         try{
             // Send request to the server to update the likes list
@@ -108,6 +108,20 @@ function LikeButton({post_id, likesList, author}) {
 
             if (postResponse.ok){
 
+                if (user.userId !== author && !user.interactionSource){
+                    // Update localStorage's interactionSource after successful like
+                    let localStorageUser = JSON.parse(localStorage.getItem('user'));
+                    if (localStorageUser) {
+                        localStorageUser.interactionSource = true;
+                        localStorage.setItem('user', JSON.stringify(localStorageUser));
+                    }
+    
+                    dispatch({type: 'LOGIN', payload: localStorageUser});
+                }
+        
+                // Update the local context
+                postDispatch({type: "UPDATE_POST_LIKE", payload: {post_id: post_id, likesList: likesList}});
+
                 // Send request to the server to update the likedPosts on user
                 const userLikeResponse = await fetch(`/api/users/toggleLikePost/${post_id}`, {
                     headers: {
@@ -116,48 +130,50 @@ function LikeButton({post_id, likesList, author}) {
                     method: "PATCH",
                 })
 
-                // Create notification object
-                if (userLikeResponse.ok && !isLiked && user.userId !== author){
-                    const notification = {
-                        post_id,
-                        isLike: true,
-                        commentContent: ""
-                    }
-
-                    // Send request to create notification on the database
-                    const notificationResponse = await fetch("/api/notifications/", {
-                        method: "POST",
-                        body: JSON.stringify(notification),
-                        headers: {
-                            "Content-Type" : "application/json",
-                            'Authorization': `Bearer ${user.token}`
+                if (userLikeResponse.ok && user.userId !== author){
+                    // Create notification object
+                    if (!isLiked){
+                        const notification = {
+                            post_id,
+                            isLike: true,
+                            commentContent: ""
                         }
-                    })
     
-                    const json = await notificationResponse.json();
-    
-                    if (notificationResponse.ok){
-                        try{
-                            // Notify author
-                            const userResponse = await fetch(`/api/users/postNotify/${json._id}/${author}`, {
-                                method: 'PATCH',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${user.token}`
-                                }
-                            });
-                    
-                            if (userResponse.ok) {
-                                console.log('User notified successfully');
-                            } else {
-                                console.error('Error notifying user');
+                        // Send request to create notification on the database
+                        const notificationResponse = await fetch("/api/notifications/", {
+                            method: "POST",
+                            body: JSON.stringify(notification),
+                            headers: {
+                                "Content-Type" : "application/json",
+                                'Authorization': `Bearer ${user.token}`
                             }
-                        } catch (error){
-                            console.error('Error notifying user:', error);
+                        })
+        
+                        const json = await notificationResponse.json();
+        
+                        if (notificationResponse.ok){
+                            try{
+                                // Notify author
+                                const userResponse = await fetch(`/api/users/postNotify/${json._id}/${author}`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${user.token}`
+                                    }
+                                });
+                        
+                                if (userResponse.ok) {
+                                    console.log('User notified successfully');
+                                } else {
+                                    console.error('Error notifying user');
+                                }
+                            } catch (error){
+                                console.error('Error notifying user:', error);
+                            }
                         }
-                    }
-                    else{
-                        console.error('Error creating notification');
+                        else{
+                            console.error('Error creating notification');
+                        }
                     }
                 }
             }
@@ -178,7 +194,7 @@ function LikeButton({post_id, likesList, author}) {
     );
 }
 
-function PostInteractionBar({post_id, commentsList, likesList, commentsPopupHandler, author}){
+function PostInteractionBar({post_id, commentsList, likesList, commentsPopupHandler}){
 
     const { postDispatch } = usePostsContext();
 
@@ -191,7 +207,7 @@ function PostInteractionBar({post_id, commentsList, likesList, commentsPopupHand
 
     return (
         <div className={s.interaction_bar}>
-            <LikeButton post_id={post_id} likesList={likesList} author={author}/>
+            <LikeButton post_id={post_id} likesList={likesList}/>
             <VerticalSeparator/>
             <FontAwesomeIcon icon={faComment} className={s.post_interaction_bar_button} onClick={handleClick}/>
         </div>
@@ -242,15 +258,13 @@ function ShowAllCommentsButton({post_id, commentsList, commentsPopupHandler}){
 }
 
 const AddComment = ({userData}) => {
-    const { activePostId, activeCommentsList, postDispatch } = usePostsContext();
+    const { postDirectory, activePostId, activeCommentsList, postDispatch } = usePostsContext();
     const validCommentRegex = /\S/;
-    const {user} = useAuthContext();
+    const {user, dispatch} = useAuthContext();
     const [commentValue, setCommentValue] = useState("");
 
     const postComment = async () => {
         if(validCommentRegex.test(commentValue)){
-            // Create the comment object
-
             const trimmedComment = commentValue.trim();
 
             const comment = {
@@ -258,7 +272,7 @@ const AddComment = ({userData}) => {
                 content: trimmedComment.replace(/\s+/g, ' '), // Replace extra whitespace with a single space.
             }
 
-            setCommentValue("")
+            setCommentValue("");
             
             const response = await fetch(`/api/posts/add-comment/${activePostId}`, {
                 headers: {
@@ -267,12 +281,9 @@ const AddComment = ({userData}) => {
                 },
                 method: "PATCH",
                 body: JSON.stringify(comment)
-            })
+            });
             
             const json = await response.json();
-            console.log(json.populatedComment)
-
-
 
             // Add comment to user's publishedComments list
             const userCommentResponse = await fetch(`/api/users/publishComment/${json.populatedComment._id}`, {
@@ -281,28 +292,34 @@ const AddComment = ({userData}) => {
                     'Content-Type': 'application/json',
                 },
                 method: "PATCH"
-            })
+            });
 
             if (response.ok && userCommentResponse.ok){
+
+                if (user.userId !== postDirectory[activePostId].author._id && !user.interactionSource){
+                    // Update localStorage's interactionSource after successful comment
+                    let localStorageUser = JSON.parse(localStorage.getItem('user'));
+                    if (localStorageUser) {
+                        localStorageUser.interactionSource = true;
+                        localStorage.setItem('user', JSON.stringify(localStorageUser));
+                    }
+
+                    dispatch({type: 'LOGIN', payload: localStorageUser});
+                }
+
                 postDispatch({type: "SET_ACTIVE_COMMENTS_LIST", payload: [json.populatedComment, ...activeCommentsList]});
 
                 // Update post on posts context
-                postDispatch({type: "UPDATE_COMMENTS_LIST_ON_POST"})
+                postDispatch({type: "UPDATE_COMMENTS_LIST_ON_POST"});
 
-                const postResponse = await fetch(`/api/posts/${activePostId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`
-                    }
-                });
-                const post_json = await postResponse.json();
-                
-                if (user.userId !== post_json.author._id){
+                if (user.userId !== postDirectory[activePostId].author._id){
+                    // Κώδικας για δημιουργία notification
                     const notification = {
                         post_id: activePostId,
                         isLike: false,
                         commentContent: trimmedComment.replace(/\s+/g, ' ')
                     }
-    
+
                     const notificationResponse = await fetch("/api/notifications/", {
                         method: "POST",
                         body: JSON.stringify(notification),
@@ -310,13 +327,13 @@ const AddComment = ({userData}) => {
                             "Content-Type" : "application/json",
                             'Authorization': `Bearer ${user.token}`
                         }
-                    })
-    
+                    });
+
                     const notification_json = await notificationResponse.json();
-    
+
                     if (notificationResponse.ok){
                         try{
-                            const userResponse = await fetch(`/api/users/postNotify/${notification_json._id}/${post_json.author._id}`, {
+                            const userResponse = await fetch(`/api/users/postNotify/${notification_json._id}/${postDirectory[activePostId].author._id}`, {
                                 method: 'PATCH',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -360,7 +377,6 @@ const AddComment = ({userData}) => {
                         onChange={(e) => {setCommentValue(e.target.value)}}
                         onKeyDown={handleKeyDown}
                         className={s.add_comment_field} placeholder="Add comment"
-                        
                     />
                     <FontAwesomeIcon className={s.post_comment_icon} onClick={postComment} icon={faPaperPlane}/>
                 </div>
@@ -368,6 +384,7 @@ const AddComment = ({userData}) => {
         </div>
     )
 }
+
 
 function CommentsPopup({userData, commentsPopupHandler}){
     // Use context to access active comments list
