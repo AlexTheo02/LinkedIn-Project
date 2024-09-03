@@ -28,17 +28,22 @@ function createJob(authorId, title, employer, requirements) {
     };
 }
 
-const createJobInteractions = (user, jobs) => {
-    // Προσθήκη job interactions και applied jobs
-    for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
-        const randomJobIndex = Math.floor(Math.random() * jobs.length);
-        const job = jobs[randomJobIndex];
+const createJobInteractions = (user, jobs, getPossibleJobsTimeline) => {
+    const possibleJobs = getPossibleJobsTimeline(user);
+    if (!possibleJobs.length){
+        return
+    }
 
-        if (!user.jobInteractions.find(item => item.$oid === job._id)) {
+    for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
+        const randomJobIndex = Math.floor(Math.random() * possibleJobs.length);
+        const job = possibleJobs[randomJobIndex];
+
+        // Job is not already in jobInteractions list of the user
+        if (!user.jobInteractions.find(item => item.$oid.toString() === job._id.$oid.toString())) {
             user.jobInteractions.push(job._id);
 
-            // Apply σε τυχαία jobs
-            if (Math.random() > 0.4) {  // So 2/5 chances they applied
+            // Figure out whether to apply to the current job with a 40% chance to do so
+            if (Math.random() > 0.4) {
                 user.appliedJobs.push(job._id);
                 job.applicants.push(user._id);
             }

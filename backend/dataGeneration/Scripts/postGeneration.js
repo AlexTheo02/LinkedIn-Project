@@ -87,7 +87,28 @@ const createPostMutltimedia = async () => {
     }
 }
 
+const createPostInteractions = (user, posts, getPossibleTimeline) => {
+    // User has not liked, or commented on any posts, so count the post views
+    if (user.likedPosts.length === 0 && user.publishedComments.length === 0){
+        const possibleTimeline = getPossibleTimeline(user);
+        if (!possibleTimeline.length){
+            return
+        }
+        const n_postInteractions = Math.floor(Math.random() * possibleTimeline.length)
+        for (let i = 0; i < n_postInteractions; i++){
+            const randomPostIndex = Math.floor(Math.random() * possibleTimeline.length);
+            const randomPostId = possibleTimeline[randomPostIndex].$oid.toString()
+            const post = posts.find(item => item._id.$oid.toString() === randomPostId)
+            // Add post to user's postInteractions list, if not already there
+            if (!user.postInteractions.find(item => item.$oid === post._id.$oid)){
+                user.postInteractions.push(post._id)
+            }
+        }
+    }
+}
+
 module.exports = {
     createPost,
-    createPostMutltimedia
+    createPostMutltimedia,
+    createPostInteractions
 }
