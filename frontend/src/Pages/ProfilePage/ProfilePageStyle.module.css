@@ -11,8 +11,6 @@
     padding-bottom: 70px;
     display: flex;
     flex-direction: column;
-    /* justify-content: center;
-    align-items: flex-start; */
 }
 
 .background_image.admin{
@@ -35,8 +33,6 @@
 .row{
     width: 100%;
     display: flex;
-    /* justify-content: center; */
-    /* align-items: flex-start; */
 }
 
 .loading_text {

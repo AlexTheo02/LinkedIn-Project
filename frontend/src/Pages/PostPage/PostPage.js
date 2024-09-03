@@ -6,19 +6,15 @@ import Post from "../../Components/PostComponent/Post.js"
 import { CommentsPopup } from "../../Components/PostComponent/PostComponents.js";
 import { useAuthContext } from "../../Hooks/useAuthContext.js";
 import { usePostsContext } from "../../Hooks/usePostsContext.js";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function PostPage() {
-    const [isLoading, setIsLoading] = useState(null);
-
     const {user} = useAuthContext();
 
     const { post_id } = useParams(); // Ανάκτηση του post_id από το URL
-
-    const [postData, setPostData] = useState(null);
     const [userData, setUserData] = useState(null);
 
-    const {activeComments, posts, postDispatch} = usePostsContext();
+    const {posts, postDispatch} = usePostsContext();
 
     useEffect(() => {
         const fetchPostData = async () => {
@@ -30,12 +26,9 @@ function PostPage() {
             const post = await response.json();
 
             if (response.ok){
-                // postDispatch({type: "SET_ACTIVE_COMMENTS", payload: post.commentsList});
-                // postDispatch({type: "SET_ACTIVE_POST_ID", payload: post._id});
                 postDispatch({type: "SET_POSTS", payload: [post]})
             }
             else{
-                setPostData(false);
                 console.log("Error fetching post");
                 return <h1 className={s.loading_text}>Error 404, Post not found</h1>;
             }
@@ -59,7 +52,7 @@ function PostPage() {
         fetchPostData();
         fetchUserData();
 
-    }, [post_id, user])
+    }, [post_id, user, postDispatch])
 
     // Comments popup state
     const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -67,7 +60,6 @@ function PostPage() {
     if(!posts || !userData){
         return <h1 className={s.loading_text}>Loading...</h1>
     }
-
 
     const showCommentsPopup = (post_id) => {
         setIsPopupVisible(true);
@@ -87,13 +79,10 @@ function PostPage() {
     return (
         <div className={s.post_page}>
             <NavBar />
-            {
-                isLoading ? <h1 className={s.loading_text}>Loading...</h1> :
-                <div className={s.post_page_contents_container}>
+            <div className={s.post_page_contents_container}>
                 <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
                 <Post postData={posts[0]} commentsPopupHandler={commentsPopupHandler}/>
-                </div>
-            }
+            </div>
         </div>
     );
 }

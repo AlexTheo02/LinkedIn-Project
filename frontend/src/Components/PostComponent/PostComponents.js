@@ -405,7 +405,6 @@ function CommentsPopup({userData, commentsPopupHandler}){
                 {activeCommentsList && activeCommentsList.map((comment, index) => (
                     <div key={`comment-map-${index}`}>
                         <Comment commentData={comment} author={comment.author}/>
-                        <HorizontalSeparator />
                     </div>
                 ))
                 }

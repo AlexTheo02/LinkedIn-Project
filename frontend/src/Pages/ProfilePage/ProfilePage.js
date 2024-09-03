@@ -10,6 +10,7 @@ import MessagePopup from './MessagePopup/MessagePopup';
 import NetworkUsersList from '../../Components/NetworkUsersList/NetworkUsersList';
 import { useConversationContext } from '../../Hooks/useConversationContext';
 import TimelinePosts from '../../Components/TimelinePosts/TimelinePosts';
+import { CommentsPopup } from '../../Components/PostComponent/PostComponents';
 
 function calculateAge(birthDate) {
     const dateOfBirth = new Date(birthDate);
@@ -63,7 +64,7 @@ function ProfilePage() {
     const [isConnected, setIsConnected] = useState(false);
     const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το modal
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το popup του message
     // Comments popup state
     const [isCommentsPopupVisible, setIsCommentsPopupVisible] = useState(false);
     
@@ -106,7 +107,7 @@ function ProfilePage() {
     const commentsPopupHandler = {
         showCommentsPopup,
         hideCommentsPopup,
-        isCommentsPopupVisible,
+        isPopupVisible: isCommentsPopupVisible,
     }
 
     const handleConnectClick = async () => {
@@ -212,6 +213,9 @@ function ProfilePage() {
         <div>
             {!isAdmin && <NavBar />}
             <div className={`${s.background_image} ${isAdmin ? s.admin : ''}`}>
+                { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
+                    <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
+                }
                 <div className={s.row}>
                     <div className={s.profile}>
                         <div className={s.container}>
