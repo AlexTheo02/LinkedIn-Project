@@ -40,6 +40,7 @@ function MessagePopup({ userData, onClose }) {
 
             const {populatedConversation :conversation} = await createConversationResponse.json();
 
+            console.log("HERE")
             console.log(conversation);
 
             // Redirect user to conversations page

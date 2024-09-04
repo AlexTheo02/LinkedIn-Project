@@ -34,7 +34,7 @@ const createJobInteractions = (user, jobs, getPossibleJobsTimeline) => {
         return
     }
 
-    for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
+    for (let i = 0; i < Math.floor(Math.random() * possibleJobs.length * 0.4); i++) {
         const randomJobIndex = Math.floor(Math.random() * possibleJobs.length);
         const job = possibleJobs[randomJobIndex];
 
@@ -42,8 +42,8 @@ const createJobInteractions = (user, jobs, getPossibleJobsTimeline) => {
         if (!user.jobInteractions.find(item => item.$oid.toString() === job._id.$oid.toString())) {
             user.jobInteractions.push(job._id);
 
-            // Figure out whether to apply to the current job with a 40% chance to do so
-            if (Math.random() > 0.4) {
+            // Figure out whether to apply to the current job with a 30% chance to do so
+            if (Math.random() > 0.3) {
                 user.appliedJobs.push(job._id);
                 job.applicants.push(user._id);
             }

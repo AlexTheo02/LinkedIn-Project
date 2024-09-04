@@ -1,4 +1,5 @@
 require("dotenv").config()
+const fs = require('fs');
 
 const express = require("express")
 const mongoose = require("mongoose")
@@ -18,22 +19,25 @@ const matrixFactorization = async (path) => {
 
     // Fetch users
     const users = await User.find();
-    let response = undefined;
+    let items = undefined;
 
     if (path === jobMatrixFactorizationPath){
-        // fetch jobs and assign them to response
-        response = await Job.find();
+        // fetch jobs and assign them to items
+        items = await Job.find();
     }
 
     else if(path === postMatrixFactorizationPath){
-        // fetch posts and assign them to response
-        response = await Post.find();
+        // fetch posts and assign them to items
+        items = await Post.find();
     }
     else return;
 
     // Start the execution process
     console.log("Executing python script:",path)
-    const pythonProcess = spawn("python",[path, JSON.stringify(users), JSON.stringify(response)]);
+    // add arguments to file and have python script read from there
+    fs.writeFileSync(process.env.USERS_PATH, JSON.stringify(users, null, 2))
+    fs.writeFileSync(process.env.ITEMS_PATH, JSON.stringify(items, null, 2))
+    const pythonProcess = spawn("python", [path]);
 
     // Output logging
     pythonProcess.stdout.on("data", (data) => {
@@ -96,10 +100,10 @@ mongoose.connect(process.env.MONGO_URI)
 
         // Matrix factorization logic
         matrixFactorization(jobMatrixFactorizationPath)
-        matrixFactorization(postMatrixFactorizationPath)
+        // matrixFactorization(postMatrixFactorizationPath)
 
         setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 600000 ) // 10 minutes
-        setInterval(() => {matrixFactorization(postMatrixFactorizationPath)}, 600000 ) // 10 minutes
+        // setInterval(() => {matrixFactorization(postMatrixFactorizationPath)}, 600000 ) // 10 minutes
 
     })
     .catch((error) => {console.log(error)})

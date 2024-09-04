@@ -163,8 +163,6 @@ const findConversationBetweenUsers = async (request, response) => {
 
         const recentConversations = user.recentConversations;
 
-        console.log(recentConversations[0].participant_1)
-
         // Search for conversation between the two users
         const conversation = recentConversations.find(conv => {
             const participants = [conv.participant_1.toString(), conv.participant_2._id.toString()];
@@ -184,7 +182,7 @@ const findConversationBetweenUsers = async (request, response) => {
 
 
     } catch (error){
-        console.error("Error finding conversation between users");
+        console.error("Error finding conversation between users.", error.message);
     }
     
 }

@@ -24,7 +24,7 @@ function createPost(authorId, multimediaURL, multimediaType) {
     };
 }
 
-const createPostMutltimedia = async () => {
+const createPostMultimedia = async () => {
         
     let fileURL, fileType, fileExtension, multimediaFileRand = null, mimetype;
     const multimediaTypeRand = Math.floor(Math.random() * 4) // 0: NO, 1: Image, 2: Video, 3: Audio
@@ -109,6 +109,6 @@ const createPostInteractions = (user, posts, getPossibleTimeline) => {
 
 module.exports = {
     createPost,
-    createPostMutltimedia,
+    createPostMultimedia,
     createPostInteractions
 }

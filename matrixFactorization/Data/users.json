@@ -1,0 +1,210 @@
+[
+  {
+    "_id": "66d8d40334fa5b51ab1443eb",
+    "name": "Giannis",
+    "surname": "Antetokounmpo",
+    "dateOfBirth": "1991-01-01T00:00:00.000Z",
+    "email": "Giannakis@gmail.com",
+    "password": "$2b$10$E5jw1gyzoCHzfJRqUZ/uuOQwahU6VgFxQeSQTu8nSttDqGGNCzoVa",
+    "phoneNumber": "34876345889",
+    "profilePicture": "https://storage.googleapis.com/linkedin_project_bucket/1725486082970-antetokounmpo.jpg",
+    "bio": "",
+    "placeOfResidence": "Athens",
+    "workingPosition": "Athlete",
+    "employmentOrganization": "Basketball",
+    "professionalExperience": [],
+    "education": [],
+    "skills": [],
+    "recentConversations": [
+      "66d8d85c34fa5b51ab1444f8"
+    ],
+    "network": [
+      "66d8d575d25e1bb3dd37041d"
+    ],
+    "publishedPosts": [],
+    "publishedJobListings": [],
+    "likedPosts": [],
+    "publishedComments": [],
+    "privateDetails": [
+      "dateOfBirth",
+      "phoneNumber"
+    ],
+    "appliedJobs": [
+      "66d8ca1385ec68b1c5765ed9",
+      "66d8ca1385ec68b1c5765ed0"
+    ],
+    "postNotifications": [],
+    "linkUpRequests": [],
+    "jobInteractions": [
+      "66d8ca1385ec68b1c5765ed9",
+      "66d8ca1385ec68b1c5765ed0"
+    ],
+    "postInteractions": [],
+    "interactionSource": false,
+    "__v": 6
+  },
+  {
+    "_id": "66d8d4c234fa5b51ab1443f7",
+    "name": "Kyriakos",
+    "surname": "Kapakoulak",
+    "dateOfBirth": "1996-01-01T00:00:00.000Z",
+    "email": "kapakoulak@gmail.com",
+    "password": "$2b$10$BKw1./s5VshvE90wlGFIR.GDKi0Rw1Z7cqQcTj3nI26813hW1zVQK",
+    "phoneNumber": "34587654",
+    "profilePicture": "https://storage.googleapis.com/linkedin_project_bucket/1725486273579-kapakoulak.png",
+    "bio": "",
+    "placeOfResidence": "Athens",
+    "workingPosition": "Stronk",
+    "employmentOrganization": "Stronk",
+    "professionalExperience": [],
+    "education": [],
+    "skills": [],
+    "recentConversations": [],
+    "network": [],
+    "publishedPosts": [],
+    "publishedJobListings": [],
+    "likedPosts": [],
+    "publishedComments": [],
+    "privateDetails": [
+      "dateOfBirth",
+      "phoneNumber"
+    ],
+    "appliedJobs": [],
+    "postNotifications": [],
+    "linkUpRequests": [],
+    "jobInteractions": [],
+    "postInteractions": [],
+    "interactionSource": false,
+    "__v": 0
+  },
+  {
+    "_id": "66d8d56b34fa5b51ab144407",
+    "name": "Agios",
+    "surname": "Vasilis",
+    "dateOfBirth": "1900-01-01T00:00:52.000Z",
+    "email": "santa@gmail.com",
+    "password": "$2b$10$Y7NaNgdZKoxVPxhw6LIaxuHX3zfA3Nd/.T2fXXAs6gH6o90s112ve",
+    "phoneNumber": "69696969",
+    "profilePicture": "https://storage.googleapis.com/linkedin_project_bucket/1725486443106-christmas small doge.png",
+    "bio": "",
+    "placeOfResidence": "North Pole",
+    "workingPosition": "Gift Giver",
+    "employmentOrganization": "North Pole",
+    "professionalExperience": [],
+    "education": [],
+    "skills": [],
+    "recentConversations": [],
+    "network": [
+      "66d8d575d25e1bb3dd37041d"
+    ],
+    "publishedPosts": [],
+    "publishedJobListings": [],
+    "likedPosts": [],
+    "publishedComments": [],
+    "privateDetails": [
+      "dateOfBirth",
+      "phoneNumber"
+    ],
+    "appliedJobs": [
+      "66d8ca1385ec68b1c5765eca",
+      "66d8ca1385ec68b1c5765eab"
+    ],
+    "postNotifications": [],
+    "linkUpRequests": [],
+    "jobInteractions": [
+      "66d8ca1385ec68b1c5765eca",
+      "66d8ca1385ec68b1c5765eaa",
+      "66d8ca1385ec68b1c5765eab"
+    ],
+    "postInteractions": [],
+    "interactionSource": false,
+    "__v": 10
+  },
+  {
+    "_id": "66d8d575d25e1bb3dd37041d",
+    "name": "Adolf",
+    "surname": "Hitler",
+    "dateOfBirth": "1970-04-30T00:00:00.000Z",
+    "email": "hitler@gmail.com",
+    "password": "$2b$10$SAwB1JKwkgszctejAIVx3.Tr9iDbRgFQk8knIFVl0vfZDgdBxCBPG",
+    "phoneNumber": "6879675467",
+    "profilePicture": "https://storage.googleapis.com/linkedin_project_bucket/1725486452817-discprof2.jpg",
+    "bio": "",
+    "placeOfResidence": "Germany",
+    "workingPosition": "Prime ",
+    "employmentOrganization": "Germany",
+    "professionalExperience": [],
+    "education": [],
+    "skills": [],
+    "recentConversations": [
+      "66d8d85c34fa5b51ab1444f8"
+    ],
+    "network": [
+      "66d8d40334fa5b51ab1443eb",
+      "66d8d56b34fa5b51ab144407"
+    ],
+    "publishedPosts": [],
+    "publishedJobListings": [],
+    "likedPosts": [],
+    "publishedComments": [],
+    "privateDetails": [
+      "dateOfBirth",
+      "phoneNumber"
+    ],
+    "appliedJobs": [],
+    "postNotifications": [],
+    "linkUpRequests": [],
+    "jobInteractions": [
+      "66d8ca1385ec68b1c5765eb9",
+      "66d8ca1385ec68b1c5765eb3",
+      "66d8ca1385ec68b1c5765ed3",
+      "66d8ca1385ec68b1c5765ead",
+      "66d8ca1385ec68b1c5765ed2",
+      "66d8ca1385ec68b1c5765ec0"
+    ],
+    "postInteractions": [],
+    "interactionSource": false,
+    "__v": 13
+  },
+  {
+    "_id": "66d8d642d25e1bb3dd370452",
+    "name": "Jesus",
+    "surname": "Christ",
+    "dateOfBirth": "1981-01-01T00:00:00.000Z",
+    "email": "jesus@gmail.com",
+    "password": "$2b$10$BD1Qsh6P5togdXom4SukeOg4puz8Zw0MY49IZx2QaiX9928qJ.9NW",
+    "phoneNumber": "676845667",
+    "profilePicture": "https://storage.googleapis.com/linkedin_project_bucket/1725486655923-shocked_future.jpg",
+    "bio": "",
+    "placeOfResidence": "Jerusalim",
+    "workingPosition": "Savior",
+    "employmentOrganization": "Earth",
+    "professionalExperience": [],
+    "education": [],
+    "skills": [],
+    "recentConversations": [],
+    "network": [],
+    "publishedPosts": [],
+    "publishedJobListings": [],
+    "likedPosts": [],
+    "publishedComments": [],
+    "privateDetails": [
+      "dateOfBirth",
+      "phoneNumber"
+    ],
+    "appliedJobs": [
+      "66d8ca1385ec68b1c5765ece"
+    ],
+    "postNotifications": [],
+    "linkUpRequests": [],
+    "jobInteractions": [
+      "66d8ca1385ec68b1c5765eb2",
+      "66d8ca1385ec68b1c5765ece",
+      "66d8ca1385ec68b1c5765ec3",
+      "66d8ca1385ec68b1c5765eae"
+    ],
+    "postInteractions": [],
+    "interactionSource": false,
+    "__v": 9
+  }
+]

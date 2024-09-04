@@ -8,7 +8,7 @@ const { lp_bucket } = require("../../googleCloudStorage.js")
 const passwordHash = "$2b$10$n1PImv8oYIgb10NqQynuw.4xd5FTYCz0RAz6dIuNsrC2OSjW8hj82";
 
 const male_pfp_path = "dataGeneration/ProfilePictures/male/";
-const female_pfp_path = "dataGeneration/ProfilePictures/female/"; 
+const female_pfp_path = "dataGeneration/ProfilePictures/female/";
 
 
 // Get a profile picture from local and upload it to google storage
@@ -79,13 +79,7 @@ function createUser(gender, profilePic, workingPosition, employmentOrganization,
         linkUpRequests: [],
         jobInteractions: [],
         postInteractions: [],
-        interactionSource: false,
-        createdAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2000, 0, 1)})
-        },
-        updatedAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2024, 0, 1)})
-        }
+        interactionSource: false
     };
 }
 

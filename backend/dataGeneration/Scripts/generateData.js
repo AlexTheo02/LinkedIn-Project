@@ -11,6 +11,12 @@ let jobs = [];
 let posts = [];
 let comments = [];
 
+const n_users = 2000;
+const n_jobs = 1500;
+const n_posts = 2600;
+const n_comments = 4000;
+const n_likes = 5000;
+
 const class_chances = {
     ComputerScience: 0.17,      // 17%
     Law: 0.27,                  // 10%
@@ -90,17 +96,11 @@ const getPossibleJobsTimeline = (user) => {
 
 async function generateData() {
     
-    const n_users = 500;
-    const n_jobs = 500;
-    const n_posts = 1500;
-    const n_comments = 1500;
-    const n_likes = 1500;
-    
     // ---------------------------------------------------------------------------------------------------------- USERS
     for (let i = 0; i < n_users; i++) {
         console.log(`CREATING USER ${i+1}`)
         const gender = Math.random() > 0.5 ? 'male' : 'female';
-        // const url = await userGeneration.createProfilePicture(gender);
+        // const url = await userGeneration.createProfilePicture(gender); // MULTIMEDIA
         const url = ""
         console.log(url)
         
@@ -206,7 +206,7 @@ async function generateData() {
         const randomUserIndex = Math.floor(Math.random() * users.length);
         const authorId = users[randomUserIndex]._id;
         console.log("awaiting multimedia")
-        // const postMultURL = await postGeneration.createPostMutltimedia()
+        // const postMultURL = await postGeneration.createPostMultimedia() // MULTIMEDIA
         const postMultURL = ""
         const multimediaURL = postMultURL ? postMultURL : ""
         console.log("multimedia generation finished")

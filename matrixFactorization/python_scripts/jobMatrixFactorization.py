@@ -1,36 +1,20 @@
 import sys
+import os
 import json
 import matrixFactorization as mf
-import generalFunctions as gf
+import numpy as np
+# users_path = os.getenv("USERS_PATH")
+# jobs_path = os.getenv("ITEMS_PATH")
+users_path = "../Data/users.json"
+jobs_path = "../Data/items.json"
 
-if len(sys.argv) != 3:
-    print("Error: arguments not provided correctly")
-    exit(0)
+# Open the json files and read data
+with open(users_path, 'r') as users_file:
+    users_list = json.load(users_file)
 
-# Parse json strings containing user and job data
-users_list = json.loads(sys.argv[1])
-jobs_list = json.loads(sys.argv[2])
+with open(jobs_path, 'r') as jobs_file:
+    jobs_list = json.load(jobs_file)
 
-# ------------------------------------------ DUMMY DATA
-# users_list = [
-#     {"_id": "user1", "connectedUsers": ["user2", "user4", "user6"], "jobInteractions": ["job1", "job4", "job5"]},
-#     {"_id": "user2", "connectedUsers": ["user1", "user3"], "jobInteractions": ["job3", "job4"]},
-#     {"_id": "user3", "connectedUsers": ["user2", "user5", "user6"], "jobInteractions": ["job2", "job4", "job5"]},
-#     {"_id": "user4", "connectedUsers": ["user1", "user5"], "jobInteractions": ["job1", "job2", "job3"]},
-#     {"_id": "user5", "connectedUsers": ["user3", "user4"], "jobInteractions": ["job2", "job5"]},
-#     {"_id": "user6", "connectedUsers": ["user1", "user3"], "jobInteractions": ["job1", "job3"]}
-# ]
-
-# jobs_list = [{"_id": "job1"}, {"_id": "job2"}, {"_id": "job3"}, {"_id": "job4"}, {"_id": "job5"}]
-
-# Relations array
-# R_dict = {
-#     "user1": {"job1": 1, "job2": 0, "job3": 0, "job4": 1, "job5": 1},
-#     "user2": {"job1": 0, "job2": 0, "job3": 1, "job4": 1, "job5": 0},
-#     "user3": {"job1": 0, "job2": 1, "job3": 0, "job4": 1, "job5": 1},
-#     "user4": {"job1": 1, "job2": 1, "job3": 1, "job4": 1, "job5": 0}
-# }
-# print(R_dict)
 
 # # Create Relations dictionary
 R_dict = {}
@@ -54,15 +38,18 @@ R = [[R_dict[user][job] for job in job_mapping] for user in user_mapping]
 
 flipped_job_mapping = {value: key for key, value in job_mapping.items()}
 
-mf = mf.MF(R=R, K=5) # number of latent features K = 5
+mf = mf.MF(R=R) # number of latent features K
 
 # Train the global model
 mf.train()
 
+np.savetxt("array.txt", np.dot(mf.U,mf.V.T))
+# exit()
+
 # Get the suggested jobs for each user
 userJobSuggestions = {}
 
-for user in users_list:
+for user in users_list[:42]:
     # Get id and network from user's data
     user_id = user['_id']
     user_network = user['network']
@@ -75,5 +62,8 @@ for user in users_list:
 
 
 # Stringify to JSON format and return to nodejs server
-print(json.dumps(userJobSuggestions, separators=(',',':')))
-sys.stdout.flush()
+# print(json.dumps(userJobSuggestions, separators=(',',':')))
+print("starting to print")
+for u,js in userJobSuggestions.items():
+    print(u,js)
+    sys.stdout.flush()
