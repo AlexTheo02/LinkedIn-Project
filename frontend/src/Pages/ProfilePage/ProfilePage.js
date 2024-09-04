@@ -9,6 +9,8 @@ import { useAuthContext } from '../../Hooks/useAuthContext';
 import MessagePopup from './MessagePopup/MessagePopup';
 import NetworkUsersList from '../../Components/NetworkUsersList/NetworkUsersList';
 import { useConversationContext } from '../../Hooks/useConversationContext';
+import TimelinePosts from '../../Components/TimelinePosts/TimelinePosts';
+import { CommentsPopup } from '../../Components/PostComponent/PostComponents';
 
 function calculateAge(birthDate) {
     const dateOfBirth = new Date(birthDate);
@@ -17,11 +19,7 @@ function calculateAge(birthDate) {
 }
 
 function formatListWithNewlines(list) {
-    // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
-    console.log(list);
     const formattedList = list.map(item => `• ${item}`);
-    
-    // Ενώνουμε όλα τα στοιχεία της λίστας με newline
     return formattedList.join('\n');
 }
 
@@ -66,7 +64,9 @@ function ProfilePage() {
     const [isConnected, setIsConnected] = useState(false);
     const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το modal
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το popup του message
+    // Comments popup state
+    const [isCommentsPopupVisible, setIsCommentsPopupVisible] = useState(false);
     
     const { conversationDispatch } = useConversationContext();
 
@@ -93,6 +93,21 @@ function ProfilePage() {
 
     if (!userData) {
         return <h1 className={s.loading_text}>Loading...</h1>;
+    }
+
+    const showCommentsPopup = (post_id) => {
+        setIsCommentsPopupVisible(true);
+    };
+
+    const hideCommentsPopup = async () => {
+        setIsCommentsPopupVisible(false);
+    };
+    
+    // Struct for efficiency
+    const commentsPopupHandler = {
+        showCommentsPopup,
+        hideCommentsPopup,
+        isPopupVisible: isCommentsPopupVisible,
     }
 
     const handleConnectClick = async () => {
@@ -198,96 +213,106 @@ function ProfilePage() {
         <div>
             {!isAdmin && <NavBar />}
             <div className={`${s.background_image} ${isAdmin ? s.admin : ''}`}>
-                <div className={s.profile}>
-                    <div className={s.container}>
-                        <div className={s.profile_field}>
-                            <img src={userData.profilePicture} alt="Profile" />
-                            <h1>{userData.name} {userData.surname}</h1>
-                            <b>{userData.workingPosition} at {userData.employmentOrganization}</b>
-                            {!userData.privateDetails.includes("dateOfBirth") ? (
-                                <p>{calculateAge(userData.dateOfBirth)} years old</p>
-                            ) : null}
-                            <p>{userData.placeOfResidence}</p>
-                        </div>
-                        <div className={s.operations}>
-                            <div className={s.buttons}>
-                                {!isAdmin &&
-                                    <>
-                                    { userData._id !== user.userId ?
+                { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
+                    <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
+                }
+                <div className={s.row}>
+                    <div className={s.profile}>
+                        <div className={s.container}>
+                            <div className={s.profile_field}>
+                                <img src={userData.profilePicture} alt="Profile" />
+                                <h1>{userData.name} {userData.surname}</h1>
+                                <b>{userData.workingPosition} at {userData.employmentOrganization}</b>
+                                {!userData.privateDetails.includes("dateOfBirth") ? (
+                                    <p>{calculateAge(userData.dateOfBirth)} years old</p>
+                                ) : null}
+                                <p>{userData.placeOfResidence}</p>
+                            </div>
+                            <div className={s.operations}>
+                                <div className={s.buttons}>
+                                    {!isAdmin &&
                                         <>
-                                        { isConnected || isRequested ?
-                                            <button disabled={connectButtonLoading}
-                                                className={s.followed_or_requested_button} onClick={isConnected ? handleDisconnectClick : handleRemoveRequest}>
-                                                {isConnected ? 'Connected' : 'Sent Request'}
-                                                <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
-                                            </button>
+                                        { userData._id !== user.userId ?
+                                            <>
+                                            { isConnected || isRequested ?
+                                                <button disabled={connectButtonLoading}
+                                                    className={s.followed_or_requested_button} onClick={isConnected ? handleDisconnectClick : handleRemoveRequest}>
+                                                    {isConnected ? 'Connected' : 'Sent Request'}
+                                                    <FontAwesomeIcon className={s.button_icon} icon={faCheck} />
+                                                </button>
+                                            :
+                                                <button
+                                                    className={s.follow_button} onClick={handleConnectClick}>
+                                                    Connect
+                                                    <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
+                                                </button>
+                                            }
+                                            { isConnected &&
+                                                <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
+                                                    Message
+                                                    <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
+                                                </button>
+                                            }
+                                            </>
                                         :
-                                            <button
-                                                className={s.follow_button} onClick={handleConnectClick}>
-                                                Connect
-                                                <FontAwesomeIcon className={s.button_icon} icon={faUserPlus} />
-                                            </button>
-                                        }
-                                        { isConnected &&
-                                            <button  disabled={connectButtonLoading} className={s.message_button} onClick={handleMessageClick}>
-                                                Message
-                                                <FontAwesomeIcon className={s.button_icon} icon={faPaperPlane} />
+                                            <button  disabled={connectButtonLoading} className={s.edit_personal_details_button} onClick={handleEditPersonalDetails}>
+                                                Edit personal details
+                                                <FontAwesomeIcon className={s.button_icon} icon={faPen} />
                                             </button>
                                         }
                                         </>
-                                    :
-                                        <button  disabled={connectButtonLoading} className={s.edit_personal_details_button} onClick={handleEditPersonalDetails}>
-                                            Edit personal details
-                                            <FontAwesomeIcon className={s.button_icon} icon={faPen} />
-                                        </button>
                                     }
-                                    </>
-                                }
+                                </div>
+                                <div className={s.contact_info}>
+                                    {!userData.privateDetails.includes("phoneNumber") || isConnected || isAdmin ? (
+                                        <>
+                                            <p>Phone Number:</p>
+                                            <p>{userData.phoneNumber}</p>
+                                        </>
+                                    ) : null}
+                                </div>
                             </div>
-                            <div className={s.contact_info}>
-                                {!userData.privateDetails.includes("phoneNumber") || isConnected || isAdmin ? (
-                                    <>
-                                        <p>Phone Number:</p>
-                                        <p>{userData.phoneNumber}</p>
-                                    </>
-                                ) : null}
-                            </div>
                         </div>
-                    </div>
-                    {userData.bio && <div className={s.container}>
-                        <h3>About me:</h3>
-                        <ExpandableText text={userData.bio}/>
-                    </div>
-                    }
-                    { userData.professionalExperience.length > 0 && (!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin) ? (
-                        <div className={s.container}>
-                            <h3>Professional Experience:</h3>
-                            <ExpandableText text={formatListWithNewlines(userData.professionalExperience)} />
+                        {userData.bio && <div className={s.container}>
+                            <h3>About me:</h3>
+                            <ExpandableText text={userData.bio}/>
                         </div>
-                    ) : null}
-                    {userData.education.length > 0 && (!userData.privateDetails.includes("education") || isConnected || isAdmin) ? (
-                        <div className={s.container}>
-                            <h3>Educational Experience:</h3>
-                            <ExpandableText text={formatListWithNewlines(userData.education)} />
-                        </div>
-                    ) : null}
-                    {userData.skills.length > 0 && (!userData.privateDetails.includes("skills") || isConnected || isAdmin) ? (
-                        <div className={s.container}>
-                            <h3>Skills:</h3>
-                            <ExpandableText text={formatListWithNewlines(userData.skills)} />
-                        </div>
-                    ) : null}
-                </div>
-                { (isConnected || isAdmin) &&
-                    <div className={s.network}>
-                        <h2>Network:</h2>
-                        {userData.network.length > 0 ? 
-                            <NetworkUsersList network={userData.network} />
-                            :
-                            <div className={s.empty_network}>
-                                <h3>This user has not connected with any other user yet</h3>
-                            </div>
                         }
+                        { userData.professionalExperience.length > 0 && (!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin) ? (
+                            <div className={s.container}>
+                                <h3>Professional Experience:</h3>
+                                <ExpandableText text={formatListWithNewlines(userData.professionalExperience)} />
+                            </div>
+                        ) : null}
+                        {userData.education.length > 0 && (!userData.privateDetails.includes("education") || isConnected || isAdmin) ? (
+                            <div className={s.container}>
+                                <h3>Educational Experience:</h3>
+                                <ExpandableText text={formatListWithNewlines(userData.education)} />
+                            </div>
+                        ) : null}
+                        {userData.skills.length > 0 && (!userData.privateDetails.includes("skills") || isConnected || isAdmin) ? (
+                            <div className={s.container}>
+                                <h3>Skills:</h3>
+                                <ExpandableText text={formatListWithNewlines(userData.skills)} />
+                            </div>
+                        ) : null}
+                    </div>
+                    { (isConnected || isAdmin) &&
+                        <div className={s.network}>
+                            <h2>Network:</h2>
+                            {userData.network.length > 0 ? 
+                                <NetworkUsersList network={userData.network} />
+                                :
+                                <div className={s.empty_network}>
+                                    <h3>This user has not connected with any other user yet</h3>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
+                    <div className={s.posts}>
+                        <TimelinePosts commentsPopupHandler={commentsPopupHandler} comingFrom={'ProfilePage'} postsToGet={userData.publishedPosts} />
                     </div>
                 }
             </div>

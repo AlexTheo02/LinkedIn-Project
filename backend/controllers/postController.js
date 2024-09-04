@@ -5,18 +5,40 @@ const Comment = require("../models/commentModel.js")
 
 // Get all posts
 const getAllPosts = async (request, response) => {
-    // Get all posts, sorted by most recently created
-    const posts = await Post.find({}).sort({createdAt: -1})
-    .populate("author","name surname profilePicture")
-    .populate({
-        path: "commentsList",
-        populate: {
-            path: "author",
-            select: "name surname profilePicture"
-        }
-    });
+    if (!request.query.postIds){
+        const posts = await Post.find({}).sort({createdAt: -1}) // Get all posts, sorted by most recently created
+        .populate("author","name surname profilePicture")
+        .populate({
+            path: "commentsList",
+            populate: {
+                path: "author",
+                select: "name surname profilePicture"
+            }
+        });
+    
+        response.status(200).json(posts);
+    }
+    else{
+        try {
+            const postIds = request.query.postIds.split(','); // List with post Ids
 
-    response.status(200).json(posts);
+            const posts = await Post.find({ _id: { $in: postIds } })
+                .sort({ createdAt: -1 })
+                .populate("author", "name surname profilePicture")
+                .populate({
+                    path: "commentsList",
+                    populate: {
+                        path: "author",
+                        select: "name surname profilePicture",
+                    },
+                });
+    
+            response.status(200).json(posts);
+        } catch (error) {
+            console.error("Error fetching posts by IDs:", error);
+            response.status(500).json({ error: "Internal server error" });
+        }
+    }
 }
 
 // Get a single post

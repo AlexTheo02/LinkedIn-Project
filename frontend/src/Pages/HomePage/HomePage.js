@@ -7,7 +7,7 @@ import { useState, useCallback, useEffect } from "react";
 import { CommentsPopup } from "../../Components/PostComponent/PostComponents.js";
 import TextAreaAutosize from "react-textarea-autosize"
 import { FileUploader } from "react-drag-drop-files";
-import TimelinePosts from "./TimelinePosts/TimelinePosts.js"
+import TimelinePosts from "../../Components/TimelinePosts/TimelinePosts.js"
 import { usePostsContext } from "../../Hooks/usePostsContext.js";
 import { useAuthContext } from "../../Hooks/useAuthContext.js";
 
@@ -238,7 +238,6 @@ function HomePage() {
     const {user} = useAuthContext();
     // Fetch user data
     const [userData, setUserData] = useState(null);
-    const { activePostId, posts, postDispatch } = usePostsContext();
 
     useEffect(() => {
 
@@ -291,7 +290,7 @@ function HomePage() {
                 <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
                 <div className={s.timeline}>
                     <CreatePost userData={userData}/>
-                    <TimelinePosts commentsPopupHandler={commentsPopupHandler}/>
+                    <TimelinePosts commentsPopupHandler={commentsPopupHandler} comingFrom={'HomePage'} postsToGet={null}/>
                 </div>
                 
             </div>
