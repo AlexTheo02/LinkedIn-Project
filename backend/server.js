@@ -99,10 +99,10 @@ mongoose.connect(process.env.MONGO_URI)
         })
 
         // Matrix factorization logic
-        matrixFactorization(jobMatrixFactorizationPath)
+        // matrixFactorization(jobMatrixFactorizationPath)
         // matrixFactorization(postMatrixFactorizationPath)
 
-        setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 600000 ) // 10 minutes
+        // setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 600000 ) // 10 minutes
         // setInterval(() => {matrixFactorization(postMatrixFactorizationPath)}, 600000 ) // 10 minutes
 
     })

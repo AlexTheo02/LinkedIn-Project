@@ -11,11 +11,11 @@ let jobs = [];
 let posts = [];
 let comments = [];
 
-const n_users = 2000;
-const n_jobs = 1500;
-const n_posts = 2600;
-const n_comments = 4000;
-const n_likes = 5000;
+const n_users = 1000;
+const n_jobs = 800;
+const n_posts = 1000;
+const n_comments = 2000;
+const n_likes = 2500;
 
 const class_chances = {
     ComputerScience: 0.17,      // 17%
