@@ -7,8 +7,9 @@ export const useApplication = () => {
     const [isLoading, setIsLoading] = useState(null);
     const {dispatch} = useJobsContext();
 
-    const handleApplyClick = async (targetJob) => {
+    const handleApplyClick = async ({targetJob}) => {
         setIsLoading(true);
+        console.log("TARGET",targetJob)
         
         try {
             // Add applicant to job's data
@@ -33,6 +34,7 @@ export const useApplication = () => {
             
                     if (userResponse.ok) {
                         const newApplicants = [user.userId, ...targetJob.applicants];
+                        console.log("TARGET JOB ID", targetJob._id)
                         dispatch({ type: 'UPDATE_JOB_APPLICANTS', payload: {jobId: targetJob._id, newApplicants: newApplicants}});
                         dispatch({ type: 'APPLY_JOB', payload: targetJob._id});
                     } else {
@@ -65,7 +67,7 @@ export const useApplication = () => {
         setIsLoading(false);
     }
 
-    const handleRemoveApplyClick = async (targetJob) => {
+    const handleRemoveApplyClick = async ({targetJob}) => {
         setIsLoading(true);
 
         try {

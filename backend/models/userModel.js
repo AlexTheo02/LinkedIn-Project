@@ -59,7 +59,11 @@ const userSchema = new Schema({
 
     postInteractions: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], default: [], required: true}, // Array of postIds the user has interacted with
 
-    interactionSource: {type: Boolean, default: false, required: true}  // false => views, true => likes and comments
+    interactionSource: {type: Boolean, default: false, required: true},  // false => views, true => likes and comments
+
+    jobSuggestions: {type: [{type: Schema.Types.ObjectId, ref: "Job"}], default: [], required: true}, // Array of suggested job ids from MF
+
+    postSuggestions: {type: [{type: Schema.Types.ObjectId, ref: "Post"}], default: [], required: true} // Array of suggested post ids from MF
 })
 
 function formatFieldName(fieldName) {
@@ -320,7 +324,7 @@ userSchema.statics.register = async function(userData) {
         name: userData.name,
         surname: userData.surname,
         dateOfBirth: userData.dateOfBirth,
-        email: userData.email,
+        email: userData.email.toLowerCase(),
         password: hash,
         phoneNumber: userData.phoneNumber,
         profilePicture: profilePictureURL,
@@ -351,7 +355,7 @@ userSchema.statics.login = async function(userData){
         throw error;
     }
 
-    const user = await this.findOne({email: userData.email});
+    const user = await this.findOne({email: userData.email.toLowerCase()});
 
     if (!user){
         const errorMessage = "Incorrect email or password";

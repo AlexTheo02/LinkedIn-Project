@@ -12,14 +12,15 @@ function JobListings({onClick}) {
     // Fetch posts from database
     useEffect(() => {
         const fetchJobs = async() => {
-            const response = await fetch('/api/jobs', {
+            const response = await fetch('/api/jobs/get-tailored-jobs', {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
                 }
             });
             const json = await response.json();
-
+            console.log(json)
             if (response.ok){
+                // console.log("APPLIED JOBS",appliedJobsIds)
                 const appliedJobsIds = json
                     .filter(job => job.applicants.includes(user.userId))
                     .map(job => job._id);

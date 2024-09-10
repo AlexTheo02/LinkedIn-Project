@@ -5,7 +5,8 @@ const {
     createJob,
     addApplicant,
     removeApplicant,
-    updateJob
+    updateJob,
+    getTailoredJobs
 } = require("../controllers/jobController.js")
 
 const requireAuth = require('../middleware/requireAuth.js')
@@ -15,6 +16,9 @@ const router = express.Router()
 
 // require Authentcation for all Users routes
 router.use(requireAuth)
+
+// GET tailored jobs
+router.get("/get-tailored-jobs", getTailoredJobs)
 
 // GET all jobs
 router.get("/", getAllJobs)
@@ -33,6 +37,7 @@ router.patch("/removeApplicant/:id", removeApplicant)
 
 // UPDATE a job
 router.patch("/:id", updateJob)
+
 
 
 module.exports = router

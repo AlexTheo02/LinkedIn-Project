@@ -331,10 +331,12 @@ const publishPost = async (request, response) => {
         }
 
         user.publishedPosts.push(id);
+        console.log("Adding post to user")
         await user.save();
 
         response.status(200).json({ message: "User published Post" });
     } catch (error) {
+        console.error(error.message)
         response.status(400).json({ error: error.message });
     }
 }

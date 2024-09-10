@@ -1,4 +1,5 @@
 const Job = require("../models/jobModel.js")
+const User = require("../models/userModel.js")
 const mongoose = require("mongoose")
 
 // Get all jobs
@@ -166,11 +167,97 @@ const updateJob = async (request, response) => {
     response.status(200).json(job);
 }
 
+const getTailoredJobs = async (request, response) => {
+    const loggedInUserId = request.user.id; // Logged in user id
+
+    const user = await User.findById(loggedInUserId);
+    if (!user) {
+        return response.status(404).json({error: "User not found"})
+    }
+
+    // Fetch all skilled jobs (jobs that user has at least one required skill)
+    const skilledJobs = await Job.find({requirements: {$in: user.skills}})
+
+    if (!skilledJobs) {
+        return response.status(404).json({error: "Skilled jobs not found"})
+    }
+
+    // Sort skilled jobs by desc matching req/skills percentage
+    const getMatchingPercentage = (job) => {
+        // Filter requirements to those that match
+        const matchedRequirements = job.requirements.filter(req => user.skills.includes(req))
+
+        const matchingPercentage = (matchedRequirements.length / job.requirements.length) * 100
+
+        return matchingPercentage
+    }
+
+    skilledJobs.sort((a,b) => {
+        mpA = getMatchingPercentage(a);
+        mpB = getMatchingPercentage(b);
+
+        return mpB - mpA;
+    });
+
+    // Fetch suggested job ids and keep the top 10
+    const suggestedJobs = user.jobSuggestions
+
+    // Combine the lists
+    let tailoredJobs = []
+    let i=0, j=0;
+    while (i<skilledJobs.length || j < suggestedJobs.length){
+        // Add 3 skilled Jobs
+        for (let k=0; k<3 && i<skilledJobs.length; k++){
+            tailoredJobs = [skilledJobs[i]._id ,...tailoredJobs]
+            i++;
+        }
+
+        // Add 1 suggested Job
+        if (j < suggestedJobs.length) {
+            tailoredJobs = [suggestedJobs[j], ...tailoredJobs]
+            j++;
+        }
+    }
+
+    // Reorder the jobs (move applied jobs to the back)
+    let reorderedJobs = []
+    const appliedJobs = []
+    for (let i=0; i<tailoredJobs.length; i++){
+        const job = tailoredJobs[i]
+        if (user.appliedJobs.includes(job)){
+            appliedJobs.push(job)
+        }
+        else{
+            reorderedJobs.push(job)
+        }
+    }
+    reorderedJobs = [...reorderedJobs, ...appliedJobs]
+
+    // Populate the reorderedJobs job ids and return them
+    try {
+        // Create a map for ids to indices
+        const idIndexMap = {}
+        for (let i=0; i< reorderedJobs.length; i++){
+            idIndexMap[reorderedJobs[i]] = i;
+        }
+        
+        const jobs = await Job.find({_id: {$in: reorderedJobs}});
+        // Sort the jobs to appear in the same order as reorderedJobs list
+        jobs.sort((a,b) => {
+            return idIndexMap[a._id.toString()] - idIndexMap[b._id.toString()]
+        })
+        response.status(200).json(jobs)
+    } catch (error) {
+        return response.status(400).json({error: "Internal server error"})
+    }
+}
+
 module.exports = {
     getAllJobs,
     getJob,
     createJob,
     addApplicant,
     removeApplicant,
-    updateJob
+    updateJob,
+    getTailoredJobs
 }

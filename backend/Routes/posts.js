@@ -6,7 +6,8 @@ const {
     getPost,
     createPost,
     updatePost,
-    addComment
+    addComment,
+    getTailoredPosts
 } = require("../controllers/postController.js")
 
 const requireAuth = require('../middleware/requireAuth.js')
@@ -16,6 +17,9 @@ const router = express.Router()
 
 // require Authentcation for all Users routes
 router.use(requireAuth)
+
+// GET tailored jobs
+router.get("/get-tailored-posts", getTailoredPosts)
 
 // GET all posts
 router.get("/", getAllPosts)
@@ -31,6 +35,7 @@ router.patch("/:id", updatePost)
 
 // Add comment to a post
 router.patch("/add-comment/:id", addComment);
+
 
 
 module.exports = router

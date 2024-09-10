@@ -72,6 +72,7 @@ const getPost = async (request, response) => {
 
 // Create a new post
 const createPost = async (request, response) => {
+    // ADD POST TO USER'S PUBLISHED POSTS LIST
     const {
         author,
         caption,
@@ -147,10 +148,33 @@ const addComment = async (request, response) => {
     return response.status(200).json({populatedComment})
 }
 
+const getTailoredPosts = async (request, response) => {
+    const loggedInUserId = request.user.id; // Logged in user id
+
+    const user = await User.findById(loggedInUserId);
+    if (!user) {
+        return response.status(404).json({error: "User not found"})
+    }
+
+    // Fetch all posts from user's network
+    const networkPosts = await Job.find({author: {$in: user.network}}).sort({updatedAt: -1})
+
+    if (!networkPosts) {
+        return response.status(404).json({error: "Network posts not found"})
+    }
+
+    const suggestedPostIds = user.postSuggestions
+
+    // 3 posts 1 suggested post??
+
+    // Figure out logic for post display and create the list to return to frontend
+}
+
 module.exports = {
     getAllPosts,
     getPost,
     createPost,
     updatePost,
-    addComment
+    addComment,
+    getTailoredPosts
 }

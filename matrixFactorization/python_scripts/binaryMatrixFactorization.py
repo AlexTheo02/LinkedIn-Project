@@ -15,6 +15,8 @@ class BMF:
         # R=MxN, U=MxK, V=KxN
         self.U = np.random.normal(scale=1./self.K, size=(self.n_users, self.K))
         self.V = np.random.normal(scale=1./self.K, size=(self.n_items, self.K))
+        # self.U = np.random.normal(size=(self.n_users, self.K))
+        # self.V = np.random.normal(size=(self.n_items, self.K))
 
         print("Matrix factorization initialized")
         self.print()

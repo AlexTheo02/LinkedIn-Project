@@ -79,7 +79,9 @@ function createUser(gender, profilePic, workingPosition, employmentOrganization,
         linkUpRequests: [],
         jobInteractions: [],
         postInteractions: [],
-        interactionSource: false
+        interactionSource: false,
+        jobSuggestions: [],
+        postSugestions: []
     };
 }
 

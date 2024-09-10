@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 class MF:
     """ 
@@ -7,7 +8,7 @@ class MF:
         V: represents the item's characteristics
     """
     # Constructor
-    def __init__(self, R, K=10, lr=0.001, n_iter=1000, tol=0.005):
+    def __init__(self, R, K=60, lr=0.001, n_iter=1000, tol=0.005, reg_param=0.1):
         self.R = np.array(R) # Relations array (user-item relations)
         self.n_users = len(R)
         self.n_items = len(R[0])
@@ -15,11 +16,12 @@ class MF:
         self.lr = lr # Learning rate
         self.n_iter = n_iter # Number of iterations (for training)
         self.tol = tol
+        self.reg_param = reg_param
         np.random.seed(404)
 
         # R=MxN, U=MxK, V=KxN
-        self.U = np.random.rand(self.n_users, self.K)
-        self.V = np.random.rand(self.n_items, self.K)
+        self.U = np.random.uniform(low=0.1, high=1.0, size=(self.n_users, self.K))
+        self.V = np.random.uniform(low=0.1, high=1.0, size=(self.n_items, self.K))
         print("Matrix factorization initialized")
         self.print()
     
@@ -37,8 +39,8 @@ class MF:
 
     def calculate_gradients(self, r, r_hat, user_index, item_index):
         error = r - r_hat
-        du = -2 * error * self.V[item_index]
-        dv = -2 * error * self.U[user_index]
+        du = - 2 * (error * self.V[item_index] - self.reg_param * self.U[user_index])
+        dv = - 2 * (error * self.U[user_index] - self.reg_param * self.V[item_index])
         return du, dv
 
     def sigmoid(self, x):
@@ -57,7 +59,7 @@ class MF:
                     r = self.R[i,j]
 
                     # Skip missing ratings
-                    if r == 0:
+                    if r <= 0:
                         continue
 
                     r_hat = self.predict(i,j)
@@ -73,7 +75,7 @@ class MF:
                     self.V[j, :] -= self.lr * dV
             if abs(prev_cost - cost) < self.tol:
                 break
-            prev_cost = self.cost_function()
+            prev_cost = cost
             
 
     def predict_all(self):
@@ -82,62 +84,66 @@ class MF:
     # Mean Squared Error (MSE)
     def cost_function(self):
         R_hat = self.predict_all()
-        cost = np.mean(np.square(self.R - R_hat))
-        return cost
+        mask = self.R > 0
+        mse = np.mean(np.square(self.R[mask] - R_hat[mask]))
+        reg = self.reg_param * (np.sum(np.square(self.U)) + np.sum(np.square(self.V)))
+        return mse + reg
 
-    def get_suggestions(self, user, user_to_index, index_to_item):
+    # def recommend(self, user_index):
 
-        # Trim self.U to only contain user's connected users
-        connected_indices = [user_to_index[user['_id']]]
-        for connected_user in user['network']:
-            connected_indices.append(user_to_index[connected_user])
+    #     full_matrix = self.predict_all()
+    #     user_row = full_matrix[user_index]
+    #     item_recommendations = []
+    #     for i,item in enumerate(user_row):
+    #         if item >= 0.85:
+    #             item_recommendations.append((i,item))
         
-        trimmedU = []
-        for i,features in enumerate(self.U):
-            if i in connected_indices:
-                trimmedU.append(features)
-        
-        # Combine values for trimmedU into a single feature array
-        combinedU = []
-        for feature in trimmedU:
-            print(feature)
-            combinedU.append(feature)
-        
-        # make prediction
-        job_suggestions = np.dot(combinedU,self.V.T)
-        return job_suggestions
-
-
-    # # Trim U to user's network
-    # def trimToNetwork(self, userId, userNetwork, userMappings):
-    #     trimmedU = []
-    #     for i in range(len(userNetwork) + 1):
-    #         trimmedU.append([])
-
-    #     trimmedU[0] = self.U[userMappings[userId]]
-    #     for i, connectedUserId in enumerate(userNetwork):
-    #         trimmedU[i + 1] = self.U[userMappings[connectedUserId]]
-
-    #     return trimmedU
+    #     # Sort based on item and return indices
+    #     item_recommendations.sort(key=lambda x: x[1], reverse=True)
+    #     # print(item_recommendations) # print scores
+    #     # Return indices, sorted
+    #     returned_list = [a for a,b in item_recommendations]
+    #     return returned_list
     
-    # def insert_recommendation(self, recommendations, prediction, item, preferences, itemMapping):
-    #     i = len(recommendations) - 1
-    #     while i >= 0 and preferences[itemMapping[recommendations[i]]] < prediction:
-    #         i -= 1
+    def recommend(self, user_id, top_n=10):
+        """ Recommends jobs to a user based on his interactions and his network's interactions """
+        predictions = self.predict_all()[user_id, :]
         
-    #     recommendations.insert(i + 1, item)
+        # Εξαίρεση των αγγελιών που έχει ήδη δει ο χρήστης (seen jobs)
+        seen_jobs = self.R[user_id, :] > 0  # Boolean array (True για τα jobs που έχει δει)
+        predictions[seen_jobs] = predictions[seen_jobs] - 5  # Αφαιρούμε τις seen jobs βάζοντας τις προβλέψεις στο -άπειρο
+        
+        # Ταξινόμηση των jobs βάσει των προβλέψεων (φθίνουσα σειρά)
+        job_ids = np.argsort(-predictions)
+        
+        return job_ids[:top_n]
 
-    # # Prediction function
-    # def predict(self, userId, userNetwork, itemInteractions, userMappings, itemMapping, flippedItemMapping):
-    #     trimmedU = self.trimToNetwork(userId, userNetwork, userMappings)
-    #     combinedU = np.mean(trimmedU, axis=0) # collective network latent features
-    #     preferences = np.dot(combinedU, self.V.T) # Average preference amongst the user and their connected user, equally influenced by them
-    #     # Create recommendations list, for items that score higher than 0.5
-    #     recommendations = []
-    #     for itemIndex, prediction in enumerate(preferences):
-    #         if prediction > 0.5:
-    #             item = flippedItemMapping[itemIndex]
-    #             if item not in itemInteractions:  # If item is already interacted with, do not insert it in recommendations list
-    #                 self.insert_recommendation(recommendations, prediction, item, preferences, itemMapping)
 
-    #     return recommendations
+        # # Trim self.U to only contain user's connected users
+        # connected_indices = [user_to_index[user['_id']]]
+        # for connected_user in user['network']:
+        #     connected_indices.append(user_to_index[connected_user])
+        
+        # trimmedU = []
+        # for i,features in enumerate(self.U):
+        #     if i in connected_indices:
+        #         trimmedU.append(features)
+        
+        # # Combine values for trimmedU into a single feature array
+        # combinedU = np.mean(trimmedU, axis=0)
+        
+        # # make prediction
+        # job_suggestions = np.dot(combinedU,self.V.T)
+        # job_suggestions = np.argsort(-job_suggestions)
+        # return job_suggestions[:top_n]
+
+    def save(self, path):
+        with open(path + ".pkl", "wb") as file:
+            pickle.dump(self, file)
+        print(f"Object saved to {path}")
+    
+    @staticmethod
+    def load(filename):
+        with open(filename + ".pkl", "rb") as file:
+            print(f"Object loaded successfuly from {filename + "pkl"}")
+            return pickle.load(file)

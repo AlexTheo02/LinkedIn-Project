@@ -25,9 +25,9 @@ const JobListingFooter = ({ job }) => {
                     disabled={isLoading}
                     className={`${s.job_listing_button} ${isApplied ? s.applied : ""}`}
                     onClick={isApplied ?
-                        (event) => {event.stopPropagation(); handleRemoveApplyClick(job)}
+                        (event) => {event.stopPropagation(); handleRemoveApplyClick({targetJob: job})}
                     :
-                        (event) => {event.stopPropagation(); handleApplyClick(job)}}
+                        (event) => {event.stopPropagation(); handleApplyClick({targetJob: job})}}
                 >
                     {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply </>}
                 </button>

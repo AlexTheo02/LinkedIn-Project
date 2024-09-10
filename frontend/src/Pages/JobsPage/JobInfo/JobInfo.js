@@ -14,7 +14,7 @@ const {
 const JobInfo = ({isExpanded, onExit}) => {
     const {appliedJobs, activeJob} = useJobsContext();
     const {handleApplyClick, handleRemoveApplyClick, isLoading} = useApplication();
-    
+
     if (!activeJob){
         return;
     }
@@ -85,11 +85,11 @@ const JobInfo = ({isExpanded, onExit}) => {
                         ))}
                     </ul>
                 </div>
-            }
+            }ε
             <button
                 disabled={isLoading}
                 className={`${s.apply_button} ${isApplied ? s.applied : ""}`}
-                onClick={isApplied ? (event) => {handleRemoveApplyClick({targetJob: activeJob})} : (event) => {handleApplyClick({targetJob: activeJob})}}
+                onClick={isApplied ? () => {handleRemoveApplyClick({targetJob: activeJob})} : () => {handleApplyClick({targetJob: activeJob})}}
                 >
                 {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply Now</>}
             </button>

@@ -1,13 +1,21 @@
 import sys
 import os
 import json
+import SVD_MatrixFactorization
 import matrixFactorization
 import binaryMatrixFactorization
 import numpy as np
-# users_path = os.getenv("USERS_PATH")
-# jobs_path = os.getenv("ITEMS_PATH")
-users_path = "../Data/users.json"
-jobs_path = "../Data/items.json"
+from dotenv import load_dotenv
+load_dotenv()
+
+users_path = os.getenv("USERS_PATH")
+jobs_path = os.getenv("JOBS_PATH")
+job_recommendations_path = os.getenv("JOBS_REC_PATH")
+trained_model_filename = os.getenv("TRAINED_JOBS_MODEL")
+
+# users_path = "../Data/users.json"
+# jobs_path = "../Data/jobs.json"
+# job_recommendations_path = "../Recommendations/jobRecommendations.json"
 
 # Open the json files and read data
 with open(users_path, 'r') as users_file:
@@ -32,110 +40,131 @@ for i,user in enumerate(users_list):
     
     # Update user dictionaries
     user_to_index[user['_id']] = i
-    index_to_user[i] = user['_id']
+    index_to_user[i] = user
 
     for j,job in enumerate(jobs_list):
         user_job_interactions[j] = 1 if job['_id'] in user['jobInteractions'] else 0
         
         # Update job dictionaries
         job_to_index[job['_id']] = j
-        index_to_job[j] = job['_id']
+        index_to_job[j] = job
 
     R[i] = user_job_interactions
 
+# ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
+# Modify R to include network influence
+R_net = [row[:] for row in R]
+net_param = 0.5
+visited_users = []
 
-A = [0 for _ in range(n_users)]
-for i, user in enumerate(users_list):
-    user_adjacency = [0 for _ in range(n_users)]
+for i in range(len(R)):
+    u1 = index_to_user[i]
+    for j in range(len(R)):
+        # Skip self
+        if i == j:
+            continue
+        u2 = index_to_user[j]
+        # Users are connected
+        if (u2['_id'] in u1['network'] and u2['_id'] not in visited_users):
+            # For each job, update values on connected users
+            for k in range(len(R[j])):
+                R_net[i][k] += net_param * R[j][k]
+                R_net[j][k] += net_param * R[i][k]
+    visited_users.append(u1["_id"])
 
-    for j, connected_user in enumerate(users_list):
-        user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
+# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=100, lr=0.001, n_iter=1000, tol=1e-7)
+
+# mf.train(no_output=False)
+# mf.save(trained_model_filename)
+
+
+
+
+# mf = mf.load(trained_model_filename)
+# selected_user = 666 
+# recommended_job_indices = mf.recommend(selected_user)
+
+# print(len(recommended_job_indices))
+# print(recommended_job_indices)
+
+# recommended_jobs = []
+# for job_index in recommended_job_indices:
+#     recommended_jobs.append((index_to_job[job_index]['_id'], index_to_job[job_index]['title']))
+# print(f"Recommended jobs for user {index_to_user[selected_user]["_id"]}:")
+# for job in recommended_jobs:
+#     print(job)
+
+
+
+
+
+
+# ----------------------------------------------------------------------------------------------- Matrix Factorization
+# mf = matrixFactorization.MF(R=R, K=2, lr=0.0001, n_iter = 1000, tol=1e-4, reg_param=0.0001)
+# mf.train()
+# mf.save(os.getenv("TRAINED_JOBS_MF_MODEL"))
+
+# mf = mf.load(os.getenv("TRAINED_JOBS_MF_MODEL"))
+
+
+
+# print(len(mf.recommend(64)))
+
+
+# selected_user = 5
+
+# user = users_list[selected_user]
+# recommended_job_indices = mf.recommend(user, user_to_index, top_n=10)
+
+# recommended_jobs = []
+# for job_index in recommended_job_indices:
+#     recommended_jobs.append(index_to_job[job_index])
+# print(f"Recommended jobs for user {index_to_user[selected_user]}: {recommended_jobs}")
+
+# ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
+
+# A = [0 for _ in range(n_users)]
+# for i, user in enumerate(users_list):
+#     user_adjacency = [0 for _ in range(n_users)]
+
+#     for j, connected_user in enumerate(users_list):
+#         user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
     
-    # Update user's adjacency
-    A[i] = user_adjacency
+#     # Update user's adjacency
+#     A[i] = user_adjacency
 
-# mf = matrixFactorization.MF(R=R, K=25, lr=0.01, n_iter = 1000)
-bmf = binaryMatrixFactorization.BMF(R, A, K=10, lr=0.01, reg_param=0.01, epochs=1000)
+# bmf = binaryMatrixFactorization.BMF(R, A, K=10, lr=0.01, reg_param=0.01, epochs=1000)
 
-# mf.train()
-bmf.train()
+# bmf.train()
 
-# job_suggestions = mf.get_suggestions(users_list[5], user_to_index, index_to_job)
-# print(job_suggestions)
+# selected_user = 5
+# recommended_job_indices = bmf.recommend(user_id=selected_user, top_n=10)
+# recommended_jobs = []
+# for job_index in recommended_job_indices:
+#     recommended_jobs.append(index_to_job[job_index])
 
-selected_user = 5
-
-recommended_job_indices = bmf.recommend(user_id=selected_user, top_n=10)
-recommended_jobs = []
-for job_index in recommended_job_indices:
-    recommended_jobs.append(index_to_job[job_index])
-
-print(f"Recommended jobs for user {index_to_user[selected_user]}: {recommended_jobs}")
+# print(f"Recommended jobs for user {index_to_user[selected_user]}: {recommended_jobs}")
 
 
 
 
+# Send response to a file
+job_recommendations = {}
+for i,user in enumerate(users_list):
+    # Get recommended job indices
+    # print(f"Getting recommendations for user {i + 1} of {len(users_list)}")
+    job_indices = mf.recommend(user_to_index[user['_id']])
 
+    # Transform them into job ids
+    recommended_job_ids = []
+    for job_index in job_indices:
+        job_id = index_to_job[job_index]['_id']
+        recommended_job_ids.append(job_id)
+    job_recommendations[user['_id']] = recommended_job_ids
 
+# print(f"Writing recommendations to {job_recommendations_path}")
+# Write job_recommendations into output file and notify server (with print msg) to read
+with open(job_recommendations_path, 'w') as json_file:
+    json.dump(job_recommendations, json_file, indent=2)
 
-
-
-
-
-
-
-
-
-
-
-# # Create Relations dictionary
-# R_dict = {}
-# for user in users_list:
-#     user_dict = {}
-#     for job in jobs_list:
-#         if job['_id'] in user['jobInteractions']:
-#             user_dict[job['_id']] = 1
-#         else:
-#             user_dict[job['_id']] = 0
-#     R_dict[user['_id']] = user_dict
-
-# # Map each userId to its corresponding index
-# user_mapping = {user: index for index, user in enumerate(R_dict.keys())}
-
-# # Map each jobId to its corresponding index
-# job_mapping = {job: index for index, job in enumerate(next(iter(R_dict.values())).keys())}
-
-# # Create the array based on the mapped indexes
-# R = [[R_dict[user][job] for job in job_mapping] for user in user_mapping]
-
-# flipped_job_mapping = {value: key for key, value in job_mapping.items()}
-
-# mf = mf.MF(R=R) # number of latent features K
-
-# # Train the global model
-# mf.train()
-
-# np.savetxt("array.txt", np.dot(mf.U,mf.V.T))
-# # exit()
-
-# # Get the suggested jobs for each user
-# userJobSuggestions = {}
-
-# for user in users_list[:42]:
-#     # Get id and network from user's data
-#     user_id = user['_id']
-#     user_network = user['network']
-#     job_interactions = user['jobInteractions']
-
-#     # Make prediction
-#     jobSuggestions = mf.predict(user_id, user_network, itemInteractions = job_interactions, userMappings = user_mapping, itemMapping = job_mapping, flippedItemMapping = flipped_job_mapping)
-#     # Assign suggested jobs to user
-#     userJobSuggestions[user_id] = jobSuggestions
-
-
-# # Stringify to JSON format and return to nodejs server
-# # print(json.dumps(userJobSuggestions, separators=(',',':')))
-# print("starting to print")
-# for u,js in userJobSuggestions.items():
-#     print(u,js)
-#     sys.stdout.flush()
+print("MF DONE")

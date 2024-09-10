@@ -2,76 +2,20 @@ require("dotenv").config()
 const fs = require('fs');
 
 const express = require("express")
-const mongoose = require("mongoose")
-const { spawn } = require('child_process');
-
-const User = require("./models/userModel.js")
-const Job = require("./models/jobModel.js")
-const Post = require("./models/postModel.js")
-
-const jobMatrixFactorizationPath = "../matrixFactorization/python_scripts/jobMatrixFactorization.py"
-const postMatrixFactorizationPath = "../matrixFactorization/python_scripts/postMatrixFactorization.py"
-
-// Function to run a specific python script
-const matrixFactorization = async (path) => {
-
-    // Fetch data to send into matrix factorization algorithm
-
-    // Fetch users
-    const users = await User.find();
-    let items = undefined;
-
-    if (path === jobMatrixFactorizationPath){
-        // fetch jobs and assign them to items
-        items = await Job.find();
-    }
-
-    else if(path === postMatrixFactorizationPath){
-        // fetch posts and assign them to items
-        items = await Post.find();
-    }
-    else return;
-
-    // Start the execution process
-    console.log("Executing python script:",path)
-    // add arguments to file and have python script read from there
-    fs.writeFileSync(process.env.USERS_PATH, JSON.stringify(users, null, 2))
-    fs.writeFileSync(process.env.ITEMS_PATH, JSON.stringify(items, null, 2))
-    const pythonProcess = spawn("python", [path]);
-
-    // Output logging
-    pythonProcess.stdout.on("data", (data) => {
-        console.log("RESPOSNE RECEIVED")
-        const suggestions = JSON.parse(data.toString());
-        console.log(suggestions)
-        // Job MF response
-        if (path === jobMatrixFactorizationPath){
-            // Add job suggestions to suggestedJobs on each user
-            
-            
-        }
-        // Post MF response
-        else if (path === postMatrixFactorizationPath){
-            // Add post suggestions to suggestedPosts on each user
-        }
-    })
-
-    // Error logging
-    pythonProcess.stderr.on("data", (error) => {
-        console.log(`PYTHON ERROR:\n${error.toString()}`);
-    })
-}
 
 // Routes
-const adminRoutes = require("./Routes/admin.js")
-const userRoutes = require("./Routes/users.js")
-const postRoutes = require("./Routes/posts.js")
-const jobRoutes = require("./Routes/jobs.js")
-const conversationRoutes = require("./Routes/conversations.js")
-const postNotificationRoutes = require("./Routes/postNotifications.js")
+const adminRoutes = require("./routes/admin.js")
+const userRoutes = require("./routes/users.js")
+const postRoutes = require("./routes/posts.js")
+const jobRoutes = require("./routes/jobs.js")
+const conversationRoutes = require("./routes/conversations.js")
+const postNotificationRoutes = require("./routes/postNotifications.js")
+
+const { matrixFactorization } = require("./generalFunctions.js")
 
 // Create an express app
 const app = express()
+const mongoose = require("mongoose")
 
 // Middleware (will fire for every request that comes in)
 app.use(express.json())
@@ -99,11 +43,11 @@ mongoose.connect(process.env.MONGO_URI)
         })
 
         // Matrix factorization logic
-        // matrixFactorization(jobMatrixFactorizationPath)
-        // matrixFactorization(postMatrixFactorizationPath)
+        // matrixFactorization(process.env.JOB_MF_PATH)
+        // matrixFactorization(process.env.POST_MF_PATH)
 
-        // setInterval(() => {matrixFactorization(jobMatrixFactorizationPath)}, 600000 ) // 10 minutes
-        // setInterval(() => {matrixFactorization(postMatrixFactorizationPath)}, 600000 ) // 10 minutes
+        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 600000 ) // 10 minutes
+        // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 600000 ) // 10 minutes
 
     })
     .catch((error) => {console.log(error)})

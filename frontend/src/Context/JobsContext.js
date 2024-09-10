@@ -34,7 +34,7 @@ export const jobsReducer = (state, action) => {
         return {
             ...state,
             jobs: updatedJobs,
-            activeJob: state.activeJob._id === action.payload.jobId ? updatedJobs[jobIndex] : state.activeJob
+            activeJob: state.activeJob && state.activeJob._id === action.payload.jobId ? updatedJobs[jobIndex] : state.activeJob
         }
         case 'SET_JOBS':
             return {
