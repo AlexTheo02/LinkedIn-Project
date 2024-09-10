@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 class BMF:
     def __init__(self, R, A, K, lr, reg_param, epochs, tol=0.005):
@@ -15,6 +16,10 @@ class BMF:
         # R=MxN, U=MxK, V=KxN
         self.U = np.random.normal(scale=1./self.K, size=(self.n_users, self.K))
         self.V = np.random.normal(scale=1./self.K, size=(self.n_items, self.K))
+
+        # self.U = np.random.uniform(low=0.1, high=1.0, size=(self.n_users, self.K))
+        # self.V = np.random.uniform(low=0.1, high=1.0, size=(self.n_items, self.K))
+
         # self.U = np.random.normal(size=(self.n_users, self.K))
         # self.V = np.random.normal(size=(self.n_items, self.K))
 
@@ -82,16 +87,27 @@ class BMF:
         full_pred = np.dot(self.U, self.V.T)
         return self.sigmoid(full_pred)
 
-    def recommend(self, user_id, top_n=10):
+    def recommend(self, user_index, top_n=10):
         """ Recommends jobs to a user based on his interactions and his network's interactions """
-        predictions = self.full_matrix()[user_id, :]
+        predictions = self.full_matrix()[user_index, :]
         
-        # Εξαίρεση των αγγελιών που έχει ήδη δει ο χρήστης (seen jobs)
-        seen_jobs = self.R[user_id, :] > 0  # Boolean array (True για τα jobs που έχει δει)
+        # Προτεραιότητα στα unseen jobs
+        seen_jobs = self.R[user_index, :] > 0  # Boolean array (True για τα jobs που έχει δει)
         predictions[seen_jobs] = predictions[seen_jobs] - 5  # Αφαιρούμε τις seen jobs βάζοντας τις προβλέψεις στο -άπειρο
         
         # Ταξινόμηση των jobs βάσει των προβλέψεων (φθίνουσα σειρά)
         job_ids = np.argsort(-predictions)
         
         return job_ids[:top_n]
+
+    def save(self, path):
+        with open(path + ".pkl", "wb") as file:
+            pickle.dump(self, file)
+        print(f"Object saved to {path}")
+    
+    @staticmethod
+    def load(filename):
+        with open(filename + ".pkl", "rb") as file:
+            print(f"Object loaded successfuly from {filename + "pkl"}")
+            return pickle.load(file)
 

@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const fs = require('fs');
 const { spawn } = require('child_process');
 
+// Mongoose models
 const User = require("./models/userModel.js")
 const Job = require("./models/jobModel.js")
 const Post = require("./models/postModel.js")
@@ -16,7 +17,7 @@ async function updateRecommendations({itemRecommendations, isJobs}){
 
         try {
             // Get user object
-            user = await User.findById(userId);
+            const user = await User.findById(userId);
             if (!user){
                 console.error("User not found", userId);
                 continue;
@@ -29,14 +30,16 @@ async function updateRecommendations({itemRecommendations, isJobs}){
                 user.recommendedPosts = itemRecommendations[userId]
             }
             
+            console.log(`updating user ${userId}'s suggestions`)
             // Save the user
             await user.save();
+            console.log(`successfully updated user ${userId}'s suggestions`)
             
         } catch (error) {
             console.error("Error:", error.message)
         }
-        
     }
+    console.log(`${isJobs ? "Job" : "Post"} suggestions successfully updated`)
 }
 
 
@@ -54,12 +57,12 @@ const matrixFactorization = async (path) => {
     let items = undefined;
 
     if (path === jobMatrixFactorizationPath){
-        jobs = await Job.find();
+        const jobs = await Job.find();
         fs.writeFileSync(process.env.JOBS_PATH, JSON.stringify(jobs, null, 2))
     }
     
     else if(path === postMatrixFactorizationPath){
-        items = await Post.find();
+        const posts = await Post.find();
         fs.writeFileSync(process.env.POSTS_PATH, JSON.stringify(posts, null, 2))
     }
 

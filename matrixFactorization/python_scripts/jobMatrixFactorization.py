@@ -123,27 +123,20 @@ for i in range(len(R)):
 
 # ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
 
-# A = [0 for _ in range(n_users)]
-# for i, user in enumerate(users_list):
-#     user_adjacency = [0 for _ in range(n_users)]
+# Create Adjacency matrix
+A = [0 for _ in range(n_users)]
+for i, user in enumerate(users_list):
+    user_adjacency = [0 for _ in range(n_users)]
 
-#     for j, connected_user in enumerate(users_list):
-#         user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
+    for j, connected_user in enumerate(users_list):
+        user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
     
-#     # Update user's adjacency
-#     A[i] = user_adjacency
+    # Update user's adjacency
+    A[i] = user_adjacency
 
-# bmf = binaryMatrixFactorization.BMF(R, A, K=10, lr=0.01, reg_param=0.01, epochs=1000)
 
-# bmf.train()
-
-# selected_user = 5
-# recommended_job_indices = bmf.recommend(user_id=selected_user, top_n=10)
-# recommended_jobs = []
-# for job_index in recommended_job_indices:
-#     recommended_jobs.append(index_to_job[job_index])
-
-# print(f"Recommended jobs for user {index_to_user[selected_user]}: {recommended_jobs}")
+mf = binaryMatrixFactorization.BMF(R, A, K=50, lr=0.01, reg_param=0.001, epochs=1000)
+mf.train()
 
 
 
@@ -167,4 +160,6 @@ for i,user in enumerate(users_list):
 with open(job_recommendations_path, 'w') as json_file:
     json.dump(job_recommendations, json_file, indent=2)
 
+sys.stdout.flush()
 print("MF DONE")
+sys.stdout.flush()

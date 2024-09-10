@@ -77842,27 +77842,53 @@
     "employmentOrganization": "Basketball Inc",
     "professionalExperience": [],
     "education": [],
-    "skills": [],
+    "skills": [
+      "JavaScript"
+    ],
     "recentConversations": [],
     "network": [],
     "publishedPosts": [],
-    "publishedJobListings": [],
+    "publishedJobListings": [
+      "66df32f43da4301d04eba12f"
+    ],
     "likedPosts": [],
     "publishedComments": [],
     "privateDetails": [
-      "dateOfBirth",
-      "phoneNumber"
+      ""
     ],
-    "appliedJobs": [],
+    "appliedJobs": [
+      "66d9ca934150387436629851",
+      "66d9ca9341503874366297fa",
+      "66d9ca93415038743662976b",
+      "66d9ca9341503874366296ee",
+      "66d9ca934150387436629688",
+      "66d9ca934150387436629897",
+      "66d9ca934150387436629957",
+      "66d9ca934150387436629782",
+      "66d9ca9341503874366297e8"
+    ],
     "postNotifications": [],
     "linkUpRequests": [],
-    "jobInteractions": [],
+    "jobInteractions": [
+      "66d9ca934150387436629851",
+      "66d9ca9341503874366297fa",
+      "66d9ca93415038743662976b",
+      "66d9ca9341503874366296ee",
+      "66d9ca934150387436629688",
+      "66d9ca934150387436629897",
+      "66d9ca934150387436629957",
+      "66d9ca934150387436629782",
+      "66d9ca9341503874366297e8"
+    ],
     "postInteractions": [
-      "66d9ca944150387436629b0e"
+      "66d9ca944150387436629b0e",
+      "66d9ca944150387436629bb7",
+      "66d9ca93415038743662998a",
+      "66d9ca944150387436629a4c"
     ],
     "interactionSource": false,
     "jobSuggestions": [],
     "postSuggestions": [],
-    "__v": 1
+    "__v": 31
   }
 ]
