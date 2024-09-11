@@ -17,7 +17,7 @@ function TimelinePosts({ commentsPopupHandler, comingFrom, postsToGet }) {
       let url = "";
 
       if (comingFrom === 'HomePage') {
-        url = "/api/posts";
+        url = "/api/posts/get-tailored-posts";
       } 
       else {
         postDispatch({ type: "EMPTY_POSTS" });

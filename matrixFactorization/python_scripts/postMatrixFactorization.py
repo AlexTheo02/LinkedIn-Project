@@ -1,79 +1,154 @@
 import sys
+import os
 import json
-import matrixFactorization as mf
-import generalFunctions as gf
+import matrixFactorization
+import numpy as np
+from dotenv import load_dotenv
+load_dotenv()
 
-if len(sys.argv) != 3:
-    print("Error: arguments not provided correctly")
-    exit(0)
+users_path = os.getenv("USERS_PATH")
+posts_path = os.getenv("POSTS_PATH")
+post_recommendations_path = os.getenv("POSTS_REC_PATH")
+trained_model_filename = os.getenv("TRAINED_POSTS_MF_MODEL")
 
-# Parse json strings containing user and post data
-users_list = json.loads(sys.argv[1])
-posts_list = json.loads(sys.argv[2])
+# Open the json files and read data
+with open(users_path, 'r') as users_file:
+    users_list = json.load(users_file)
 
-# ------------------------------------------ DUMMY DATA
-# users_list = [
-#     {"_id": "user1", "connectedUsers": ["user2", "user4", "user6"], "postInteractions": ["post1", "post4", "post5"]},
-#     {"_id": "user2", "connectedUsers": ["user1", "user3"], "postInteractions": ["post3", "post4"]},
-#     {"_id": "user3", "connectedUsers": ["user2", "user5", "user6"], "postInteractions": ["post2", "post4", "post5"]},
-#     {"_id": "user4", "connectedUsers": ["user1", "user5"], "postInteractions": ["post1", "post2", "post3"]},
-#     {"_id": "user5", "connectedUsers": ["user3", "user4"], "postInteractions": ["post2", "post5"]},
-#     {"_id": "user6", "connectedUsers": ["user1", "user3"], "postInteractions": ["post1", "post3"]}
-# ]
+with open(posts_path, 'r') as posts_file:
+    posts_list = json.load(posts_file)
 
-# posts_list = [{"_id": "post1"}, {"_id": "post2"}, {"_id": "post3"}, {"_id": "post4"}, {"_id": "post5"}]
+n_users = len(users_list)
+n_posts = len(posts_list)
 
-# Relations array
-# R_dict = {
-#     "user1": {"post1": 1, "post2": 0, "post3": 0, "post4": 1, "post5": 1},
-#     "user2": {"post1": 0, "post2": 0, "post3": 1, "post4": 1, "post5": 0},
-#     "user3": {"post1": 0, "post2": 1, "post3": 0, "post4": 1, "post5": 1},
-#     "user4": {"post1": 1, "post2": 1, "post3": 1, "post4": 1, "post5": 0}
-# }
-# print(R_dict)
+R = [0 for _ in range(n_users)]
+post_to_index = {}
+index_to_post = {}
 
-# # Create Relations dictionary
-R_dict = {}
-for user in users_list:
-    user_dict = {}
-    for post in posts_list:
-        if post['_id'] in user['postInteractions']:
-            user_dict[post['_id']] = 1
+user_to_index = {}
+index_to_user = {}
+
+# Create relationships array
+for i,user in enumerate(users_list):
+    user_post_interactions = [0 for _ in range(n_posts)]
+    
+    # Update user dictionaries
+    user_to_index[user['_id']] = i
+    index_to_user[i] = user
+    user_comment_ids = user['publishedComments']
+
+    for j,post in enumerate(posts_list):
+        # If user has liked/commented on any post
+        if user['interactionSource']:
+            # Count how many comments user has published to this specific post
+            post_comment_ids = post['commentsList']
+            n_comments = sum(1 for comment_id in user_comment_ids if comment_id in post_comment_ids)
+            
+            liked = 1.5 if post['_id'] in user['likedPosts'] else 0
+            comments_value = 2 * n_comments
+            interaction_value = liked + comments_value
+            user_post_interactions[j] = interaction_value
         else:
-            user_dict[post['_id']] = 0
-    R_dict[user['_id']] = user_dict
+            user_post_interactions[j] = 1 if post['_id'] in user['postInteractions'] else 0
+        
+        # Update post dictionaries
+        post_to_index[post['_id']] = j
+        index_to_post[j] = post
 
-# Map each userId to its corresponding index
-user_mapping = {user: index for index, user in enumerate(R_dict.keys())}
+    R[i] = user_post_interactions
 
-# Map each postId to its corresponding index
-post_mapping = {post: index for index, post in enumerate(next(iter(R_dict.values())).keys())}
+# Modify R to include network influence
+R_net = [row[:] for row in R]
+net_param = 0.3
+visited_users = []
 
-# Create the array based on the mapped indexes
-R = [[R_dict[user][post] for post in post_mapping] for user in user_mapping]
+for i in range(len(R)):
+    u1 = index_to_user[i]
+    for j in range(len(R)):
+        # Skip self
+        if i == j:
+            continue
+        u2 = index_to_user[j]
+        # Users are connected
+        if (u2['_id'] in u1['network'] and u2['_id'] not in visited_users):
+            # For each post, update values on connected users
+            for k in range(len(R[j])):
+                R_net[i][k] += net_param * R[j][k]
+                R_net[j][k] += net_param * R[i][k]
+    visited_users.append(u1["_id"])
 
-flipped_post_mapping = {value: key for key, value in post_mapping.items()}
+# ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
 
-mf = mf.MF(R=R, K=5) # number of latent features K = 5
+# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=40, lr=0.01, reg_param=0.0001, n_iter=1000, tol=1e-6)
 
-# Train the global model
+# mf.train(no_output=False)
+# mf.save(trained_model_filename)
+
+# mf = mf.load(trained_model_filename)
+
+
+# ----------------------------------------------------------------------------------------------- Matrix Factorization
+mf = matrixFactorization.MF(R=R_net, K=60, lr=0.001, n_iter = 1000, tol=1e-4, reg_param=0.00001)
 mf.train()
+mf.save(trained_model_filename)
 
-# Get the suggested posts for each user
-userPostSuggestions = {}
+# mf = mf.load(trained_model_filename)
 
-for user in users_list:
-    # Get id and network from user's data
-    user_id = user['_id']
-    user_network = user['network']
-    post_interactions = user['postInteractions']
+# ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
 
-    # Make prediction
-    postSuggestions = mf.predict(user_id, user_network, itemInteractions = post_interactions, userMappings = user_mapping, itemMapping = post_mapping, flippedItemMapping = flipped_post_mapping)
-    # Assign suggested posts to user
-    userPostSuggestions[user_id] = postSuggestions
+# Create Adjacency matrix
+# A = [0 for _ in range(n_users)]
+# for i, user in enumerate(users_list):
+#     user_adjacency = [0 for _ in range(n_users)]
+
+#     for j, connected_user in enumerate(users_list):
+#         user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
+    
+#     # Update user's adjacency
+#     A[i] = user_adjacency
 
 
-# Stringify to JSON format and return to nodejs server
-print(json.dumps(userPostSuggestions, separators=(',',':')))
+# mf = binaryMatrixFactorization.BMF(R, A, K=700, lr=0.005, reg_param=0.001, epochs=1000)
+# mf.train()
+
+
+# ----------------------------------------------------------------------------------------------- Upload to files and notify server
+
+# Send response to a file
+top_n = 40
+post_recommendations = {}
+for i,user in enumerate(users_list):
+    # Get recommended post indices
+    # print(f"Getting recommendations for user {i + 1} of {len(users_list)}")
+    post_indices = mf.recommend(user_to_index[user['_id']], top_n=top_n)
+
+    # Transform them into post ids
+    recommended_post_ids = []
+    for post_index in post_indices:
+        post_id = index_to_post[post_index]['_id']
+        recommended_post_ids.append(post_id)
+    post_recommendations[user['_id']] = recommended_post_ids
+
+# print(f"Writing recommendations to {post_recommendations_path}")
+# Write post_recommendations into output file and notify server (with print msg) to read
+with open(post_recommendations_path, 'w') as json_file:
+    json.dump(post_recommendations, json_file, indent=2)
+
+def average_list_length(mydict):
+    total_length = 0
+    num_lists = 0
+
+    for key, value in mydict.items():
+        total_length += len(value)
+        num_lists += 1
+
+    if num_lists == 0:
+        return 0  # In case the dictionary is empty
+
+    return total_length / num_lists
+
+# print(average_list_length(post_recommendations))
+
+sys.stdout.flush()
+print("MF DONE")
 sys.stdout.flush()

@@ -13,10 +13,6 @@ jobs_path = os.getenv("JOBS_PATH")
 job_recommendations_path = os.getenv("JOBS_REC_PATH")
 trained_model_filename = os.getenv("TRAINED_JOBS_MODEL")
 
-# users_path = "../Data/users.json"
-# jobs_path = "../Data/jobs.json"
-# job_recommendations_path = "../Recommendations/jobRecommendations.json"
-
 # Open the json files and read data
 with open(users_path, 'r') as users_file:
     users_list = json.load(users_file)

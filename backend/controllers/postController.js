@@ -1,6 +1,7 @@
 const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
 const mongoose = require("mongoose")
 const Post = require("../models/postModel.js")
+const User = require("../models/userModel.js")
 const Comment = require("../models/commentModel.js")
 
 // Get all posts
@@ -156,18 +157,82 @@ const getTailoredPosts = async (request, response) => {
         return response.status(404).json({error: "User not found"})
     }
 
-    // Fetch all posts from user's network
-    const networkPosts = await Job.find({author: {$in: user.network}}).sort({updatedAt: -1})
+    try {
+        // Own posts
+        const userPostIds = user.publishedPosts;
+        
+        // All posts from user's network
+        const networkPosts = await Post.find({author: {$in: user.network}}).sort({createdAt: -1});
 
-    if (!networkPosts) {
-        return response.status(404).json({error: "Network posts not found"})
+        if (!networkPosts){
+            return response.status(404).json({error: "Network posts not found"})
+        }
+        
+        // All posts anyone from the network has liked
+        const networkLikedPosts = await Post.find({likesList: {$in: user.network}}).sort({createdAt: -1});
+        
+        if (!networkLikedPosts){
+            return response.status(404).json({error: "Network Liked Posts posts not found"})
+        }
+
+        // Matrix Factorization suggested posts
+        let suggestedPostIds = user.postSuggestions;
+
+        // Combine the lists
+        const networkPostIds = networkPosts.map(post => post._id)
+        const primaryPostIds = [...userPostIds, ...networkPostIds]
+
+        const networkLikedPostIds = networkLikedPosts.map(post => post._id)
+                
+        // Remove already existing posts in network liked posts from suggested posts
+        suggestedPostIds = suggestedPostIds.filter(postId => !networkLikedPostIds.find(pid => pid.toString() === postId.toString()))
+        
+        let secondaryPostIds = [...suggestedPostIds, ...networkLikedPostIds]
+        
+        // Remove already existing posts in primary posts from secondary posts
+        secondaryPostIds = secondaryPostIds.filter(postId => !primaryPostIds.find(pid => pid.toString() === postId.toString()))
+
+        // Fetch populated posts to return
+        const primaryPosts = await Post.find({_id: {$in: primaryPostIds}}).sort({createdAt: -1})
+        .populate("author","name surname profilePicture")
+        .populate({
+            path: "commentsList",
+            populate: {
+                path: "author",
+                select: "name surname profilePicture"
+            }
+        });
+
+        if (!primaryPosts){
+            return response.status(404).json({error: "Primary posts not found"})
+        }
+
+        const secondaryPosts = await Post.find({_id: {$in: secondaryPostIds}}).sort({createdAt: -1})
+        .populate("author","name surname profilePicture")
+        .populate({
+            path: "commentsList",
+            populate: {
+                path: "author",
+                select: "name surname profilePicture"
+            }
+        });
+
+        if (!secondaryPosts){
+            return response.status(404).json({error: "Secondary posts not found"})
+        }
+
+        // Deep Merge the lists
+        const timelinePosts = [];
+        primaryPosts.forEach(post => timelinePosts.push(post))
+
+        secondaryPosts.forEach(post => timelinePosts.push(post))
+
+        response.status(200).json(timelinePosts);
+
+    } catch (error) {
+        console.error("Error:", error.message)
+        response.status(400).json({error: "Internal Server Error"})
     }
-
-    const suggestedPostIds = user.postSuggestions
-
-    // 3 posts 1 suggested post??
-
-    // Figure out logic for post display and create the list to return to frontend
 }
 
 module.exports = {
