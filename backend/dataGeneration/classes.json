@@ -7,9 +7,9 @@
             "Game Developer", "Cloud Engineer", "Network Engineer", "UX/UI Designer", "IT Project Manager"
         ],
         "Skills": [
-            "C++", "JavaScript", "Machine Learning", "Python", "Java", "SQL", "Cybersecurity",
-            "Data Analysis", "Cloud Computing", "DevOps", "AI Development", "Software Testing",
-            "Mobile Development", "Game Design", "Network Configuration", "UX/UI Design", "Project Management"
+            "C++", "JavaScript", "Machine Learning", "Python", "Java", "SQL", "Cloud Computing",
+            "DevOps", "AI Development", "Software Testing", "Mobile Development", "Game Design",
+            "Network Configuration", "UX/UI Design"
         ],
         "Companies": [
             "Apple", "Microsoft", "Google", "Amazon", "Facebook", "Netflix", "IBM", "Intel",
@@ -25,9 +25,8 @@
         ],
         "Skills": [
             "Legal Research", "Contract Drafting", "Litigation", "Negotiation", "Client Counseling",
-            "Legal Writing", "Regulatory Compliance", "Mediation", "Public Speaking", "Critical Thinking",
-            "Problem Solving", "Case Management", "Legal Analysis", "Document Review", "Court Procedures",
-            "Legal Ethics", "Dispute Resolution"
+            "Legal Writing", "Regulatory Compliance", "Mediation", "Legal Analysis", "Document Review",
+            "Court Procedures", "Legal Ethics", "Dispute Resolution", "Critical Thinking", "Public Speaking"
         ],
         "Companies": [
             "Baker McKenzie", "DLA Piper", "Norton Rose Fulbright", "Skadden", "Latham & Watkins",
@@ -45,8 +44,7 @@
         "Skills": [
             "Culinary Skills", "Food Safety", "Knife Skills", "Menu Planning", "Baking", "Grilling",
             "Sautéing", "Pastry Making", "Time Management", "Sanitation", "Recipe Development",
-            "Nutrition Knowledge", "Inventory Management", "Plating", "Food Presentation", "Cost Control",
-            "Team Leadership"
+            "Nutrition Knowledge", "Inventory Management", "Plating", "Food Presentation", "Cost Control"
         ],
         "Companies": [
             "Gordon Ramsay Group", "The French Laundry", "Nobu", "Le Bernardin", "Momofuku",
@@ -82,10 +80,9 @@
             "Scout", "Nutritionist", "Sports Photographer"
         ],
         "Skills": [
-            "Athletic Training", "Coaching", "Sports Management", "Sports Analysis", "Journalism",
-            "Physical Therapy", "Sports Psychology", "Conditioning", "Event Planning", "Marketing",
-            "Talent Scouting", "Nutrition", "Photography", "Public Relations", "Team Leadership",
-            "Fitness Training", "Game Strategy"
+            "Athletic Training", "Coaching", "Sports Management", "Sports Analysis",
+            "Physical Therapy", "Sports Psychology", "Conditioning", "Event Planning",
+            "Talent Scouting", "Fitness Training", "Game Strategy"
         ],
         "Companies": [
             "ESPN", "Nike", "Adidas", "Under Armour", "Puma", "Gatorade", "NBC Sports", "Fox Sports",
@@ -102,7 +99,7 @@
             "Event Security Coordinator"
         ],
         "Skills": [
-            "Surveillance", "Cybersecurity", "Risk Assessment", "Emergency Response", "Physical Security",
+            "Surveillance", "Risk Assessment", "Emergency Response", "Physical Security",
             "Loss Prevention", "Security Analysis", "Investigations", "Conflict Resolution",
             "Crisis Management", "Firearms Training", "Martial Arts", "First Aid", "Network Security",
             "Alarm Systems", "Incident Reporting", "Crowd Control"
@@ -118,13 +115,13 @@
             "Copywriter", "Art Director", "Account Manager", "Media Planner", "Creative Director",
             "Brand Manager", "Market Research Analyst", "Social Media Manager", "Content Strategist",
             "Graphic Designer", "SEO Specialist", "PPC Specialist", "Advertising Sales Agent",
-            "Public Relations Specialist", "Event Coordinator", "Marketing Manager", "Client Services Manager"
+            "Public Relations Specialist", "Event Coordinator", "Marketing Manager", "Client Services Manager",
+            "Marketing"
         ],
         "Skills": [
             "Copywriting", "Graphic Design", "Brand Management", "Market Research", "Social Media",
-            "Content Strategy", "SEO", "PPC Campaigns", "Sales", "Public Relations", "Event Planning",
-            "Client Relations", "Creative Thinking", "Project Management", "Data Analysis", "Communication",
-            "Negotiation"
+            "Content Strategy", "SEO", "PPC Campaigns", "Sales", "Public Relations", "Creative Thinking",
+            "Communication", "Negotiation"
         ],
         "Companies": [
             "Ogilvy", "Wieden+Kennedy", "BBDO", "Leo Burnett", "McCann", "Saatchi & Saatchi",
@@ -141,15 +138,15 @@
             "Mining Engineer"
         ],
         "Skills": [
-            "CAD Design", "Project Management", "Problem Solving", "Analytical Skills", "Technical Writing",
+            "CAD Design", "Problem Solving", "Analytical Skills", "Technical Writing",
             "Mathematics", "Physics", "Chemistry", "Programming", "System Design", "Material Science",
             "Thermodynamics", "Fluid Mechanics", "Electrical Circuit Design", "Mechanics", "Structural Analysis",
             "Quality Control"
         ],
         "Companies": [
             "Siemens", "General Electric", "Lockheed Martin", "Boeing", "Shell", "ExxonMobil", "Jacobs",
-            "Fluor", "ABB", "Schlumberger", "Arup", "WSP Global", "AECOM", "Tetra Tech", "Honeywell",
-            "Raytheon", "Bechtel"
+            "Fluor", "Bechtel", "AECOM", "ABB", "Bosch", "Schneider Electric", "Honeywell", "Rolls-Royce",
+            "Airbus", "Ford", "Tesla"
         ]
     },
     "Music": {
@@ -160,7 +157,7 @@
             "Music Arranger"
         ],
         "Skills": [
-            "Music Composition", "Audio Engineering", "Sound Mixing", "Music Theory", "Instrument Proficiency",
+            "Music Composition", "Sound Mixing", "Music Theory", "Instrument Proficiency",
             "Vocal Techniques", "Music Production", "Arranging", "Conducting", "Songwriting",
             "Recording Techniques", "Music Editing", "Music Notation", "Music Therapy", "Live Sound",
             "Studio Management", "Performance Skills"
@@ -174,23 +171,21 @@
     },
     "Education": {
         "WorkingPositions": [
-            "Primary School Teacher", "Secondary School Teacher", "University Professor", "Special Education Teacher",
-            "Education Consultant", "School Counselor", "Librarian", "Curriculum Developer", "ESL Teacher",
-            "Instructional Coordinator", "Education Administrator", "Teacher Assistant", "Kindergarten Teacher",
-            "Tutor", "Lecturer", "Academic Advisor", "Training and Development Specialist"
+            "Teacher", "Professor", "School Administrator", "Curriculum Developer",
+            "Education Consultant", "Special Education Teacher", "Guidance Counselor",
+            "Librarian", "Substitute Teacher", "Instructional Coordinator", "Training Specialist",
+            "Education Researcher", "School Psychologist", "Coach", "Dean", "Admissions Officer",
+            "Tutor"
         ],
         "Skills": [
-            "Lesson Planning", "Classroom Management", "Curriculum Development", "Student Assessment",
-            "Instructional Design", "Educational Technology", "Differentiated Instruction",
-            "Special Education Techniques", "Counseling", "Educational Research", "Child Development",
-            "Communication Skills", "Critical Thinking", "Problem Solving", "Collaboration",
-            "Mentoring", "Professional Development"
+            "Lesson Planning", "Classroom Management", "Student Assessment", "Curriculum Development",
+            "Differentiated Instruction", "Education Technology", "Public Speaking", "Communication",
+            "Critical Thinking", "Educational Research", "Professional Development", "Instructional Design"
         ],
         "Companies": [
-            "Pearson", "McGraw-Hill Education", "Houghton Mifflin Harcourt", "Scholastic",
-            "Kaplan", "The Princeton Review", "Cambridge University Press", "Oxford University Press",
-            "Blackboard", "Coursera", "Edmodo", "Khan Academy", "Edmentum", "Discovery Education",
-            "Hobsons", "Renaissance Learning", "Wiley"
+            "Teach for America", "Pearson", "McGraw-Hill Education", "Scholastic", "Kaplan", "Houghton Mifflin Harcourt",
+            "Cambridge University Press", "Oxford University Press", "K12 Inc.", "Edmentum", "Edmodo", "Coursera", "Khan Academy",
+            "Udacity", "EdX", "Chegg", "Blackboard"
         ]
     }
 }

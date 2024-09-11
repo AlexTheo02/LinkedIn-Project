@@ -13,8 +13,9 @@ async function updateRecommendations({itemRecommendations, isJobs}){
     console.log(userIds.length)
     
     // For each user, find user and update the recommendedJobs list or recommendedPosts list
+    let counter = 1
+    let max_users = userIds.length
     for (const userId of userIds) {
-
         try {
             // Get user object
             const user = await User.findById(userId);
@@ -25,16 +26,16 @@ async function updateRecommendations({itemRecommendations, isJobs}){
             
             // Update recommendation list for jobs/items on user
             if (isJobs) {
-                user.recommendedJobs = itemRecommendations[userId]
+                user.jobSuggestions = itemRecommendations[userId]
             } else {
-                user.recommendedPosts = itemRecommendations[userId]
+                user.postSuggestions = itemRecommendations[userId]
             }
             
-            console.log(`updating user ${userId}'s suggestions`)
+            // console.log(`updating user ${userId}'s suggestions`)
             // Save the user
             await user.save();
-            console.log(`successfully updated user ${userId}'s suggestions`)
-            
+            console.log(`successfully updated ${counter} / ${max_users} suggestions`);
+            counter++;
         } catch (error) {
             console.error("Error:", error.message)
         }
@@ -129,7 +130,7 @@ const matrixFactorization = async (path) => {
         }
     })
         
-        // Error logging
+    // Error logging
     pythonProcess.stderr.on("data", (error) => {
         console.log(`PYTHON ERROR:\n${error.toString()}`);
     })
@@ -137,5 +138,5 @@ const matrixFactorization = async (path) => {
 
 
 module.exports = {
-    matrixFactorization,
+    matrixFactorization
 }

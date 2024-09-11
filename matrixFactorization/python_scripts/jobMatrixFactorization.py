@@ -51,7 +51,6 @@ for i,user in enumerate(users_list):
 
     R[i] = user_job_interactions
 
-# ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
 # Modify R to include network influence
 R_net = [row[:] for row in R]
 net_param = 0.5
@@ -72,54 +71,22 @@ for i in range(len(R)):
                 R_net[j][k] += net_param * R[i][k]
     visited_users.append(u1["_id"])
 
-# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=100, lr=0.001, n_iter=1000, tol=1e-7)
+# ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
+
+# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=40, lr=0.0001, n_iter=1000, tol=1e-4)
 
 # mf.train(no_output=False)
 # mf.save(trained_model_filename)
 
-
-
-
 # mf = mf.load(trained_model_filename)
-# selected_user = 666 
-# recommended_job_indices = mf.recommend(selected_user)
-
-# print(len(recommended_job_indices))
-# print(recommended_job_indices)
-
-# recommended_jobs = []
-# for job_index in recommended_job_indices:
-#     recommended_jobs.append((index_to_job[job_index]['_id'], index_to_job[job_index]['title']))
-# print(f"Recommended jobs for user {index_to_user[selected_user]["_id"]}:")
-# for job in recommended_jobs:
-#     print(job)
-
-
-
-
 
 
 # ----------------------------------------------------------------------------------------------- Matrix Factorization
-# mf = matrixFactorization.MF(R=R, K=2, lr=0.0001, n_iter = 1000, tol=1e-4, reg_param=0.0001)
+# mf = matrixFactorization.MF(R=R_net, K=40, lr=0.001, n_iter = 1000, tol=1e-4, reg_param=0.001)
 # mf.train()
 # mf.save(os.getenv("TRAINED_JOBS_MF_MODEL"))
 
 # mf = mf.load(os.getenv("TRAINED_JOBS_MF_MODEL"))
-
-
-
-# print(len(mf.recommend(64)))
-
-
-# selected_user = 5
-
-# user = users_list[selected_user]
-# recommended_job_indices = mf.recommend(user, user_to_index, top_n=10)
-
-# recommended_jobs = []
-# for job_index in recommended_job_indices:
-#     recommended_jobs.append(index_to_job[job_index])
-# print(f"Recommended jobs for user {index_to_user[selected_user]}: {recommended_jobs}")
 
 # ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
 
@@ -135,11 +102,11 @@ for i, user in enumerate(users_list):
     A[i] = user_adjacency
 
 
-mf = binaryMatrixFactorization.BMF(R, A, K=50, lr=0.01, reg_param=0.001, epochs=1000)
+mf = binaryMatrixFactorization.BMF(R, A, K=100, lr=0.005, reg_param=0.001, epochs=1000)
 mf.train()
 
 
-
+# ----------------------------------------------------------------------------------------------- Upload to files and notify server
 
 # Send response to a file
 job_recommendations = {}

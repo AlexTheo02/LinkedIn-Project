@@ -89,34 +89,34 @@ class MF:
         reg = self.reg_param * (np.sum(np.square(self.U)) + np.sum(np.square(self.V)))
         return mse + reg
 
-    # def recommend(self, user_index):
+    def recommend(self, user_index):
 
-    #     full_matrix = self.predict_all()
-    #     user_row = full_matrix[user_index]
-    #     item_recommendations = []
-    #     for i,item in enumerate(user_row):
-    #         if item >= 0.85:
-    #             item_recommendations.append((i,item))
+        full_matrix = self.predict_all()
+        user_row = full_matrix[user_index]
+        item_recommendations = []
+        for i,item in enumerate(user_row):
+            if item >= 0.85:
+                item_recommendations.append((i,item))
         
-    #     # Sort based on item and return indices
-    #     item_recommendations.sort(key=lambda x: x[1], reverse=True)
-    #     # print(item_recommendations) # print scores
-    #     # Return indices, sorted
-    #     returned_list = [a for a,b in item_recommendations]
-    #     return returned_list
+        # Sort based on item and return indices
+        item_recommendations.sort(key=lambda x: x[1], reverse=True)
+        # print(item_recommendations) # print scores
+        # Return indices, sorted
+        returned_list = [a for a,b in item_recommendations]
+        return returned_list
     
-    def recommend(self, user_id, top_n=10):
-        """ Recommends jobs to a user based on his interactions and his network's interactions """
-        predictions = self.predict_all()[user_id, :]
+    # def recommend(self, user_id, top_n=10):
+        # """ Recommends jobs to a user based on his interactions and his network's interactions """
+        # predictions = self.predict_all()[user_id, :]
         
-        # Εξαίρεση των αγγελιών που έχει ήδη δει ο χρήστης (seen jobs)
-        seen_jobs = self.R[user_id, :] > 0  # Boolean array (True για τα jobs που έχει δει)
-        predictions[seen_jobs] = predictions[seen_jobs] - 5  # Αφαιρούμε τις seen jobs βάζοντας τις προβλέψεις στο -άπειρο
+        # # Εξαίρεση των αγγελιών που έχει ήδη δει ο χρήστης (seen jobs)
+        # seen_jobs = self.R[user_id, :] > 0  # Boolean array (True για τα jobs που έχει δει)
+        # predictions[seen_jobs] = predictions[seen_jobs] - 5  # Αφαιρούμε τις seen jobs βάζοντας τις προβλέψεις στο -άπειρο
         
-        # Ταξινόμηση των jobs βάσει των προβλέψεων (φθίνουσα σειρά)
-        job_ids = np.argsort(-predictions)
+        # # Ταξινόμηση των jobs βάσει των προβλέψεων (φθίνουσα σειρά)
+        # job_ids = np.argsort(-predictions)
         
-        return job_ids[:top_n]
+        # return job_ids[:top_n]
 
 
         # # Trim self.U to only contain user's connected users

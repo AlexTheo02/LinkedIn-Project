@@ -11,6 +11,20 @@ let jobs = [];
 let posts = [];
 let comments = [];
 
+// User ids of users in each class
+userClasses = {
+    ComputerScience: [],
+    Law: [],
+    Kitchen: [],
+    Medical: [],
+    Sports: [],
+    Security: [],
+    Advertising: [],
+    Engineering: [],
+    Music: [],
+    Education: []
+}
+
 const n_users = 1000;
 const n_jobs = 800;
 const n_posts = 1000;
@@ -133,8 +147,11 @@ async function generateData() {
             // Add to user's skills
             skills.push(skill)
         }
-        
-        users.push(userGeneration.createUser(gender, url, workingPosition, employmentOrganization, skills));
+
+        const key = Object.keys(classes).find(key => classes[key] === selectedClass);
+
+        users.push(userGeneration.createUser(userClasses, key, gender, url, workingPosition, employmentOrganization, skills));
+
         console.log(`USER ${i+1} CREATED`)
     }
     console.log("USERS DONE\n\n")
@@ -144,7 +161,8 @@ async function generateData() {
     let network_to_push = {}
     // User network
     users.forEach(user => {
-        userGeneration.configureNetwork(user, network_to_push, users)
+        userGeneration.configureNetwork(user, userClasses, network_to_push, users)
+        return
     });
     users.forEach(user => {
         userGeneration.networkToPush(user, network_to_push)

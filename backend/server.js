@@ -38,15 +38,16 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Connection to database successful")
         // Listen for requests (only when connection to the database is established first)
+
         app.listen(process.env.PORTNUM, () => {
             console.log("Listening on port",process.env.PORTNUM)
         })
 
         // Matrix factorization logic
-        matrixFactorization(process.env.JOB_MF_PATH)
+        // matrixFactorization(process.env.JOB_MF_PATH)
         // matrixFactorization(process.env.POST_MF_PATH)
 
-        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 600000 ) // 10 minutes
+        setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 600000 ) // 10 minutes
         // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 600000 ) // 10 minutes
 
     })

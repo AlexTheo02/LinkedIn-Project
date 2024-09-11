@@ -86,7 +86,7 @@ class SVD_MF:
         item_recommendations.sort(key=lambda x: x[1], reverse=True)
         # print(item_recommendations) # print scores
         # Return indices, sorted
-        returned_list = [a for a,b in item_recommendations]
+        returned_list = [a for a,_ in item_recommendations]
         return returned_list
     
     def save(self, path):
