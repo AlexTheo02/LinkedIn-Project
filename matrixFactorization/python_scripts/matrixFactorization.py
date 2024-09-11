@@ -8,7 +8,7 @@ class MF:
         V: represents the item's characteristics
     """
     # Constructor
-    def __init__(self, R, K=60, lr=0.001, n_iter=1000, tol=0.005, reg_param=0.1):
+    def __init__(self, R, K=60, lr=0.001, n_iter=1000, tol=0.005, reg_param=0.001):
         self.R = np.array(R) # Relations array (user-item relations)
         self.n_users = len(R)
         self.n_items = len(R[0])
@@ -43,9 +43,6 @@ class MF:
         dv = - 2 * (error * self.U[user_index] - self.reg_param * self.V[item_index])
         return du, dv
 
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-
     # Training function
     def train(self):
         prev_cost = 0
@@ -64,9 +61,6 @@ class MF:
 
                     r_hat = self.predict(i,j)
 
-                    # Calculate error for current element
-                    error = self.calculate_error(r, r_hat)
-
                     # Calculate gradients
                     dU,dV = self.calculate_gradients(r, r_hat, i, j)
 
@@ -76,6 +70,7 @@ class MF:
             if abs(prev_cost - cost) < self.tol:
                 break
             prev_cost = cost
+            self.lr = self.lr * 0.99 # small learning rate decay
             
 
     def predict_all(self):
@@ -89,13 +84,13 @@ class MF:
         reg = self.reg_param * (np.sum(np.square(self.U)) + np.sum(np.square(self.V)))
         return mse + reg
 
-    def recommend(self, user_index):
+    def recommend(self, user_index, top_n):
 
         full_matrix = self.predict_all()
         user_row = full_matrix[user_index]
         item_recommendations = []
         for i,item in enumerate(user_row):
-            if item >= 0.85:
+            if item >= 1:
                 item_recommendations.append((i,item))
         
         # Sort based on item and return indices
@@ -103,39 +98,8 @@ class MF:
         # print(item_recommendations) # print scores
         # Return indices, sorted
         returned_list = [a for a,b in item_recommendations]
-        return returned_list
+        return returned_list[:top_n]
     
-    # def recommend(self, user_id, top_n=10):
-        # """ Recommends jobs to a user based on his interactions and his network's interactions """
-        # predictions = self.predict_all()[user_id, :]
-        
-        # # Εξαίρεση των αγγελιών που έχει ήδη δει ο χρήστης (seen jobs)
-        # seen_jobs = self.R[user_id, :] > 0  # Boolean array (True για τα jobs που έχει δει)
-        # predictions[seen_jobs] = predictions[seen_jobs] - 5  # Αφαιρούμε τις seen jobs βάζοντας τις προβλέψεις στο -άπειρο
-        
-        # # Ταξινόμηση των jobs βάσει των προβλέψεων (φθίνουσα σειρά)
-        # job_ids = np.argsort(-predictions)
-        
-        # return job_ids[:top_n]
-
-
-        # # Trim self.U to only contain user's connected users
-        # connected_indices = [user_to_index[user['_id']]]
-        # for connected_user in user['network']:
-        #     connected_indices.append(user_to_index[connected_user])
-        
-        # trimmedU = []
-        # for i,features in enumerate(self.U):
-        #     if i in connected_indices:
-        #         trimmedU.append(features)
-        
-        # # Combine values for trimmedU into a single feature array
-        # combinedU = np.mean(trimmedU, axis=0)
-        
-        # # make prediction
-        # job_suggestions = np.dot(combinedU,self.V.T)
-        # job_suggestions = np.argsort(-job_suggestions)
-        # return job_suggestions[:top_n]
 
     def save(self, path):
         with open(path + ".pkl", "wb") as file:

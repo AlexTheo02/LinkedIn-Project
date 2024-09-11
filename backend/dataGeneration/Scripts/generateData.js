@@ -1,3 +1,4 @@
+// Run from /backend> using node datGeneration/Scripts/dataGeneration.js
 const fs = require('fs');
 
 const classes = require('.././classes.json');

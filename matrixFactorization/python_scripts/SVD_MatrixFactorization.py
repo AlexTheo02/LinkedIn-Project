@@ -5,6 +5,7 @@ class SVD_MF:
 
     def __init__(self, R, K=40, lr=0.001, reg_param=0.001, n_iter=1000, tol=1e-4):
         self.R = np.array(R) # Relations array (user-item relations)
+        self.R = self._minmax_normalize(self.R)
         self.n_users, self.n_items = self.R.shape
         self.K = K # Number of factors
         self.lr = lr # Learning rate
@@ -13,17 +14,27 @@ class SVD_MF:
         self.tol = tol
         np.random.seed(404)
 
-        # SVD initialization (CHECK INITIALIZATION AND OPTIMIZE ERROR AND TRAINING FUNCTIONS)
+        # SVD initialization
 
-        # HERE,, ERROR HERE
         # self.U = np.random.normal(scale=1./self.K, size=(self.n_users,self.K))
         # self.V = np.random.normal(scale=1./self.K, size=(self.n_items,self.K))
         # self.Sigma = np.random.normal(scale=1./self.K, size=self.K)
+
+        # Xavier initialization
+        # limit = np.sqrt(6 / (self.n_users + self.K))
+        # self.U = np.random.uniform(-limit, limit, size=(self.n_users, self.K))
+        # self.V = np.random.uniform(-limit, limit, size=(self.n_items, self.K))
+        # self.Sigma = np.ones(self.K)
 
         self.U = np.random.uniform(low=0.1, high=1.0, size=(self.n_users, self.K))
         self.V = np.random.uniform(low=0.1, high=1.0, size=(self.n_items, self.K))
         self.Sigma = np.random.uniform(low=0.1, high=1.0, size=self.K)
 
+
+    def _minmax_normalize(self, R):
+        R_min = np.min(R[R > 0])  # Consider only non-zero interactions
+        R_max = np.max(R[R > 0])
+        return (R - R_min) / (R_max - R_min)
 
     def train(self, no_output=False):
         prev_error = float("inf")
@@ -40,16 +51,15 @@ class SVD_MF:
                             v_j_k = self.V[j,k]
 
                             # Gradient updates for U,Σ,V
-                            grad_U = eij * self.Sigma[k] * v_j_k - self.reg_param * u_i_k
+                            grad_U = eij * self.Sigma[k] * v_j_k - self.reg_param * v_j_k
                             grad_V = eij * self.Sigma[k] * u_i_k - self.reg_param * v_j_k
                             grad_Sigma = eij * u_i_k * v_j_k - self.reg_param * self.Sigma[k]
 
-                            self.U[i,k] += self.lr * (eij * self.Sigma[k] * v_j_k - self.reg_param * u_i_k)
+                            self.U[i,k] += self.lr * grad_U
 
-                            self.V[j,k] += self.lr * (eij * self.Sigma[k] * u_i_k - self.reg_param * v_j_k)
+                            self.V[j,k] += self.lr * grad_V
 
-                            self.Sigma[k] += self.lr * (eij * u_i_k * v_j_k - self.reg_param * self.Sigma[k])
-
+                            self.Sigma[k] += self.lr * grad_Sigma
             rmse = self._rmse()
             if not no_output:
                 print(f"Iteration: {iter+1}: Error: {rmse}")

@@ -202,47 +202,18 @@ const getTailoredJobs = async (request, response) => {
     // Fetch suggested job ids and keep the top 10
     const suggestedJobs = user.jobSuggestions
 
-    // Combine the lists
-    let tailoredJobs = []
-    let i=0, j=0;
-    while (i<skilledJobs.length || j < suggestedJobs.length){
-        // Add 3 skilled Jobs
-        for (let k=0; k<3 && i<skilledJobs.length; k++){
-            tailoredJobs = [skilledJobs[i]._id ,...tailoredJobs]
-            i++;
-        }
 
-        // Add 1 suggested Job
-        if (j < suggestedJobs.length) {
-            tailoredJobs = [suggestedJobs[j], ...tailoredJobs]
-            j++;
-        }
-    }
-
-    // Reorder the jobs (move applied jobs to the back)
-    let reorderedJobs = []
-    const appliedJobs = []
-    for (let i=0; i<tailoredJobs.length; i++){
-        const job = tailoredJobs[i]
-        if (user.appliedJobs.includes(job)){
-            appliedJobs.push(job)
-        }
-        else{
-            reorderedJobs.push(job)
-        }
-    }
-    reorderedJobs = [...reorderedJobs, ...appliedJobs]
-
-    // Populate the reorderedJobs job ids and return them
+    // REMOVE LATER
+    // Populate the suggestedJobs job ids and return them
     try {
         // Create a map for ids to indices
         const idIndexMap = {}
-        for (let i=0; i< reorderedJobs.length; i++){
-            idIndexMap[reorderedJobs[i]] = i;
+        for (let i=0; i< suggestedJobs.length; i++){
+            idIndexMap[suggestedJobs[i]] = i;
         }
         
-        const jobs = await Job.find({_id: {$in: reorderedJobs}});
-        // Sort the jobs to appear in the same order as reorderedJobs list
+        const jobs = await Job.find({_id: {$in: suggestedJobs}});
+        // Sort the jobs to appear in the same order as suggestedJobs list
         jobs.sort((a,b) => {
             return idIndexMap[a._id.toString()] - idIndexMap[b._id.toString()]
         })
@@ -250,6 +221,63 @@ const getTailoredJobs = async (request, response) => {
     } catch (error) {
         return response.status(400).json({error: "Internal server error"})
     }
+
+
+
+
+
+
+
+
+
+    // // Combine the lists
+    // let tailoredJobs = []
+    // let i=0, j=0;
+    // while (i<skilledJobs.length || j < suggestedJobs.length){
+    //     // Add 3 skilled Jobs
+    //     for (let k=0; k<3 && i<skilledJobs.length; k++){
+    //         tailoredJobs = [skilledJobs[i]._id ,...tailoredJobs]
+    //         i++;
+    //     }
+
+    //     // Add 1 suggested Job
+    //     if (j < suggestedJobs.length) {
+    //         tailoredJobs = [suggestedJobs[j], ...tailoredJobs]
+    //         j++;
+    //     }
+    // }
+
+    // // Reorder the jobs (move applied jobs to the back)
+    // let reorderedJobs = []
+    // const appliedJobs = []
+    // for (let i=0; i<tailoredJobs.length; i++){
+    //     const job = tailoredJobs[i]
+    //     if (user.appliedJobs.includes(job)){
+    //         appliedJobs.push(job)
+    //     }
+    //     else{
+    //         reorderedJobs.push(job)
+    //     }
+    // }
+    // reorderedJobs = [...reorderedJobs, ...appliedJobs]
+
+    // // Populate the reorderedJobs job ids and return them
+    // try {
+    //     // Create a map for ids to indices
+    //     const idIndexMap = {}
+    //     for (let i=0; i< reorderedJobs.length; i++){
+    //         idIndexMap[reorderedJobs[i]] = i;
+    //     }
+        
+    //     const jobs = await Job.find({_id: {$in: reorderedJobs}});
+    //     // Sort the jobs to appear in the same order as reorderedJobs list
+    //     jobs.sort((a,b) => {
+    //         return idIndexMap[a._id.toString()] - idIndexMap[b._id.toString()]
+    //     })
+    //     response.status(200).json(jobs)
+    // } catch (error) {
+    //     return response.status(400).json({error: "Internal server error"})
+    // }
 }
 
 module.exports = {

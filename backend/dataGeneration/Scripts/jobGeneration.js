@@ -34,7 +34,9 @@ const createJobInteractions = (user, jobs, getPossibleJobsTimeline) => {
         return
     }
 
-    for (let i = 0; i < Math.floor(Math.random() * possibleJobs.length * 0.4); i++) {
+    const n_jobInteractions = Math.max(Math.random() * possibleJobs.length * 0.7, possibleJobs.length * 0.2)
+
+    for (let i = 0; i < n_jobInteractions; i++) {
         const randomJobIndex = Math.floor(Math.random() * possibleJobs.length);
         const job = possibleJobs[randomJobIndex];
 

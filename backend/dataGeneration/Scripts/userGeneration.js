@@ -1,5 +1,3 @@
-// Run from /backend> using node datGeneration/Scripts/dataGeneration.js
-
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 const fs = require('fs');

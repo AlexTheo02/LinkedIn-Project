@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 
 class BMF:
-    def __init__(self, R, A, K, lr, reg_param, epochs, tol=0.005):
+    def __init__(self, R, A, K, lr, reg_param, epochs, tol=0.001):
         self.R = np.array(R) # Relations array (user-item relations)
         self.A = np.array(A)  # Adjacency matrix between users
         self.n_users, self.n_items = self.R.shape # users x jobs

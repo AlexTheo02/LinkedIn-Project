@@ -53,7 +53,7 @@ for i,user in enumerate(users_list):
 
 # Modify R to include network influence
 R_net = [row[:] for row in R]
-net_param = 0.5
+net_param = 0.3
 visited_users = []
 
 for i in range(len(R)):
@@ -73,7 +73,7 @@ for i in range(len(R)):
 
 # ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
 
-# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=40, lr=0.0001, n_iter=1000, tol=1e-4)
+# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=40, lr=0.01, reg_param=0.0001, n_iter=1000, tol=1e-6)
 
 # mf.train(no_output=False)
 # mf.save(trained_model_filename)
@@ -82,38 +82,39 @@ for i in range(len(R)):
 
 
 # ----------------------------------------------------------------------------------------------- Matrix Factorization
-# mf = matrixFactorization.MF(R=R_net, K=40, lr=0.001, n_iter = 1000, tol=1e-4, reg_param=0.001)
-# mf.train()
-# mf.save(os.getenv("TRAINED_JOBS_MF_MODEL"))
+mf = matrixFactorization.MF(R=R_net, K=60, lr=0.001, n_iter = 1000, tol=1e-4, reg_param=0.00001)
+mf.train()
+mf.save(os.getenv("TRAINED_JOBS_MF_MODEL"))
 
 # mf = mf.load(os.getenv("TRAINED_JOBS_MF_MODEL"))
 
 # ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
 
 # Create Adjacency matrix
-A = [0 for _ in range(n_users)]
-for i, user in enumerate(users_list):
-    user_adjacency = [0 for _ in range(n_users)]
+# A = [0 for _ in range(n_users)]
+# for i, user in enumerate(users_list):
+#     user_adjacency = [0 for _ in range(n_users)]
 
-    for j, connected_user in enumerate(users_list):
-        user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
+#     for j, connected_user in enumerate(users_list):
+#         user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
     
-    # Update user's adjacency
-    A[i] = user_adjacency
+#     # Update user's adjacency
+#     A[i] = user_adjacency
 
 
-mf = binaryMatrixFactorization.BMF(R, A, K=100, lr=0.005, reg_param=0.001, epochs=1000)
-mf.train()
+# mf = binaryMatrixFactorization.BMF(R, A, K=700, lr=0.005, reg_param=0.001, epochs=1000)
+# mf.train()
 
 
 # ----------------------------------------------------------------------------------------------- Upload to files and notify server
 
 # Send response to a file
+top_n = 40
 job_recommendations = {}
 for i,user in enumerate(users_list):
     # Get recommended job indices
     # print(f"Getting recommendations for user {i + 1} of {len(users_list)}")
-    job_indices = mf.recommend(user_to_index[user['_id']])
+    job_indices = mf.recommend(user_to_index[user['_id']], top_n=top_n)
 
     # Transform them into job ids
     recommended_job_ids = []
@@ -126,6 +127,21 @@ for i,user in enumerate(users_list):
 # Write job_recommendations into output file and notify server (with print msg) to read
 with open(job_recommendations_path, 'w') as json_file:
     json.dump(job_recommendations, json_file, indent=2)
+
+def average_list_length(mydict):
+    total_length = 0
+    num_lists = 0
+
+    for key, value in mydict.items():
+        total_length += len(value)
+        num_lists += 1
+
+    if num_lists == 0:
+        return 0  # In case the dictionary is empty
+
+    return total_length / num_lists
+
+# print(average_list_length(job_recommendations))
 
 sys.stdout.flush()
 print("MF DONE")
