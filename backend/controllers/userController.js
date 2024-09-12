@@ -5,16 +5,15 @@ const jwb = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const validator = require("validator")
 const { deleteFile, handleFileUpload } = require("../middleware/fileUpload.js")
-const js2xmlparser = require('js2xmlparser');
 const Comment = require("../models/commentModel.js")
 
 // Get all users
 const getAllUsers = async (request, response) => {
   
     const searchTerm = request.query.searchTerm
-    // Get all users, sorted by newest created
+    // Get all users
     if (!searchTerm){
-        const users = await User.find({}).sort({createdAt: -1});
+        const users = await User.find({});
         response.status(200).json(users);
     }
     else{

@@ -81,3 +81,18 @@
 .applied:hover{
     background-color: #a0250077;
 }
+
+.applicants_button{
+    padding: 7px 15px;
+    font-weight: bold;
+    font-size: medium;
+    border-radius: 10px;
+    border: 2.5px solid #269b7c;
+    background-color: #269b7c;
+    color: #fff;
+}
+
+.applicants_button:hover{
+    background-color: #269b7ca7;
+    cursor: pointer;
+}

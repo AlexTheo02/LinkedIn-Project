@@ -6,10 +6,14 @@ import JobListings from "./JobListings/JobListings";
 import CreateJobListing from './CreateJobListing/CreateJobListing'
 import { useJobsContext } from "../../Hooks/useJobsContext";
 import { useAuthContext } from "../../Hooks/useAuthContext";
+import ApplicantsPopup from "./ApplicantsPopup/ApplicantsPopup";
 
 function JobsPage(){
     const [showingMoreInfo, setShowingMoreInfo] = useState(false);
     const [isCreatingJob, setIsCreatingJob] = useState(false);
+    const [isApplicantsPopupOpen, setIsApplicantsPopupOpen] = useState(false);
+    const [applicants, setApplicants] = useState(null);
+
     const { dispatch } = useJobsContext();
     const { user } = useAuthContext();
 
@@ -50,6 +54,16 @@ function JobsPage(){
         setShowingMoreInfo(false);
     }
 
+    const handleApplicantsPopupClose = () => {
+        setApplicants(null)
+        setIsApplicantsPopupOpen(false);  // Closes the popup
+    };
+
+    const handleApplicantsClick = (applicants) => {
+        setApplicants(applicants)
+        setIsApplicantsPopupOpen(true);  // Closes the popup
+    };
+
     return(
         <div className={s.jobs_page}>
             <NavBar currentPage={"Jobs"}/>
@@ -77,12 +91,16 @@ function JobsPage(){
                     {isCreatingJob ?
                         <CreateJobListing jobListingsHandler={jobListingsHandler}/>
                         :
-                        <JobListings onClick={handleJobClick} />
+                        <JobListings onClick={handleJobClick} onApplicantsClick={handleApplicantsClick} />
                     }
                         
                 </div>
                 <JobInfo isExpanded={showingMoreInfo} onExit={exitJobInfo}/>
             </div>
+
+            {isApplicantsPopupOpen && (
+                <ApplicantsPopup applicantsData={applicants} onClose={handleApplicantsPopupClose} />
+            )}
         </div>
     );
 }

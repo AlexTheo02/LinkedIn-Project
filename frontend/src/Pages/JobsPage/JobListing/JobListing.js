@@ -1,16 +1,19 @@
 import s from "./JobListingStyle.module.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useJobsContext } from "../../../Hooks/useJobsContext.js";
 import { useApplication } from "../../../Hooks/useApplication.js";
+import {useAuthContext} from "../../../Hooks/useAuthContext.js";
+
 const {
     string_workingArrangmement,
     string_employmentType
 } = require("../functions.js")
 
-const JobListingFooter = ({ job }) => {
+const JobListingFooter = ({ job, onApplicantsClick }) => {
     const {appliedJobs} = useJobsContext();
     const {handleApplyClick, handleRemoveApplyClick, isLoading} = useApplication();
+    const {user} = useAuthContext()
 
     const isApplied = appliedJobs.includes(job._id)
 
@@ -21,23 +24,30 @@ const JobListingFooter = ({ job }) => {
 
             <div className={s.job_listing_interaction_bar}>
                 {/* Interaction Bar */}
-                <button
-                    disabled={isLoading}
-                    className={`${s.job_listing_button} ${isApplied ? s.applied : ""}`}
-                    onClick={isApplied ?
-                        (event) => {event.stopPropagation(); handleRemoveApplyClick({targetJob: job})}
-                    :
-                        (event) => {event.stopPropagation(); handleApplyClick({targetJob: job})}}
-                >
-                    {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply </>}
-                </button>
+                {job.author === user.userId
+                ?
+                    <button onClick={(event) => {event.stopPropagation(); onApplicantsClick(job.applicants)}} className={s.applicants_button}>   
+                        Applicants <FontAwesomeIcon icon={faUser}/>
+                    </button>
+                :
+                    <button
+                        disabled={isLoading}
+                        className={`${s.job_listing_button} ${isApplied ? s.applied : ""}`}
+                        onClick={isApplied ?
+                            (event) => {event.stopPropagation(); handleRemoveApplyClick({targetJob: job})}
+                        :
+                            (event) => {event.stopPropagation(); handleApplyClick({targetJob: job})}}
+                    >
+                        {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply </>}
+                    </button>
+                }
             </div>
 
         </div>
     )
 }
 
-const JobListing = ({job, onClick}) => {
+const JobListing = ({job, onClick, onApplicantsClick}) => {
 
     return (
         <div className={s.job_listing} onClick={() => onClick(job)}>
@@ -54,7 +64,7 @@ const JobListing = ({job, onClick}) => {
                 
             </div>
 
-            <JobListingFooter job={job}/>
+            <JobListingFooter job={job} onApplicantsClick={onApplicantsClick}/>
         </div>
     )
 }

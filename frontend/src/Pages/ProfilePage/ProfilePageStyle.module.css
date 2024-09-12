@@ -176,6 +176,7 @@
 .network {
     margin: 10px;
     width: 25%;
+    max-height: 87vh;
 }
 
 .network h2{

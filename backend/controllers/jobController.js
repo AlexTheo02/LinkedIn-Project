@@ -175,6 +175,8 @@ const getTailoredJobs = async (request, response) => {
         return response.status(404).json({error: "User not found"})
     }
 
+    const publishedJobsIds = user.publishedJobListings
+
     // Fetch all skilled jobs (jobs that user has at least one required skill)
     let skilledJobs = await Job.find({requirements: {$in: user.skills}})
 
@@ -202,8 +204,13 @@ const getTailoredJobs = async (request, response) => {
     // Fetch suggested job ids and keep the top 10
     let suggestedJobs = user.jobSuggestions
 
+    // Removing user's jobs from skilled and suggested jobs
+    skilledJobs = skilledJobs.filter(job => !publishedJobsIds.find(jobid => job._id.toString() === jobid.toString()))
+    suggestedJobs = suggestedJobs.filter(id => !publishedJobsIds.find(jobid => jobid.toString() === id.toString()))
+
     // Combine the lists
     let tailoredJobs = []
+
     let i=0, j=0;
     while (i<skilledJobs.length || j < suggestedJobs.length){
         // Add 3 skilled Jobs
@@ -233,7 +240,7 @@ const getTailoredJobs = async (request, response) => {
             reorderedJobs.push(job)
         }
     }
-    reorderedJobs = [...reorderedJobs, ...appliedJobs]
+    reorderedJobs = [...publishedJobsIds, ...reorderedJobs, ...appliedJobs]
 
     // Populate the reorderedJobs job ids and return them
     try {

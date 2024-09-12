@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
-import s from './MessagePopupStyle.module.css'; // Βεβαιωθείτε ότι το σωστό αρχείο CSS εισάγεται
+import s from './MessagePopupStyle.module.css';
 import { useAuthContext } from '../../../Hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useConversationContext } from '../../../Hooks/useConversationContext';

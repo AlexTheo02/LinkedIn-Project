@@ -4,7 +4,7 @@ import s from "./JobListingsStyle.module.css"
 import { useAuthContext } from "../../../Hooks/useAuthContext";
 import {useJobsContext} from "../../../Hooks/useJobsContext"
 
-function JobListings({onClick}) {
+function JobListings({onClick, onApplicantsClick}) {
     const {user} = useAuthContext()
     const {jobs, dispatch} = useJobsContext()
 
@@ -18,9 +18,8 @@ function JobListings({onClick}) {
                 }
             });
             const json = await response.json();
-            console.log(json)
+            
             if (response.ok){
-                // console.log("APPLIED JOBS",appliedJobsIds)
                 const appliedJobsIds = json
                     .filter(job => job.applicants.includes(user.userId))
                     .map(job => job._id);
@@ -40,7 +39,7 @@ function JobListings({onClick}) {
     return(
         <div className={s.jobs}>
             {jobs && jobs.map((job) => (
-                <JobListing key={job._id} job={job} onClick={() => { onClick(job) }}/>
+                <JobListing key={job._id} job={job} onClick={() => { onClick(job) }} onApplicantsClick={onApplicantsClick}/>
             ))}
         </div>
         

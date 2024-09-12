@@ -1,20 +1,20 @@
 const { faker } = require('@faker-js/faker');
 const mongoose = require('mongoose');
 
-// Λειτουργία για τη δημιουργία θέσεων εργασίας (jobs)
-function createComment(postId, authorId) {
+function createComment(post, authorId) {
+    postCreationDate = new Date(post.createdAt.$date.toString())
     return {
         _id: {
             $oid: new mongoose.Types.ObjectId()
         },
-        post: postId,
+        post: post._id,
         author: authorId,
         content: faker.lorem.sentence(),
         createdAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2000, 0, 1)})
+            $date: faker.date.between({from: postCreationDate, to: '2024-09-03'})
         },
         updatedAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2024, 0, 1)})
+            $date: faker.date.between({from: '2024-09-04', to: Date.now() })
         }
     };
 }

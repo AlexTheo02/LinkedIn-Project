@@ -1,4 +1,4 @@
-// Run from /backend> using node datGeneration/Scripts/dataGeneration.js
+// Run from /backend> using node dataGeneration/Scripts/generateData.js
 const fs = require('fs');
 
 const classes = require('.././classes.json');
@@ -258,7 +258,7 @@ async function generateData() {
         const post = posts.find(item => item._id.$oid.toString() === randomPostId)
 
         // Generate Comment
-        const comment = commentGeneration.createComment(post._id, author._id);
+        const comment = commentGeneration.createComment(post, author._id);
 
         // Add comment to both comments list and post's commentsList
         comments.push(comment)

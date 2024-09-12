@@ -16,10 +16,10 @@ function createPost(authorId, multimediaURL, multimediaType) {
         commentsList : [], // List of commentIds
         likesList : [], // List of userIds
         createdAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2000, 0, 1)})
+            $date: faker.date.between({from: '2024-01-01', to: '2024-09-01'})
         },
         updatedAt: {
-            $date: faker.date.past({years: 2, refDate: new Date(2024, 0, 1)})
+            $date: faker.date.between({from: '2024-09-02', to: Date.now() })
         }
     };
 }

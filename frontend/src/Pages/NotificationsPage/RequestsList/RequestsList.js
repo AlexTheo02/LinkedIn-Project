@@ -89,7 +89,7 @@ function RequestsList() {
             {showPopup && <RequestPopup user={acceptedUser} onClose={handlePopupClose} />} {/* Προσθήκη του Popup */}
         </div>
         ) : (
-            <span className={s.noRequestsMessage}>You haven't any link up requests.</span>
+            <span className={s.noRequestsMessage}>You don't have any link up request.</span>
         )
     );
 }
