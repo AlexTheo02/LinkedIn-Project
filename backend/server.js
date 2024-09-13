@@ -1,7 +1,12 @@
 require("dotenv").config()
 const fs = require('fs');
-
+const https = require('https')
 const express = require("express")
+
+const key = fs.readFileSync(process.env.SSL_KEY, 'utf8')
+const cert = fs.readFileSync(process.env.SSL_CERT, 'utf8')
+
+const credentials = { key, cert };
 
 // Routes
 const adminRoutes = require("./routes/admin.js")
@@ -39,16 +44,17 @@ mongoose.connect(process.env.MONGO_URI)
         console.log("Connection to database successful")
         // Listen for requests (only when connection to the database is established first)
 
-        app.listen(process.env.PORTNUM, () => {
+        const server = https.createServer(credentials, app)
+        server.listen(process.env.PORTNUM, () => {
             console.log("Listening on port",process.env.PORTNUM)
         })
 
         // Matrix factorization logic
-        matrixFactorization(process.env.JOB_MF_PATH)
-        matrixFactorization(process.env.POST_MF_PATH)
+        // matrixFactorization(process.env.JOB_MF_PATH)
+        // matrixFactorization(process.env.POST_MF_PATH)
 
-        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 3600000 ) // 1 hour
-        // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 3600000 ) // 1 hour
+        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 10800000 ) // 3 hours
+        // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 10800000 ) // 3 hours
 
     })
     .catch((error) => {console.log(error)})

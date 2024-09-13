@@ -107,6 +107,9 @@ const configureNetwork = (user, userClasses, network_to_push, users) => {
     
     // List of available class user ids
     let availableClassUsers = classUsers.filter(uid => !connectedClassUsers.find(u => u.$oid.toString() === uid.$oid.toString()));
+
+    // Remove self from available connections
+    availableClassUsers = availableClassUsers.filter(uid => uid.$oid.toString() !== userId.toString())
     
     // List of users in a different class from current user
     const differentClassUsers = users.filter(u => !classUsers.find(uid => u._id.$oid.toString() === uid.$oid.toString()))
@@ -140,7 +143,6 @@ const configureNetwork = (user, userClasses, network_to_push, users) => {
 
         // Remove from available users
         availableClassUsers = availableClassUsers.filter(uid => uid.$oid.toString() !== randomUserId.$oid.toString())
-
     }
 
     // Create remaining different class connections

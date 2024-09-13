@@ -207,17 +207,17 @@ const getTailoredJobs = async (request, response) => {
     let tailoredJobs = []
 
     let i=0, j=0;
-    while (i<skilledJobs.length || j < suggestedJobs.length){
+    while (i < skilledJobs.length || j < suggestedJobs.length){
         // Add 3 skilled Jobs
         for (let k=0; k<3 && i<skilledJobs.length; k++){
-            tailoredJobs = [skilledJobs[i]._id, ...tailoredJobs]
+            tailoredJobs.push(skilledJobs[i]._id)
             suggestedJobs = suggestedJobs.filter(jobId => jobId.toString() !== skilledJobs[i]._id.toString())
             i++;
         }
 
         // Add 1 suggested Job
         if (j < suggestedJobs.length) {
-            tailoredJobs = [suggestedJobs[j], ...tailoredJobs]
+            tailoredJobs.push(suggestedJobs[j])
             skilledJobs = skilledJobs.filter(jobId => jobId.toString() !== suggestedJobs[j].toString())
             j++;
         }

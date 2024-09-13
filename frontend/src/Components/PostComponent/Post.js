@@ -38,8 +38,12 @@ function Post({postData, commentsPopupHandler}){
             <PostCaption caption={postData.caption}/>
             { postData.multimediaURL && <PostMultimedia multimediaURL={postData.multimediaURL} multimediaType={postData.multimediaType}/> }
             <PostInfoBar likeCount={likeCount} commentCount={commentCount}/>
-            <HorizontalSeparator/>
-            <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler}/>
+            {!user.admin &&
+                <>
+                    <HorizontalSeparator/>
+                    <PostInteractionBar post_id={postData._id} commentsList={postData.commentsList} likesList={postData.likesList} commentsPopupHandler={commentsPopupHandler}/>
+                </>
+            }
             {postData.commentsList.length > 0 ?  
                 <>
                     <HorizontalSeparator/>

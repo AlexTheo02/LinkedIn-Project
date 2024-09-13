@@ -29,7 +29,7 @@ function Notification({ id }) {
         };
 
         fetchNotification();
-    }, [user]);
+    }, [user, id]);
 
     if (!notification) {
         return;
@@ -44,8 +44,11 @@ function Notification({ id }) {
                     'Authorization': `Bearer ${user.token}`
                 }
             })
+            if (!readNotification.ok){
+                const json = readNotification.json()
+                console.log(json)
+            }
         }
-        console.log(notification)
         navigate(`/Post/${notification.post_id._id}`)
     };
 

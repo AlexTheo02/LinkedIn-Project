@@ -56,7 +56,7 @@ function TimelinePosts({ commentsPopupHandler, comingFrom, postsToGet }) {
 
   const handleIntersection = useCallback((entries) => {
     entries.forEach( async (entry) => {
-      if (entry.isIntersecting && !user.interactionSource) {
+      if (entry.isIntersecting && !user.interactionSource && !user.admin) {
         try {
             const response = await fetch(`/api/users/viewInteraction/${entry.target.dataset.postid}`, {
                 method: 'PATCH',

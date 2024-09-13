@@ -15,13 +15,14 @@ import { usePostsContext } from "../../Hooks/usePostsContext";
 
 // Components that are needed to construct a Post Component
 
-function InteractiveProfile({profilePicture, name, surname, user_id, altern, nonInteractive}){
+function InteractiveProfile({profilePicture, name, surname, user_id, altern, nonInteractive, closeCommentsPopup}){
 
     // Change arguments to user_id, then get pfp and username from database
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         // Navigate to user's profile based on the id
+        closeCommentsPopup && closeCommentsPopup();
         if (!nonInteractive) { navigate(`/Profile/${user_id}`); }
     }
 
@@ -51,9 +52,9 @@ function PostCaption({caption}){
 function PostMultimedia({multimediaURL, multimediaType}){
     return(
         <div className={s.multimedia}>
-            {multimediaType === "image" && <img src={multimediaURL} alt="No img source found" />}
-            {multimediaType === "video" && <video src={multimediaURL} controls alt="No vid source found" />}
-            {multimediaType === "audio" && <audio src={multimediaURL} controls alt="No aud source found" />}
+            {multimediaType === "Image" && <img src={multimediaURL} alt="No img source found" />}
+            {multimediaType === "Video" && <video src={multimediaURL} controls alt="No vid source found" />}
+            {multimediaType === "Audio" && <audio src={multimediaURL} controls alt="No aud source found" />}
         </div>
     )
 }
@@ -227,11 +228,11 @@ function PostPreviewComments({post_id, commentsList, commentsPopupHandler}){
     )
 }
 
-function Comment({commentData, author}){
+function Comment({commentData, author, onProfileClick}){
 
     return(
         <div className={s.comment}>
-            <InteractiveProfile profilePicture={author.profilePicture} user_id={author._id} name={author.name} surname={author.surname} altern={true}/>
+            <InteractiveProfile profilePicture={author.profilePicture} user_id={author._id} name={author.name} surname={author.surname} altern={true} closeCommentsPopup={onProfileClick}/>
             <div className={s.comment_content}>
                 {commentData.content}
             </div>
@@ -389,7 +390,7 @@ const AddComment = ({userData}) => {
 function CommentsPopup({userData, commentsPopupHandler}){
     // Use context to access active comments list
     const { activeCommentsList } = usePostsContext();
-    
+    const {user} = useAuthContext()
 
     return(
         <div className={commentsPopupHandler.isPopupVisible ? s.comments_popup_visible : s.comments_popup_invisible}>
@@ -404,12 +405,14 @@ function CommentsPopup({userData, commentsPopupHandler}){
             <div className={s.comments_popup_container}>
                 {activeCommentsList && activeCommentsList.map((comment, index) => (
                     <div key={`comment-map-${index}`}>
-                        <Comment commentData={comment} author={comment.author}/>
+                        <Comment commentData={comment} author={comment.author} onProfileClick={commentsPopupHandler.hideCommentsPopup}/>
                     </div>
                 ))
                 }
             </div>
-            <AddComment userData={userData}/>
+            {!user.admin &&
+                <AddComment userData={userData}/>
+            }
         </div>
     );
 }

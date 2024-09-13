@@ -22,8 +22,8 @@ class MF:
         # R=MxN, U=MxK, V=KxN
         self.U = np.random.uniform(low=0.1, high=1.0, size=(self.n_users, self.K))
         self.V = np.random.uniform(low=0.1, high=1.0, size=(self.n_items, self.K))
-        print("Matrix factorization initialized")
-        self.print()
+        # print("Matrix factorization initialized")
+        # self.print()
     
     def print(self):
         print(f"R = users {self.n_users} x {self.n_items} items")
@@ -106,10 +106,10 @@ class MF:
     def save(self, path):
         with open(path + ".pkl", "wb") as file:
             pickle.dump(self, file)
-        print(f"Object saved to {path}")
+        # print(f"Object saved to {path}.pkl")
     
     @staticmethod
     def load(filename):
         with open(filename + ".pkl", "rb") as file:
-            print(f"Object loaded successfuly from {filename + ".pkl"}")
+            # print(f"Object loaded successfuly from {filename}.pkl")
             return pickle.load(file)

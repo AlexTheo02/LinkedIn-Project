@@ -19,7 +19,7 @@ const userSchema = new Schema({
 
     phoneNumber: {type: String, required: true, unique: true},
 
-    profilePicture: {type: String, required: false}, // CHANGE TO TRUE
+    profilePicture: {type: String, required: true},
 
     bio: {type: String, default: ""},
 

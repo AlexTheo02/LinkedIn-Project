@@ -1,4 +1,5 @@
 const User = require("../models/userModel.js")
+const js2xmlparser = require("js2xmlparser");
 
 // Export users' info in json or xml file (for admin)
 const exportUsers = async (req, res) => {

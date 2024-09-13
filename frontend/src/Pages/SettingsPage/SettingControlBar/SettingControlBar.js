@@ -1,8 +1,6 @@
 import s from "./SettingControlBarStyle.module.css"
-import { useAuthContext } from "../../../Hooks/useAuthContext";
 
 const SettingControlBar = ({settingName, settingHandler}) => {
-    const {user} = useAuthContext();
     const {
         setCurrent,
         setCurrentConfirm,
