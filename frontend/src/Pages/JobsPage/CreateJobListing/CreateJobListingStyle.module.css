@@ -13,12 +13,12 @@
 }
 
 .create_job_listing::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+    background: #888;
+    border-radius: 4px;
 }
 
 .create_job_listing::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+    background: #555;
 }
 
 .create_job_listing_interaction_bar{
@@ -101,14 +101,12 @@
 .dual_field{
     display: flex;
     margin-bottom: 1vh;
-    /* background-color: red; */
 }
 
 .working_arrangement{
     display: flex;
     justify-content: space-between;
     width: 60%;
-    /* margin: auto; */
 }
 
 .category_selection_button{
@@ -137,7 +135,6 @@
     flex-direction: column;
     width: 50%;
     gap: .5vh;
-    /* margin: auto; */
 }
 
 .error_message{

@@ -8,8 +8,7 @@ function JobListings({onClick, onApplicantsClick}) {
     const {user} = useAuthContext()
     const {jobs, dispatch} = useJobsContext()
 
-
-    // Fetch posts from database
+    // Fetch jobs from database
     useEffect(() => {
         const fetchJobs = async() => {
             const response = await fetch('/api/jobs/get-tailored-jobs', {
@@ -33,7 +32,6 @@ function JobListings({onClick, onApplicantsClick}) {
             fetchJobs()
         }
         
-        // filter jobs for user's timeline
     }, [dispatch, user])
 
     return(

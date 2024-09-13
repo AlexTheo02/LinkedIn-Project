@@ -115,8 +115,7 @@ async function generateData() {
     for (let i = 0; i < n_users; i++) {
         console.log(`CREATING USER ${i+1}`)
         const gender = Math.random() > 0.5 ? 'male' : 'female';
-        // const url = await userGeneration.createProfilePicture(gender); // MULTIMEDIA
-        const url = ""
+        const url = await userGeneration.createProfilePicture(gender); // MULTIMEDIA
         console.log(url)
         
         const randValue = Math.random();
@@ -173,7 +172,7 @@ async function generateData() {
     // ---------------------------------------------------------------------------------------------------------- JOBS
     for (let i = 0; i < n_jobs; i++) {
         console.log(`CREATING JOB ${i+1}`)
-        // Επιλογή τυχαίου χρήστη ως author
+        // Select random user as author
         const randomUserIndex = Math.floor(Math.random() * users.length);
         const authorId = users[randomUserIndex]._id;
         
@@ -210,7 +209,7 @@ async function generateData() {
         }
         const job = jobGeneration.createJob(authorId, title, employer, requirements);
         
-        // Προσθήκη του job στο πεδίο publishedJobListings του χρήστη
+        // Add job to user's publishedJobListings
         users[randomUserIndex].publishedJobListings.push(job._id);
         jobs.push(job);
         console.log(`JOB ${i+1} CREATED`)
@@ -221,19 +220,18 @@ async function generateData() {
     for (let i = 0; i < n_posts; i++) {
         console.log(`CREATING POST ${i+1}`)
         
-        // Επιλογή τυχαίου χρήστη ως author
+        // Select random user as author
         const randomUserIndex = Math.floor(Math.random() * users.length);
         const authorId = users[randomUserIndex]._id;
         console.log("awaiting multimedia")
-        // const postMultURL = await postGeneration.createPostMultimedia() // MULTIMEDIA
-        const postMultURL = ""
+        const postMultURL = await postGeneration.createPostMultimedia() // MULTIMEDIA
         const multimediaURL = postMultURL ? postMultURL : ""
         console.log("multimedia generation finished")
         const multimediaType = multimediaURL ? multimediaURL.match(/[^-]+$/)[0] : ""
         
         const post = postGeneration.createPost(authorId, multimediaURL, multimediaType);
         
-        // Προσθήκη του job στο πεδίο publishedJobListings του χρήστη
+        // Add post to user's publishedPosts
         users[randomUserIndex].publishedPosts.push(post._id);
         posts.push(post);
         console.log(`POST ${i+1} CREATED`)

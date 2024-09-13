@@ -78,7 +78,6 @@ function SettingsPage() {
         })
 
         const json = await response.json();
-        console.log(json);
         if (response.ok){
             // User has changed on db, change current value to Lowercase
             setCurrentEmail(currentEmail.toLowerCase());
@@ -88,7 +87,6 @@ function SettingsPage() {
             newUserData.email = json.email;
             setUserData(newUserData);
 
-            console.log(userData)
             setIsEmailChanging(false);
             setEmailMessage({status: true, message: json.message});
         }
@@ -113,7 +111,6 @@ function SettingsPage() {
         })
 
         const json = await response.json();
-        console.log(json);
         if (response.ok){
 
             setPreviousPassword(currentPassword);
@@ -210,7 +207,7 @@ function SettingsPage() {
                 <div className={s.container}>
 
                     <div className={s.profile_container} id="profileContainer">
-                        <img src={userData.profilePicture} alt="Profile Picture" id="profilePic" />
+                        <img src={userData.profilePicture} alt="Profile" id="profilePic" />
                         <h2>{`${userData.name} ${userData.surname}`}</h2>
                     </div>
 

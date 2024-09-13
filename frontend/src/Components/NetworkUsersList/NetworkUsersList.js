@@ -3,6 +3,7 @@ import s from './NetworkUsersListStyle.module.css';
 import NetworkUser from './NetworkUser/NetworkUser';
 import { useNavigate } from 'react-router-dom';
 
+// Adaptive list of users, with interactive profiles
 function NetworkUsersList({ network }) {
     const navigate = useNavigate();
 

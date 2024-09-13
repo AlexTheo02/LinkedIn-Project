@@ -3,10 +3,6 @@
     border: 1px solid #a02500;
 }
 
-.react-dropdown-select-item{
-    /* border-radius: 20px; */
-}
-
 .react-dropdown-select-item:hover{
     background: #a025007a !important;
 }

@@ -5,6 +5,7 @@ const upload = multer({
     storage: multer.memoryStorage()
 });
 
+// Upload a file to google cloud storage bucket, and return the link to it
 const handleFileUpload = async (file) => {
     
     try {

@@ -1,19 +1,18 @@
 const User = require("../models/userModel.js")
-const mongoose = require("mongoose")
 
 // Export users' info in json or xml file (for admin)
 const exportUsers = async (req, res) => {
-    const format = req.body.format;         // Παράμετρος format (json ή xml)
-    const selectedUsers = req.body.users;   // Οι επιλεγμενοι χρηστες
+    const format = req.body.format;         // Format parameter (json or xml)
+    const selectedUsers = req.body.users;
 
     if (!selectedUsers || !format) {
         return res.status(400).json({ error: 'Missing users or format' });
     }
 
-    // Φιλτράρουμε τους επιλεγμένους χρήστες
+    // Filter selected users
     const filteredUsers = await User.find({ _id: { $in: selectedUsers } });
 
-    // Εξαγωγή σε JSON ή XML
+    // Extract to JSON or XML
     if (format === 'json') {
         const exportData = JSON.stringify(filteredUsers, null, 2);
         res.setHeader('Content-Type', 'application/json');
@@ -22,9 +21,9 @@ const exportUsers = async (req, res) => {
     } else if (format === 'xml') {
         const convertToStringIds = (arr) => arr.map(id => id.toString());
 
-        // Προετοιμάζουμε τα δεδομένα για XML
+        // Prepare our data for XML
         const xmlData = filteredUsers.map(user => ({
-            _id: user._id.toString(),  // Μετατροπή του _id σε string
+            _id: user._id.toString(),
             name: user.name,
             surname: user.surname,
             dateOfBirth: user.dateOfBirth,

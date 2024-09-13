@@ -20,7 +20,7 @@
     align-items: flex-start;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    white-space: nowrap;
 }
 
 .user_info .position {
@@ -28,6 +28,6 @@
     color: rgb(77, 77, 77);
     overflow: hidden; 
     text-overflow: ellipsis;
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    white-space: nowrap;
     max-width: 100%;
 }

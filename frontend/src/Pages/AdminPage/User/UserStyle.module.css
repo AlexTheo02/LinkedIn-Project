@@ -64,7 +64,7 @@
     align-items: flex-start;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    white-space: nowrap;
 }
 
 .contact_info b{
@@ -81,7 +81,7 @@
     color: rgb(77, 77, 77);
     overflow: hidden; 
     text-overflow: ellipsis;
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    white-space: nowrap;
     max-width: 100%;
 
 }

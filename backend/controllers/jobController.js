@@ -12,7 +12,6 @@ const getAllJobs = async (request, response) => {
 
 // Get a single job
 const getJob = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -27,7 +26,6 @@ const getJob = async (request, response) => {
         return response.status(404).json({error: "Job not found"})
     }
     
-    // Job exists
     response.status(200).json(job);
 }
 
@@ -48,8 +46,6 @@ const createJob = async (request, response) => {
         employeesRange,
         applicants
     } = request.body;
-
-    console.log('Request body:', request.body);
     
     let emptyFields = [];
 
@@ -148,7 +144,6 @@ const removeApplicant = async (request, response) => {
 
 // Update a job
 const updateJob = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -201,7 +196,7 @@ const getTailoredJobs = async (request, response) => {
         return mpB - mpA;
     });
 
-    // Fetch suggested job ids and keep the top 10
+    // Fetch suggested job ids
     let suggestedJobs = user.jobSuggestions
 
     // Removing user's jobs from skilled and suggested jobs
@@ -228,7 +223,7 @@ const getTailoredJobs = async (request, response) => {
         }
     }
 
-    // Reorder the jobs (move applied jobs to the back)
+    // Reorder the jobs (move applied jobs to the back and published jobs to the front)
     let reorderedJobs = []
     const appliedJobs = []
     for (let i=0; i<tailoredJobs.length; i++){

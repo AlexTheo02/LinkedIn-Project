@@ -21,12 +21,12 @@
 }
 
 .background_image::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+    background: #888;
+    border-radius: 4px;
 }
 
 .background_image::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+    background: #555;
 }
 
 .loading_text {
@@ -66,7 +66,7 @@
     height: 160px;
     margin: 0 10px;
     border-radius: 50%;
-    object-fit: cover; /* Προσθήκη αυτής της ιδιότητας για να διατηρήσει τις διαστάσεις της εικόνας */
+    object-fit: cover;
 }
 
 .profile_field label {

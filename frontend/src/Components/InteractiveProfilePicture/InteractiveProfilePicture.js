@@ -1,8 +1,7 @@
 import s from "./InteractiveProfilePictureStyle.module.css"
 import { useNavigate } from "react-router-dom";
-import tsipras from "../../Images/tsipras.jpg"
-import mitsotakis from "../../Images/mitsotakis.jpg"
 
+// Clickable profile picture that redirects you to the user's profile
 function InteractiveProfilePicture({user_id, userData, nonInter}){
     
     const navigate = useNavigate();

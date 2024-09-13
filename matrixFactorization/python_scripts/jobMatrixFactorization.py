@@ -1,9 +1,7 @@
 import sys
 import os
 import json
-import SVD_MatrixFactorization
 import matrixFactorization
-import binaryMatrixFactorization
 import numpy as np
 from dotenv import load_dotenv
 load_dotenv()
@@ -11,7 +9,7 @@ load_dotenv()
 users_path = os.getenv("USERS_PATH")
 jobs_path = os.getenv("JOBS_PATH")
 job_recommendations_path = os.getenv("JOBS_REC_PATH")
-trained_model_filename = os.getenv("TRAINED_JOBS_MODEL")
+trained_model_filename = os.getenv("TRAINED_JOBS_MF_MODEL")
 
 # Open the json files and read data
 with open(users_path, 'r') as users_file:
@@ -67,40 +65,12 @@ for i in range(len(R)):
                 R_net[j][k] += net_param * R[i][k]
     visited_users.append(u1["_id"])
 
-# ----------------------------------------------------------------------------------------------- SVD Matrix Factorization
-
-# mf = SVD_MatrixFactorization.SVD_MF(R_net, K=40, lr=0.01, reg_param=0.0001, n_iter=1000, tol=1e-6)
-
-# mf.train(no_output=False)
-# mf.save(trained_model_filename)
-
-# mf = mf.load(trained_model_filename)
-
-
 # ----------------------------------------------------------------------------------------------- Matrix Factorization
 mf = matrixFactorization.MF(R=R_net, K=60, lr=0.001, n_iter = 1000, tol=1e-4, reg_param=0.00001)
-mf.train()
-mf.save(os.getenv("TRAINED_JOBS_MF_MODEL"))
+mf.train(no_output=True) # train with no output messages
+mf.save(trained_model_filename)
 
-# mf = mf.load(os.getenv("TRAINED_JOBS_MF_MODEL"))
-
-# ----------------------------------------------------------------------------------------------- Binary Matrix Factorization
-
-# Create Adjacency matrix
-# A = [0 for _ in range(n_users)]
-# for i, user in enumerate(users_list):
-#     user_adjacency = [0 for _ in range(n_users)]
-
-#     for j, connected_user in enumerate(users_list):
-#         user_adjacency[j] = 1 if connected_user['_id'] in user['network'] else 0
-    
-#     # Update user's adjacency
-#     A[i] = user_adjacency
-
-
-# mf = binaryMatrixFactorization.BMF(R, A, K=700, lr=0.005, reg_param=0.001, epochs=1000)
-# mf.train()
-
+# mf = mf.load(trained_model_filename)
 
 # ----------------------------------------------------------------------------------------------- Upload to files and notify server
 
@@ -124,20 +94,6 @@ for i,user in enumerate(users_list):
 with open(job_recommendations_path, 'w') as json_file:
     json.dump(job_recommendations, json_file, indent=2)
 
-def average_list_length(mydict):
-    total_length = 0
-    num_lists = 0
-
-    for key, value in mydict.items():
-        total_length += len(value)
-        num_lists += 1
-
-    if num_lists == 0:
-        return 0  # In case the dictionary is empty
-
-    return total_length / num_lists
-
-# print(average_list_length(job_recommendations))
 
 sys.stdout.flush()
 print("MF DONE")

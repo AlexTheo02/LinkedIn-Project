@@ -1,17 +1,19 @@
 import React from 'react';
 import s from './JobInfoStyle.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faLocationDot, faUserTie, faCalendarDays, faBriefcase, faBuilding, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faLocationDot, faUserTie, faCalendarDays, faBriefcase, faBuilding, faCheck, faUser } from '@fortawesome/free-solid-svg-icons';
 import { formatDistanceToNow } from 'date-fns';
 import { useJobsContext } from '../../../Hooks/useJobsContext.js';
 import { useApplication } from '../../../Hooks/useApplication.js';
+import { useAuthContext } from '../../../Hooks/useAuthContext.js';
 const {
     string_workingArrangmement,
     string_employmentType,
     calculate_employeesRange
 } = require("../functions.js")
 
-const JobInfo = ({isExpanded, onExit}) => {
+const JobInfo = ({isExpanded, onExit, onApplicantsClick}) => {
+    const {user} = useAuthContext()
     const {appliedJobs, activeJob} = useJobsContext();
     const {handleApplyClick, handleRemoveApplyClick, isLoading} = useApplication();
 
@@ -21,7 +23,7 @@ const JobInfo = ({isExpanded, onExit}) => {
 
     const isApplied = appliedJobs.includes(activeJob._id)
     
-    // Έλεγχος εγκυρότητας ημερομηνίας
+    // Date validation check
     const isValidDate = !isNaN(new Date(activeJob.createdAt));
 
     return (
@@ -85,14 +87,21 @@ const JobInfo = ({isExpanded, onExit}) => {
                         ))}
                     </ul>
                 </div>
-            }ε
-            <button
-                disabled={isLoading}
-                className={`${s.apply_button} ${isApplied ? s.applied : ""}`}
-                onClick={isApplied ? () => {handleRemoveApplyClick({targetJob: activeJob})} : () => {handleApplyClick({targetJob: activeJob})}}
-                >
-                {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply Now</>}
-            </button>
+            }
+            {activeJob.author === user.userId
+            ?
+                <button onClick={(event) => {event.stopPropagation(); onApplicantsClick(activeJob.applicants)}} className={s.applicants_button}>   
+                    Applicants <FontAwesomeIcon icon={faUser}/>
+                </button>
+            :
+                <button
+                    disabled={isLoading}
+                    className={`${s.apply_button} ${isApplied ? s.applied : ""}`}
+                    onClick={isApplied ? () => {handleRemoveApplyClick({targetJob: activeJob})} : () => {handleApplyClick({targetJob: activeJob})}}
+                    >
+                    {isApplied ? <>Applied <FontAwesomeIcon icon={faCheck}/> </>: <>Apply Now</>}
+                </button>
+            }
         </div>
     );
 };

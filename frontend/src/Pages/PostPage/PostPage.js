@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom';
 function PostPage() {
     const {user} = useAuthContext();
 
-    const { post_id } = useParams(); // Ανάκτηση του post_id από το URL
+    const { post_id } = useParams(); // Get post ID from url
     const [userData, setUserData] = useState(null);
 
     const {posts, postDispatch} = usePostsContext();

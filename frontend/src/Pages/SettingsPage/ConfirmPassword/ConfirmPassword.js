@@ -35,10 +35,6 @@ const ConfirmPassword = ({setIsConfirmingPassword, setInitialPassword}) => {
                 body: JSON.stringify({password: currentPassword})
             });
 
-            const json = await response.json();
-
-            console.log(json)
-
             // Correct password
             if (response.ok){
                 setInitialPassword(currentPassword);
@@ -47,7 +43,6 @@ const ConfirmPassword = ({setIsConfirmingPassword, setInitialPassword}) => {
             
             // Wrong password
             else {
-                console.log(json);
                 setWrongInput(true);
                 setCurrentPassword("")
                 const counter = wrongInputCounter + 1

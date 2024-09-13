@@ -4,7 +4,7 @@
     padding: 20px;
     border-radius: 22px;
     position: relative;
-    width: 100%; /* Αφήνουμε το πλάτος να είναι δυναμικό */
+    width: 100%;
     cursor: pointer;
 }
 

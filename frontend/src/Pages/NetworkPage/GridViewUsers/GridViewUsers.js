@@ -3,7 +3,7 @@ import s from "./GridViewUsersStyle.module.css";
 import ConnectedUser from '../ConnectedUser/ConnectedUser';
 import { useAuthContext } from '../../../Hooks/useAuthContext';
 
-function GridViewUsers({ users }) {
+function GridViewUsers() {
     const { user } = useAuthContext();
     const [userData, setUserData] = useState(null);
 

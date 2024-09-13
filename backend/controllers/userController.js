@@ -7,22 +7,22 @@ const validator = require("validator")
 const { deleteFile, handleFileUpload } = require("../middleware/fileUpload.js")
 const Comment = require("../models/commentModel.js")
 
-// Get all users
+// Get all users or users based on search
 const getAllUsers = async (request, response) => {
-  
     const searchTerm = request.query.searchTerm
     // Get all users
     if (!searchTerm){
         const users = await User.find({});
         response.status(200).json(users);
     }
+    // Get users based on search
     else{
         try {
-            const users = await User.find(); // Παίρνουμε όλους τους χρήστες
+            const users = await User.find();
             const filteredUsers = users.filter(user => {
-                const fullName = `${user.name} ${user.surname}`.toLowerCase(); // Συνενώνουμε name και surname
-                return fullName.includes(String(searchTerm).toLowerCase()); // Ελέγχουμε αν περιέχει το searchTerm
-            }).slice(0, 10); // Περιορισμός στα 10 πρώτα αποτελέσματα
+                const fullName = `${user.name} ${user.surname}`.toLowerCase(); // Combine name and surname
+                return fullName.includes(String(searchTerm).toLowerCase()); // Check if included in searchTerm
+            }).slice(0, 10); // First 10 results
     
             response.status(200).json(filteredUsers);
         } catch (error) {
@@ -33,7 +33,6 @@ const getAllUsers = async (request, response) => {
 
 // Get a single user
 const getUserById = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -48,13 +47,11 @@ const getUserById = async (request, response) => {
         return response.status(404).json({error: "User not found"})
     }
     
-    // User exists
     response.status(200).json(user);
 }
 
 // Get a user by a specific field
 const getUser = async (request, response) => {
-
     const {fieldName, fieldValue} = request.query;
     
     const allowedFields = [
@@ -81,121 +78,38 @@ const getUser = async (request, response) => {
         if (user.length === 0) {
             return response.status(404).json({error: "User not found"})
         }
-        // User exists
+        
         response.status(200).json(user);
-
     } catch (error) {
         response.status(400).json({error: error.message})
     }
-}
-
-// Create a new user
-const createUser = async (request, response) => {
-
-    const {
-        name,
-        surname,
-        dateOfBirth,
-        email,
-        password,
-        phoneNumber,
-        // Profile Picture
-        placeOfResidence,
-        workingPosition,
-        employmentOrganization,
-        professionalExperience,
-        education,
-        skills,
-        recentConversations,
-        network,
-        publishedPosts,
-        publishedJobListings,
-        likedPosts
-    } = request.body;
-
-    // Get multimedia file
-    // Upload and retrieve gc link
-    // Store link to db
-
-    // Add to mongodb database
-    try {
-        const user = await User.create({
-            name,
-            surname,
-            dateOfBirth,
-            email,
-            password,
-            phoneNumber,
-            // Profile picture
-            placeOfResidence,
-            workingPosition,
-            employmentOrganization,
-            professionalExperience,
-            education,
-            skills,
-            recentConversations,
-            network,
-            publishedPosts,
-            publishedJobListings,
-            likedPosts
-    });
-        response.status(200).json(user)
-    } catch (error) {
-        response.status(400).json({error: error.message})
-    }
-}
-
-// Delete a user
-const deleteUser = async (request, response) => {
-    // Grab the id from the route parameters
-    const { id } = request.params;
-
-    // Check if id is a valid mongoose id
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return response.status(404).json({error: "User not found"})
-    }
-
-    // Find and delete the user
-    const user = await User.findOneAndDelete({_id: id});
-
-    // User does not exist
-    if (!user) {
-        return response.status(404).json({error: "User not found"})
-    }
-    
-    // User exists, send back deleted user
-    response.status(200).json(user);
 }
 
 // Confirm login password
 const confirmPassword = async(request, response) => {
-    // Get password from request
     const {password} = request.body;
 
-    // Get user and their password
+    // Get logged in user and their password
     const loggedInUserId = request.user.id;
     const userPassword = await User.findById(loggedInUserId).select("password");
 
     const match = await bcrypt.compare(password, userPassword.password);
 
     if (!match){
-        const errorMessage = "Incorrect password";
-        const error = new Error(errorMessage);
         return response.status(400).json({error: "Incorrect password"});
     }
 
     response.status(200).json({message: "Password confirm successful"});
-
 }
 
 // Change email
 const changeEmail = async (request, response) => {
     const {email} = request.body;
-    // Convert to lowercase
+    
     const emailLowercase = email.toLowerCase()
 
     try {
-        // Get user and their userData
+        // Get logged in user and their userData
         const loggedInUserId = request.user.id;
         const userData = await User.findById(loggedInUserId);
 
@@ -234,8 +148,6 @@ const changeEmail = async (request, response) => {
 // Change password
 const changePassword = async (request, response) => {
     const {password, confirmPassword} = request.body;
-
-    console.log(password, confirmPassword)
 
     try {
         // Get user and their userData
@@ -342,7 +254,7 @@ const publishPost = async (request, response) => {
 
 // View post interaction
 const viewInteraction = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Post id
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -367,7 +279,7 @@ const viewInteraction = async (request, response) => {
 
 // Like a post
 const toggleLikePost = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Post id
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -444,9 +356,8 @@ const publishComment = async (request, response) => {
 }
 
 const logJobInteraction = async(request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Job id
     const loggedInUserId = request.user.id;
-    // const { remove } = request.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return response.status(404).json({ error: "Job not found" });
@@ -459,16 +370,11 @@ const logJobInteraction = async(request, response) => {
         }
 
         if (user.jobInteractions.includes(id)) {
-            // if (remove){
-            //     const newJobInteractions = user.jobInteractions.filter(jobId => jobId != id)
-            //     user.jobInteractions = newJobInteractions;
-            //     await user.save();
-            //     return response.status(200).json({message: "User interaction successfuly removed"});
-            // }
             return response.status(200).json({message: "User has already interacted with this job"});
         }
         user.jobInteractions.push(id);
         await user.save();
+
         response.status(200).json({message: "User-Job interaction logged successfuly"});
     } catch (error) {
         response.status(400).json({error: error.message})
@@ -477,7 +383,7 @@ const logJobInteraction = async(request, response) => {
 
 // Apply for job
 const applyJob = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Job id
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -498,7 +404,7 @@ const applyJob = async (request, response) => {
         user.appliedJobs.push(id);
         await user.save();
 
-        response.status(200).json({ message: "Applied for the job" });
+        response.status(200).json({ message: "Applied for the job successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -506,7 +412,7 @@ const applyJob = async (request, response) => {
 
 // Remove apply for a job
 const removeApplyJob = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  // Job id
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -523,7 +429,7 @@ const removeApplyJob = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Application removed" });
+        response.status(200).json({ message: "Application removed successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -531,7 +437,7 @@ const removeApplyJob = async (request, response) => {
 
 // Connection Request
 const requestConnection = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.params;  
     const loggedInUserId = request.user.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -552,7 +458,7 @@ const requestConnection = async (request, response) => {
         user.linkUpRequests.push(loggedInUserId);
         await user.save();
 
-        response.status(200).json({ message: "Connection request sent" });
+        response.status(200).json({ message: "Connection request sent successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -577,7 +483,7 @@ const removeRequestConnection = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Connection removed" });
+        response.status(200).json({ message: "Connection removed successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -649,7 +555,7 @@ const acceptRequest = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Connection removed" });
+        response.status(200).json({ message: "Connection accepted successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -674,7 +580,7 @@ const declineRequest = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Connection removed" });
+        response.status(200).json({ message: "Connection removed successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -702,7 +608,7 @@ const postNotify = async (request, response) => {
 
         await user.save();
 
-        response.status(200).json({ message: "Connection removed" });
+        response.status(200).json({ message: "Notification sent successfully" });
     } catch (error) {
         response.status(400).json({ error: error.message });
     }
@@ -710,15 +616,14 @@ const postNotify = async (request, response) => {
 
 function formatFieldName(fieldName) {
     return fieldName
-        .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
-        .replace(/^./, str => str.toUpperCase()) // Κάνει κεφαλαίο το πρώτο γράμμα
-        .trim(); // Αφαιρεί τυχόν περιττά κενά
+        .replace(/([A-Z])/g, ' $1') // Adds a whitespace before every capital letter
+        .replace(/^./, str => str.toUpperCase()) // Capitalize the first letter
+        .trim(); // Remove trailing and leading whitespace
 }
 
 // Validation function
 async function validateUserData(userData, userId = null) {
     let validFields = {
-        // profilePicture: 0,
         name: 0,
         surname: 0,
         dateOfBirth: 2,
@@ -817,7 +722,6 @@ async function validateUserData(userData, userId = null) {
 
 // Update a user
 const updateUser = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     const userBodyData = {
@@ -865,7 +769,7 @@ const updateUser = async (request, response) => {
         // User exists, send back updated user
         response.status(200).json(updatedUser);
     } catch (error) {
-        // Αν το error περιεχει τα validFields
+        // If error contains validFields
         if (error.fields) {
             response.status(401).json({
                 error: error.message,
@@ -873,7 +777,7 @@ const updateUser = async (request, response) => {
             });
         } 
         else {
-            // Άλλοι πιθανοί τύποι σφαλμάτων
+            // Other errors
             response.status(400).json({error: error.message});
         }
     }
@@ -901,11 +805,9 @@ const loginUser = async (request, response) => {
 
         const token = createToken(user._id);
 
-        console.log(user);
-
         response.status(200).json({ userId: user._id, token: token, admin: false, interactionSource: user.interactionSource });
     } catch (error) {
-        // Αν το error περιεχει τα validFields
+        // If error contains validFields
         if (error.fields) {
             response.status(401).json({
                 error: error.message,
@@ -913,7 +815,7 @@ const loginUser = async (request, response) => {
             });
         } 
         else {
-            // Άλλοι πιθανοί τύποι σφαλμάτων
+            // Other errors
             response.status(400).json({error: error.message});
         }
     }
@@ -932,11 +834,9 @@ const registerUser = async (request, response) => {
 
         const token = createToken(user._id);
 
-        console.log(user);
-
         response.status(200).json({ userId: user._id, token: token, admin: false, interactionSource: false });
     } catch (error) {
-        // Αν το error περιεχει τα validFields
+        // If error contains validFields
         if (error.fields) {
             response.status(401).json({
                 error: error.message,
@@ -944,7 +844,7 @@ const registerUser = async (request, response) => {
             });
         } 
         else {
-            // Άλλοι πιθανοί τύποι σφαλμάτων
+            // Other errors
             response.status(400).json({error: error.message});
         }
     }
@@ -954,8 +854,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUser,
-    createUser,
-    deleteUser,
     confirmPassword,
     changeEmail,
     changePassword,

@@ -37,7 +37,6 @@ function CurrentConversationPanel(){
 
             // Update local messageLog state
             activeConversation.messageLog = [msg, ...activeConversation.messageLog];
-            console.log(activeConversation);
 
             // Update the conversation on the database
             const filteredMessageLog = activeConversation.messageLog.filter(msg => msg.failedToSend !== true);
@@ -59,7 +58,6 @@ function CurrentConversationPanel(){
                 // find failed message based on the timestamp, then update the failed to send field
                 
                 const failedMessage = activeConversation.messageLog.find(msg =>new Date(msg.timestamp).getTime() === new Date(json.timestamp).getTime())
-                console.log(failedMessage)
                 if (failedMessage){
                     failedMessage.failedToSend = true;
                 }

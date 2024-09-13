@@ -8,8 +8,6 @@ import { useAuthContext } from '../../../Hooks/useAuthContext';
 function SearchBar() {
     const {user} = useAuthContext();
 
-    const imageForUsers = require('./../../../Images/logo.png');
-
     const [input, setInput] = useState("");
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);

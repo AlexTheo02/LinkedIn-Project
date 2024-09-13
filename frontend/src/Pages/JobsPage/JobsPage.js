@@ -29,11 +29,12 @@ function JobsPage(){
                 "Content-Type" : "application/json",
                 'Authorization': `Bearer ${user.token}`
             },
-            // body: JSON.stringify({remove: false})
         });
 
-        const json = await response.json();
-        console.log(json)
+        if (!response.ok){
+            const json = await response.json()
+            console.log(json)
+        }
     }
 
     const handleCreateJobClick = () => {
@@ -61,7 +62,7 @@ function JobsPage(){
 
     const handleApplicantsClick = (applicants) => {
         setApplicants(applicants)
-        setIsApplicantsPopupOpen(true);  // Closes the popup
+        setIsApplicantsPopupOpen(true);  // Opens the popup
     };
 
     return(
@@ -95,7 +96,7 @@ function JobsPage(){
                     }
                         
                 </div>
-                <JobInfo isExpanded={showingMoreInfo} onExit={exitJobInfo}/>
+                <JobInfo isExpanded={showingMoreInfo} onExit={exitJobInfo} onApplicantsClick={handleApplicantsClick}/>
             </div>
 
             {isApplicantsPopupOpen && (

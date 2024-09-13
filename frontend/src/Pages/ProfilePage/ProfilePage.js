@@ -23,6 +23,7 @@ function formatListWithNewlines(list) {
     return formattedList.join('\n');
 }
 
+// Text with a show more button
 function ExpandableText({ text, maxLines = 4, maxCharacters = 500 }) {
     const [expanded, setExpanded] = useState(false);
 
@@ -36,9 +37,9 @@ function ExpandableText({ text, maxLines = 4, maxCharacters = 500 }) {
     const isTruncatedByLines = lines.length > maxLines;
     const isTruncatedByChars = characters > maxCharacters;
     const displayedText = isTruncatedByLines && !expanded
-        ? lines.slice(0, maxLines).join('\n') + '...'
+        ? lines.slice(0, maxLines).join('\n') + '...'   // If it is truncated by lines (over maxLines newlines)
         : isTruncatedByChars && !expanded
-        ? text.substring(0, maxCharacters) + '...'
+        ? text.substring(0, maxCharacters) + '...'      // If it is truncated by characted (over maxCharacters)
         : text;
     
 
@@ -59,13 +60,12 @@ function ProfilePage() {
     const isAdmin = user.admin;
     const navigate = useNavigate();
     
-    const { id } = useParams(); // Ανάκτηση του id από το URL
+    const { id } = useParams();
     const [userData, setUserData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State για το popup του message
-    // Comments popup state
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State for message popup
     const [isCommentsPopupVisible, setIsCommentsPopupVisible] = useState(false);
     
     const { conversationDispatch } = useConversationContext();
@@ -197,7 +197,7 @@ function ProfilePage() {
             navigate("/Conversations");
         }
         else{
-            setIsPopupOpen(true); // Ανοίγει το modal
+            setIsPopupOpen(true); // Opens popup
         }   
     };
 
@@ -206,7 +206,7 @@ function ProfilePage() {
     };
 
     const handleModalClose = () => {
-        setIsPopupOpen(false); // Κλείνει το modal
+        setIsPopupOpen(false); // Closes popup
     };
 
     return (

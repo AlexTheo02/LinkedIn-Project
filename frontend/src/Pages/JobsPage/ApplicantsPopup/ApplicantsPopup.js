@@ -8,10 +8,10 @@ function ApplicantsPopup({ applicantsData, onClose }) {
     const [isClosing, setIsClosing] = useState(false);
 
     const handleClose = () => {
-        setIsClosing(true); // Trigger το animation κλεισίματος
+        setIsClosing(true); // Trigger animation's closing
         setTimeout(() => {
-            onClose(); // Κλείνουμε το popup αφού ολοκληρωθεί το animation
-        }, 300); // Χρόνος που ταιριάζει με τη διάρκεια του animation
+            onClose(); // Closes popup after animation completes
+        }, 300); // Waiting for the animation to complete
     };
 
     return (

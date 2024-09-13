@@ -6,8 +6,6 @@ const {
     getAllUsers,
     getUserById,
     getUser,
-    createUser,
-    deleteUser,
     confirmPassword,
     changeEmail,
     changePassword,
@@ -52,12 +50,6 @@ router.get("/find", getUser)
 
 // GET a signle user (by id)
 router.get("/:id", getUserById)
-
-// POST a new user
-router.post("/", createUser)
-
-// DELETE a user
-router.delete("/:id", deleteUser)
 
 // Confirm login password
 router.post("/confirm-password", confirmPassword)

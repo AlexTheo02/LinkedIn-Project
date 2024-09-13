@@ -20,12 +20,12 @@
 }
 
 .logo {
-  margin-right: auto; /* Pushes the logo to the left */
+  margin-right: auto;
 }
 
 .button_field{
   display: flex;
-  gap: 10px; /* Adds space between buttons */
+  gap: 10px;
   align-items: center;
   width: 20%;
 }

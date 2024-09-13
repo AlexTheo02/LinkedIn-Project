@@ -13,7 +13,7 @@ function RequestsList() {
     const [showArrows, setShowArrows] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [acceptedUser, setAcceptedUser] = useState(null);
-    const [popupQueue, setPopupQueue] = useState([]); // Ουρά για τα popup requests
+    const [popupQueue, setPopupQueue] = useState([]); // Popup requests queue
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -43,7 +43,7 @@ function RequestsList() {
     
     useEffect(() => {
         if (!showPopup && popupQueue.length > 0) {
-            const nextPopupUser = popupQueue.shift(); // Παίρνει τον επόμενο χρήστη από την ουρά
+            const nextPopupUser = popupQueue.shift(); // Gets next user from popupQueue
             setAcceptedUser(nextPopupUser);
             setShowPopup(true);
         }
@@ -70,7 +70,7 @@ function RequestsList() {
     };
 
     const handleShowPopup = (popupUser) => {
-        setPopupQueue(prevQueue => [...prevQueue, popupUser]); // Προσθήκη χρήστη στην ουρά
+        setPopupQueue(prevQueue => [...prevQueue, popupUser]); // Adds user to popupQueue
     }
 
     return ( requests.length > 0 ? (
@@ -86,7 +86,7 @@ function RequestsList() {
             {showArrows && (
             <FontAwesomeIcon icon={faAnglesRight} className={s.angles} onClick={scrollRight} />
             )}
-            {showPopup && <RequestPopup user={acceptedUser} onClose={handlePopupClose} />} {/* Προσθήκη του Popup */}
+            {showPopup && <RequestPopup user={acceptedUser} onClose={handlePopupClose} />}
         </div>
         ) : (
             <span className={s.noRequestsMessage}>You don't have any link up request.</span>

@@ -37,7 +37,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
         setIsLoading(true);
         const applicants = [];
 
-        // Μετατροπή των λιστών σε πίνακες από strings και φιλτράρισμα των κενών strings
+        // Trim items and remove empty items from lists
         const requirements = requirementsList.filter(item => item.trim() !== "");
         const responsibilities = responsibilitiesList.filter(item => item.trim() !== "");
         const benefits = benefitsList.filter(item => item.trim() !== "");
@@ -156,8 +156,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
                 />
             </div>
             
-            {/* Working Arrangement and Working Hours and Number of employees range*/}
-            {/* dual field now contains 3 elements, but the style remains the same */}
+            {/* Working Arrangement and Employment Type and Employees Range*/}
             <div className={s.dual_field}> 
 
                 {/* Working Arrangement */}
@@ -209,7 +208,7 @@ const CreateJobListing = ({jobListingsHandler}) => {
                     </div>
                 </div>
 
-                {/* Number of employees range */}
+                {/* Employees Range */}
                 <div className={s.job_field_container}>
                     <label>Employees Range:</label>
                     <Dropdown

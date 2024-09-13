@@ -13,7 +13,7 @@ import TextAreaAutosize from "react-textarea-autosize"
 import { useAuthContext } from "../../Hooks/useAuthContext";
 import { usePostsContext } from "../../Hooks/usePostsContext";
 
-
+// Components that are needed to construct a Post Component
 
 function InteractiveProfile({profilePicture, name, surname, user_id, altern, nonInteractive}){
 

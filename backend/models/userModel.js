@@ -68,15 +68,15 @@ const userSchema = new Schema({
 
 function formatFieldName(fieldName) {
     return fieldName
-        .replace(/([A-Z])/g, ' $1') // Προσθέτει κενό πριν από κάθε κεφαλαίο γράμμα
-        .replace(/^./, str => str.toUpperCase()) // Κάνει κεφαλαίο το πρώτο γράμμα
-        .trim(); // Αφαιρεί τυχόν περιττά κενά
+        .replace(/([A-Z])/g, ' $1') // Adds a whitespace before every capital letter
+        .replace(/^./, str => str.toUpperCase()) // Capitalize the first letter
+        .trim(); // Remove trailing and leading whitespace
 }
 
 // Static register method
 userSchema.statics.register = async function(userData) {
 
-    // Validation logic
+    // ---------------------------------------------------------------- Validation logic
 
     // 0 -> empty, 1 -> valid, 2-> must be a valid x, 3 -> duplicate, 4-> passwords do not match
     let validFields = {
@@ -236,14 +236,14 @@ userSchema.statics.register = async function(userData) {
         let errorMessage = "";
         let invalidFields = [];
     
-        // Ελέγχεις αν υπάρχουν πεδία που είναι 0 (κενά)
+        // Check for empty fields
         for (const [field, status] of Object.entries(validFields)) {
             if (status === 0) {
                 invalidFields.push(formatFieldName(field));
             }
         }
     
-        // Εάν υπάρχουν πεδία που είναι 0, προσθέτεις μήνυμα για κενά πεδία
+        // If any fields are 0, add message for empty fields
         if (invalidFields.length > 0) {
             errorMessage = `Please fill the fields: ${invalidFields.join(", ")}`;
             const error = new Error(errorMessage);
@@ -259,7 +259,7 @@ userSchema.statics.register = async function(userData) {
             throw error;
         }
 
-        // Αν δεν υπάρχουν κενά πεδία, ελέγχεις για μη έγκυρα πεδία (status 2)
+        // Check for invalid fie
         const possibleInvalidFIelds = ['email', 'phoneNumber']
 
         possibleInvalidFIelds.forEach(field => {
@@ -308,14 +308,13 @@ userSchema.statics.register = async function(userData) {
         }
     }
     
-    // Validation logic complete
+    // ---------------------------------------------------------------- Validation logic complete
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(userData.password, salt);
 
     // Upload profile picture to google cloud storage
-
     const profilePictureURL = await handleFileUpload(userData.profilePicture);
     console.log("Profile picture uploaded successfuly",profilePictureURL);
 

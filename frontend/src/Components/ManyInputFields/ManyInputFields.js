@@ -1,6 +1,7 @@
 import React from "react";
 import s from "./ManyInputFieldsStyle.module.css"
 
+// Component that allows for many input fields to be combined into a single list
 const ManyInputFields = ({name, list, setList, limit = 10, isEditing = true}) => {
 
     const handleListChange = (index, event) => {

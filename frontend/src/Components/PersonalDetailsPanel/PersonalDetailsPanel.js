@@ -5,14 +5,14 @@ import { useAuthContext } from "../../Hooks/useAuthContext";
 import NetworkUsersList from "../NetworkUsersList/NetworkUsersList"
 import { useNavigate } from "react-router-dom";
 
+
 function formatListWithNewlines(list) {
-    // Χρησιμοποιούμε τη μέθοδο map για να προθέσουμε τη βουλα σε κάθε στοιχείο
     const formattedList = list.map(item => `• ${item}`);
     
-    // Ενώνουμε όλα τα στοιχεία της λίστας με newline
     return formattedList.join('\n');
 }
 
+// Panel (positioned on the left of the home page) that contains some personalized details for a specific user
 function PersonalDetailsPanel({userData}){
     const { user } = useAuthContext();
     const navigate = useNavigate();

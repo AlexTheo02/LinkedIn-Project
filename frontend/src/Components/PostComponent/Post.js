@@ -13,7 +13,7 @@ import {
 import { useAuthContext } from "../../Hooks/useAuthContext.js";
 import { useEffect, useState } from "react";
 
-
+// Component that renders a specific post
 function Post({postData, commentsPopupHandler}){
     const {user} = useAuthContext();
     const authorData = postData.author;

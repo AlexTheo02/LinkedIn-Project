@@ -10,7 +10,6 @@ import PersonalDetailsPage from "./Pages/PersonalDetailsPage/PersonalDetailsPage
 import SettingsPage from "./Pages/SettingsPage/SettingsPage.js"
 import ProfilePage from './Pages/ProfilePage/ProfilePage.js';
 import PostPage from './Pages/PostPage/PostPage.js';
-import NavBar from './Components/NavBar/NavBar.js';
 import { PostsContextProvider } from './Context/PostContext.js';
 import { ConversationContextProvider } from './Context/ConversationContext.js';
 import { useAuthContext } from './Hooks/useAuthContext.js';
@@ -28,7 +27,7 @@ import {
 function App() {
   const {user} = useAuthContext()
 
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // Initialize with null
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
       if (user) {
@@ -45,7 +44,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <NavBar /> */}
       <div className='pages'>
         <Routes>
 
@@ -125,5 +123,4 @@ function App() {
   );
 }
 
-// Export both components
 export default App;

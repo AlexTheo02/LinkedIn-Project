@@ -14,7 +14,7 @@ const determineUserClass = (user, userClasses) => {
     return Object.keys(userClasses).find(key => userClasses[key].find(uid => uid.$oid.toString() === user._id.$oid.toString()))
 }
 
-// Get a profile picture from local and upload it to google storage
+// Get a profile picture from local and upload it to google cloud storage
 const createProfilePicture = async (gender) => {
     const rand = Math.floor(Math.random() * 20) + 1
     const pfp_path = `${gender==='male' ? male_pfp_path : female_pfp_path}${rand}.jpg`;
@@ -48,7 +48,6 @@ const createProfilePicture = async (gender) => {
     }
 }
 
-// Λειτουργία για τη δημιουργία χρηστών
 function createUser(userClasses, key, gender, profilePic, workingPosition, employmentOrganization, skills) {
     const id = {$oid: new mongoose.Types.ObjectId()}
     userClasses[`${key}`].push(id)
@@ -72,7 +71,7 @@ function createUser(userClasses, key, gender, profilePic, workingPosition, emplo
         education: [],
         skills: skills,
         recentConversations: [],
-        network: [], // Θα προστεθούν τυχαίοι χρήστες αργότερα
+        network: [], // Other users will be added later
         publishedPosts: [],
         publishedJobListings: [],
         likedPosts: [],
@@ -99,39 +98,30 @@ const configureNetwork = (user, userClasses, network_to_push, users) => {
     
     // List of user ids in the same class
     const classUsers = userClasses[`${userClass}`];
-    // console.log("classUsers: ",classUsers.length)
     
     // List of user ids of the same class that have already connected with the current user
     const connectedClassUsers = networkToPush[userId] ? networkToPush[userId].filter(u => determineUserClass(u, userClasses) === userClass) : [];
-    // console.log("connectedClassUsers: ",connectedClassUsers.length)
     
     // List of user ids of different class that have already connected with the current user
     const connectedDifferentClassUsers = networkToPush[userId] ? networkToPush[userId].filter(uid => !connectedClassUsers.find(u => u.$oid.toString() === uid.$oid.toString())) : [];
-    // console.log("connectedDifferentClassUsers: ",connectedDifferentClassUsers.length)
     
     // List of available class user ids
     let availableClassUsers = classUsers.filter(uid => !connectedClassUsers.find(u => u.$oid.toString() === uid.$oid.toString()));
-    // console.log("availableClassUsers: ",availableClassUsers.length)
     
     // List of users in a different class from current user
     const differentClassUsers = users.filter(u => !classUsers.find(uid => u._id.$oid.toString() === uid.$oid.toString()))
-    // console.log("differentClassUsers: ",differentClassUsers.length)
     
     // List of users of different class not connected to current user
     let availableDifferentClassUsers = differentClassUsers.filter(uid => !connectedDifferentClassUsers.find(u => u.$oid.toString() === uid.$oid.toString()))
-    // console.log("availableDifferentClassUsers: ",availableDifferentClassUsers.length)
 
     // Max 5% of all users
     let n_initialConnections = Math.floor(Math.random() * 0.05 * users.length);
-    // console.log("n_initialConnections: ",n_initialConnections)
     
     // Max 70% of same class users, else, max 80% of network connections, subtract already connected class users
     const n_classConnections = Math.round(Math.max(Math.random(), 0.5) * Math.min(0.8 * n_initialConnections, 0.7 * classUsers.length)) - connectedClassUsers.length
-    // console.log("n_classConnections: ",n_classConnections)
     
     // Up to 20% of class connections, random connections
     const n_randomConnections = Math.round(Math.random() * 0.2 * n_classConnections);
-    // console.log("n_randomConnections: ",n_randomConnections)
     
     // Create remaining same class connections
     for (let i=0; i < n_classConnections; i++){

@@ -26,7 +26,6 @@ export const useAuthentication = () => {
         formData.append("workingPosition", user.workingPosition);
         formData.append("employmentOrganization", user.employmentOrganization);
 
-        console.log(formData)
         // Send register request to the server
         const response = await fetch ("api/users/register", {
             method: "POST",
@@ -34,9 +33,6 @@ export const useAuthentication = () => {
         });
 
         const json = await response.json();
-
-        // Registered user's json or error message
-        console.log(json);
 
         if (!response.ok){
             setIsLoading(false);
@@ -69,9 +65,6 @@ export const useAuthentication = () => {
         });
     
         const json = await response.json();
-    
-        // Registered user's json or error message
-        console.log(json);
     
         // Fail
         if (!response.ok){

@@ -120,3 +120,21 @@
 .apply_button.applied:hover{
     background-color: #a0250077;
 }
+
+.applicants_button{
+    display: block;
+    padding: 13px 35px;
+    margin: 20px auto;
+    font-weight: bold;
+    font-size: medium;
+    border-radius: 20px;
+    border: 2.5px solid #269b7c;
+    background-color: #269b7c;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.applicants_button:hover{
+    background-color: #269b7ca7;
+    cursor: pointer;
+}

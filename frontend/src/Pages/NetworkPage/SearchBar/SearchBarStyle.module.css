@@ -59,12 +59,12 @@
 }
 
 .results_list::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+    background: #888;
+    border-radius: 4px;
 }
 
 .results_list::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+    background: #555;
 }
 
 .results_list ul {
@@ -104,16 +104,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
-    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .user_info .position {
     font-style: italic;
     color: rgb(77, 77, 77);
-    overflow: hidden; /* Κρύβει το υπερβάλλον κείμενο */
-    text-overflow: ellipsis; /* Προσθέτει ellipsis στο τέλος του κειμένου */
-    white-space: nowrap; /* Το κείμενο δεν κάνει wrap */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     max-width: 100%;
 }

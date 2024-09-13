@@ -44,12 +44,14 @@ class MF:
         return du, dv
 
     # Training function
-    def train(self):
+    def train(self, no_output = False):
         prev_cost = 0
         for iter in range(self.n_iter):
-            print(f"------- {iter + 1} -------")
+            if not no_output:
+                print(f"------- {iter + 1} -------")
             cost = self.cost_function()
-            print(cost)
+            if not no_output:
+                print(cost)
 
             for i in range(self.n_users):
                 for j in range(self.n_items):
@@ -109,5 +111,5 @@ class MF:
     @staticmethod
     def load(filename):
         with open(filename + ".pkl", "rb") as file:
-            print(f"Object loaded successfuly from {filename + "pkl"}")
+            print(f"Object loaded successfuly from {filename + ".pkl"}")
             return pickle.load(file)

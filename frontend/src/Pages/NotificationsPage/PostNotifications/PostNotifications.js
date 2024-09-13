@@ -7,7 +7,7 @@ function PostNotifications() {
     const {user} = useAuthContext()
     const [notifications, setNotifications] = useState(null);
 
-    // Fetch posts from database
+    // Fetch notifications from database
     useEffect(() => {
         const fetchPosts = async() => {
             const response = await fetch('/api/notifications', {

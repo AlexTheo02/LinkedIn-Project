@@ -162,14 +162,6 @@ function PersonalDetails() {
         const educationList = cleanList(education);
         const skillsList = cleanList(skills);
 
-        console.log("PROF EXP LIST", professionalExperienceList)
-        console.log("EDUCATION LIST", educationList)
-        console.log("SKILLS LIST", skillsList)
-        
-        // console.log("PROF EXP", professionalExperience)
-        // console.log("EDU", education)
-        // console.log("SKILLS", skills)
-
         const formDataPrivateDetails = [
             !isDateOfBirthPublic && "dateOfBirth",
             !isPhonePublic && "phoneNumber",
@@ -208,9 +200,7 @@ function PersonalDetails() {
             const data = await response.json();
 
             if (!response.ok) {
-                console.log(data)
                 setError(data.error);
-                // setError(data.error)
                 setErrorFields(data.errorFields);
             }
             if (response.ok){

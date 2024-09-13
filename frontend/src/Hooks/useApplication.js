@@ -9,7 +9,6 @@ export const useApplication = () => {
 
     const handleApplyClick = async ({targetJob}) => {
         setIsLoading(true);
-        console.log("TARGET",targetJob)
         
         try {
             // Add applicant to job's data
@@ -34,7 +33,6 @@ export const useApplication = () => {
             
                     if (userResponse.ok) {
                         const newApplicants = [user.userId, ...targetJob.applicants];
-                        console.log("TARGET JOB ID", targetJob._id)
                         dispatch({ type: 'UPDATE_JOB_APPLICANTS', payload: {jobId: targetJob._id, newApplicants: newApplicants}});
                         dispatch({ type: 'APPLY_JOB', payload: targetJob._id});
                     } else {
@@ -58,11 +56,12 @@ export const useApplication = () => {
                 "Content-Type" : "application/json",
                 'Authorization': `Bearer ${user.token}`
             },
-            // body: JSON.stringify({remove: false})
         });
-
-        const json = await response.json();
-        console.log(json)
+        
+        if (!response.ok){
+            const json = await response.json()
+            console.error("Error:", json)
+        }
 
         setIsLoading(false);
     }
@@ -117,11 +116,12 @@ export const useApplication = () => {
                 "Content-Type" : "application/json",
                 'Authorization': `Bearer ${user.token}`
             },
-            // body: JSON.stringify({remove: true})
         });
-
-        const json = await response.json();
-        console.log(json)
+        
+        if (!response.ok){
+            const json = await response.json()
+            console.error("Error:", json)
+        }
 
         setIsLoading(false);
     }

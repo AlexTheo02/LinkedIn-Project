@@ -1,10 +1,10 @@
-const { upload, handleFileUpload } = require("../middleware/fileUpload.js");
+const { handleFileUpload } = require("../middleware/fileUpload.js");
 const mongoose = require("mongoose")
 const Post = require("../models/postModel.js")
 const User = require("../models/userModel.js")
 const Comment = require("../models/commentModel.js")
 
-// Get all posts
+// Get all posts or many posts by ids
 const getAllPosts = async (request, response) => {
     if (!request.query.postIds){
         const posts = await Post.find({}).sort({createdAt: -1}) // Get all posts, sorted by most recently created
@@ -19,6 +19,7 @@ const getAllPosts = async (request, response) => {
     
         response.status(200).json(posts);
     }
+    // Get many posts by ids
     else{
         try {
             const postIds = request.query.postIds.split(','); // List with post Ids
@@ -44,7 +45,6 @@ const getAllPosts = async (request, response) => {
 
 // Get a single post
 const getPost = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -67,13 +67,11 @@ const getPost = async (request, response) => {
         return response.status(404).json({error: "Post not found"})
     }
     
-    // Post exists
     response.status(200).json(post);
 }
 
 // Create a new post
 const createPost = async (request, response) => {
-    // ADD POST TO USER'S PUBLISHED POSTS LIST
     const {
         author,
         caption,
@@ -81,6 +79,7 @@ const createPost = async (request, response) => {
         likesList
     } = request.body;
     
+    // Handling multimedia files if they exist
     const multimediaURL = request.file ? await handleFileUpload(request.file) : null;
     const multimediaType = request.file ? request.file.mimetype.split('/')[0] : null;
 
@@ -103,10 +102,8 @@ const createPost = async (request, response) => {
     }
 }
 
-
 // Update a post
 const updatePost = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -127,7 +124,6 @@ const updatePost = async (request, response) => {
 
 // Add comment to post
 const addComment = async (request, response) => {
-    // Grab the id from the route parameters
     const { id: postId } = request.params;
     const { author, content } = request.body;
 
@@ -140,11 +136,10 @@ const addComment = async (request, response) => {
 
     // Find the desired post
     const post = await Post.findById(postId);
-    post.commentsList.unshift(comment); // add to the beggining of the list
+    post.commentsList.unshift(comment); // Add to the beggining of the list
 
     post.save();
     const populatedComment = await comment.populate("author", "name surname profilePicture");
-    console.log(populatedComment);
 
     return response.status(200).json({populatedComment})
 }
@@ -158,7 +153,7 @@ const getTailoredPosts = async (request, response) => {
     }
 
     try {
-        // Own posts
+        // User's posts
         const userPostIds = user.publishedPosts;
         
         // All posts from user's network

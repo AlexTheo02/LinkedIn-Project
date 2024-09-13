@@ -88,7 +88,6 @@
 .multimedia img, .multimedia video, .multimedia audio {
     width: 100%;
     height: auto;
-    /* MULTIMEDIA RESIZE HERE <================================================= */
 }
 
 .post_info_bar, .interaction_bar {

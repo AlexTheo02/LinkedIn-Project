@@ -11,7 +11,6 @@ const adminSchema = new Schema({
 
 // Static login method
 adminSchema.statics.login = async function(userData){
-    console.log("MPHKA EDW")
     let errorFields = [];
 
     if (!userData.email){
@@ -34,7 +33,6 @@ adminSchema.statics.login = async function(userData){
     if (!admin) return null;
 
     const match = await bcrypt.compare(userData.password, admin.password);
-    console.log("MATCH IS ", match)
 
     return match ? admin : null;
 }

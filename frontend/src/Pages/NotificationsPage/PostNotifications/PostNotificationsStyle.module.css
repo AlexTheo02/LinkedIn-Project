@@ -5,7 +5,7 @@
     flex-wrap: nowrap;
     overflow-y: auto;
     width: 70%;
-    justify-content: start; /* Στοίχιση των στοιχείων στην αρχή */
+    justify-content: start;
     padding-right: 8px;
     max-height: 370px;
 }
@@ -15,10 +15,10 @@
 }
 
 .notifications_list::-webkit-scrollbar-thumb {
-    background: #888; /* Χρώμα της γραμμής κύλισης */
-    border-radius: 4px; /* Στρογγυλεμένες άκρες */
+    background: #888;
+    border-radius: 4px;
 }
 
 .notifications_list::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Χρώμα της γραμμής κύλισης όταν περνάει το ποντίκι */
+    background: #555;
 }

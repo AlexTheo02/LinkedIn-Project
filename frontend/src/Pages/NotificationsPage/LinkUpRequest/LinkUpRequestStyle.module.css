@@ -5,8 +5,8 @@
     margin-bottom: 10px;
     border-radius: 22px;
     position: relative;
-    width: 425px; /* Σταθερό πλάτος για να διατηρούνται οι διαστάσεις */
-    flex-shrink: 0; /* Αποτρέπει τη συρρίκνωση του container */
+    width: 425px;
+    flex-shrink: 0; /* Prevents minimizing of the container */
 }
 
 .profile_container h3{
@@ -88,7 +88,6 @@
     height: 85px;
     color: white;
     padding: 10px 15px;
-    /* margin: 0 auto; */
     margin-bottom: -50px;
     margin-left: -13px;
     font-weight: 600;

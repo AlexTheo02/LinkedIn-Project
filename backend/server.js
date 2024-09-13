@@ -44,11 +44,11 @@ mongoose.connect(process.env.MONGO_URI)
         })
 
         // Matrix factorization logic
-        // matrixFactorization(process.env.JOB_MF_PATH)
-        // matrixFactorization(process.env.POST_MF_PATH)
+        matrixFactorization(process.env.JOB_MF_PATH)
+        matrixFactorization(process.env.POST_MF_PATH)
 
-        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 600000 ) // 10 minutes
-        // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 600000 ) // 10 minutes
+        // setInterval(() => {matrixFactorization(process.env.JOB_MF_PATH)}, 3600000 ) // 1 hour
+        // setInterval(() => {matrixFactorization(process.env.POST_MF_PATH)}, 3600000 ) // 1 hour
 
     })
     .catch((error) => {console.log(error)})

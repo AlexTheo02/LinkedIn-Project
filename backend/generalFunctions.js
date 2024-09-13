@@ -1,4 +1,3 @@
-const mongoose = require("mongoose")
 const fs = require('fs');
 const { spawn } = require('child_process');
 
@@ -10,7 +9,6 @@ const Post = require("./models/postModel.js")
 async function updateRecommendations({itemRecommendations, isJobs}){
     console.log("Updating recommendations")
     const userIds = Object.keys(itemRecommendations)
-    console.log(userIds.length)
     
     // For each user, find user and update the recommendedJobs list or recommendedPosts list
     let counter = 1
@@ -24,17 +22,16 @@ async function updateRecommendations({itemRecommendations, isJobs}){
                 continue;
             }
             
-            // Update recommendation list for jobs/items on user
+            // Update recommendation list for jobs/posts on user
             if (isJobs) {
                 user.jobSuggestions = itemRecommendations[userId]
             } else {
                 user.postSuggestions = itemRecommendations[userId]
             }
             
-            // console.log(`updating user ${userId}'s suggestions`)
             // Save the user
             await user.save();
-            console.log(`successfully updated ${counter} / ${max_users} suggestions`);
+            console.log(`Successfully updated ${counter} / ${max_users} ${isJobs ? "Job" : "Post"} suggestions`);
             counter++;
         } catch (error) {
             console.error("Error:", error.message)
@@ -42,8 +39,6 @@ async function updateRecommendations({itemRecommendations, isJobs}){
     }
     console.log(`${isJobs ? "Job" : "Post"} suggestions successfully updated`)
 }
-
-
 
 const jobMatrixFactorizationPath = process.env.JOB_MF_PATH
 const postMatrixFactorizationPath = process.env.POST_MF_PATH
@@ -55,7 +50,6 @@ const matrixFactorization = async (path) => {
 
     // Fetch users
     const users = await User.find();
-    let items = undefined;
 
     if (path === jobMatrixFactorizationPath){
         const jobs = await Job.find();
@@ -108,7 +102,6 @@ const matrixFactorization = async (path) => {
             }
             // Post MF response
             else if (path === postMatrixFactorizationPath){
-                // Add post suggestions to suggestedPosts on each user
                 // Add post recommendations to recommendedPosts on each user
                 fs.readFile(process.env.POST_RECOMMENDATIONS_PATH, (error, data) => {
                     if (error) {
@@ -119,7 +112,7 @@ const matrixFactorization = async (path) => {
                     try {
                         const postRecommendations = JSON.parse(data);
 
-                        // Update the database users to include their new job recommendations
+                        // Update the database users to include their new post recommendations
                         updateRecommendations({itemRecommendations: postRecommendations, isJobs: false})
                         
                     } catch (error) {
@@ -135,7 +128,6 @@ const matrixFactorization = async (path) => {
         console.log(`PYTHON ERROR:\n${error.toString()}`);
     })
 }
-
 
 module.exports = {
     matrixFactorization

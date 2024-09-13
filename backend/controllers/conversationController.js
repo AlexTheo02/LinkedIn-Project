@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 
 // Get all conversations for logged in user
 const getAllConversations = async (request, response) => {
-    // Get current user's Recent Conversations List
+    // Get user's Recent Conversations List
     const recentConv = await User.findById(request.user._id)
     .populate({
         path: "recentConversations",
@@ -17,19 +17,16 @@ const getAllConversations = async (request, response) => {
     .select("recentConversations");
 
     const recentConversations = recentConv.recentConversations;
-    // console.log(recentConversations)
 
     // Sort by timestamp
     const sortedConversations = recentConversations.sort((a,b) => {
         return (b.messageLog[0].timestamp - a.messageLog[0].timestamp)
     })
 
-    // console.log(sortedConversations)
-
     response.status(200).json(sortedConversations);
 }
 
-// Get multiple conversations (not ids) based on ids
+// Get multiple conversations based on ids
 const getMultipleConversations = async (request, response) => {
     // Grab the ids from the route parameters and add them to an array
     const { ids } = request.query;
@@ -55,7 +52,6 @@ const getMultipleConversations = async (request, response) => {
 
 // Get a single conversation
 const getConversation = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -70,19 +66,16 @@ const getConversation = async (request, response) => {
         return response.status(404).json({error: "Conversation not found"})
     }
     
-    // Conversation exists
     response.status(200).json(conversation);
 }
 
 // Create a new conversation
 const createConversation = async (request, response) => {
-    console.log('Request body:', request.body);
     const {
         participant_1,
         participant_2,
         initialMessage
     } = request.body;
-
     
     const messageLog = [initialMessage]
 
@@ -121,7 +114,6 @@ const createConversation = async (request, response) => {
 
 // Update a conversation
 const updateConversation = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -141,7 +133,6 @@ const updateConversation = async (request, response) => {
 }
 
 const findConversationBetweenUsers = async (request, response) => {
-    // Grab the id from the route parameters
     const { id } = request.params;
 
     // Check if id is a valid mongoose id
@@ -152,7 +143,6 @@ const findConversationBetweenUsers = async (request, response) => {
     const userId = request.user.id;
 
     try {
-
         // Find user's recent conversation list and populate it
         const user = await User.findById(userId)
         .populate({

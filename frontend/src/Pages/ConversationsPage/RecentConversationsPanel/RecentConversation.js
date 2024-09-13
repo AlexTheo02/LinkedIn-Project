@@ -17,7 +17,7 @@ function RecentConversation({conversation}){
 
     useEffect(() => {
         setTimestamp(formatDistanceToNow(conversation.messageLog[0].timestamp, {addSuffix: true}));
-    }, [conversations])
+    }, [conversations, conversation])
 
     const handleRecentConversationClick = () => {
         // Change active conversation context if different from before
@@ -28,7 +28,6 @@ function RecentConversation({conversation}){
         }
     }
 
-    // SELECTED RECENT CONVERSATION SHOULD BE KIND OF HIGHLIGHTED
     return (
         <div className={`${s.recent_conversation} ${isActive && s.active}`} onClick={handleRecentConversationClick}>
             <img src={receiver.profilePicture} alt="User Profile" className={s.recent_conversation_pfp}/>

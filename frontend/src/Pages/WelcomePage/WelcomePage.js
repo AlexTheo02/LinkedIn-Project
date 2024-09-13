@@ -13,7 +13,6 @@ const {
 } = require("../../Components/GeneralFunctions.js")
 
 function WelcomePage() {
-
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -92,14 +91,14 @@ function WelcomePage() {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setProfilePicture(file); // actual file
-      setProfilePic(URL.createObjectURL(file)); // preview
+      setProfilePicture(file); // Actual file
+      setProfilePic(URL.createObjectURL(file)); // Preview
     }
   };
   
   return (
     <div className={s.welcome_page}>
-      {/* Register page */}
+      {/* Welcome page */}
       <WelcomeNavBar onModeSwitch={handleModeSwitch} isRegistering={isRegistering} />
       <div className={s.background_image}>
         <div className={s.form_box}>

@@ -10,7 +10,7 @@ function RequestPopup({ user, onClose }) {
 
         const timeout = setTimeout(() => {
             setIsVisible(false);
-            setTimeout(onClose, 300); // Κλείσιμο του πλαισίου μετά το animation εξόδου
+            setTimeout(onClose, 300); // Closes popup after animation completes
         }, 4000);
 
         return () => clearTimeout(timeout);
@@ -26,7 +26,7 @@ function RequestPopup({ user, onClose }) {
         </div>
     );
 
-    return ReactDOM.createPortal(popupContent, document.body);
+    return ReactDOM.createPortal(popupContent, document.body);  // Uses portal to overlay page's body
 }
 
 export default RequestPopup;

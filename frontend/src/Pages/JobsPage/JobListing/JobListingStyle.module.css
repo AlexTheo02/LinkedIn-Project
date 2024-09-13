@@ -16,7 +16,6 @@
 
 
 .job_listing_header{
-    /* background-color: #7fffaa; */
     display: flex;
     flex-direction: column;
 }

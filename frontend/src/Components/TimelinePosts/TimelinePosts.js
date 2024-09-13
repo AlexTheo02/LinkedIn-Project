@@ -4,6 +4,7 @@ import s from "./TimelinePostsStyle.module.css";
 import { usePostsContext } from "../../Hooks/usePostsContext";
 import { useAuthContext } from "../../Hooks/useAuthContext";
 
+// Render posts based on the postsToGet list, in chronological order
 function TimelinePosts({ commentsPopupHandler, comingFrom, postsToGet }) {
   const { posts, postDispatch } = usePostsContext();
   const { user } = useAuthContext();

@@ -59,12 +59,12 @@ function MessagePopup({ userData, onClose }) {
     };
 
     const handleClose = () => {
-        setIsClosing(true); // Κάνουμε trigger το animation κλεισίματος
+        setIsClosing(true); // Trigger closing animation
         setTimeout(() => {
             setIsLoading(true);
-            onClose(); // Κλείνουμε το popup αφού ολοκληρωθεί το animation
+            onClose(); // Closes the popup after animation is completed
             setIsLoading(false);
-        }, 300); // Ο χρόνος αυτός πρέπει να ταιριάζει με τη διάρκεια του animation
+        }, 300); // Waiting until the animation completes
     };
 
     return (

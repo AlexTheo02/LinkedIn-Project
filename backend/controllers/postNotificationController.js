@@ -13,8 +13,7 @@ const getAllNotifications = async (request, response) => {
             return response.status(404).json({ error: "User not found" });
         }
 
-        // Ταξινομούμε τα postNotifications με βάση το createdAt από το πιο πρόσφατο στο πιο παλιό
-        console.log(user.postNotifications)
+        // Sort from most recent to less
         const sortedNotifications = user.postNotifications.sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
@@ -29,7 +28,6 @@ const getAllNotifications = async (request, response) => {
 // Get a single notification
 const getNotification = async (request, response) => {
     try {
-        // Grab the id from the route parameters
         const { id } = request.params;
 
         // Check if id is a valid mongoose id
@@ -37,7 +35,7 @@ const getNotification = async (request, response) => {
             return response.status(404).json({ error: "Notification not found" });
         }
 
-        // Find the notification by id and populate the related fields in one query
+        // Find the notification by id and populate the related fields
         const notification = await PostNotification.findById(id)
             .populate("author", "name surname profilePicture")
             .populate("post_id", "caption multimediaURL multimediaType");
@@ -47,7 +45,6 @@ const getNotification = async (request, response) => {
             return response.status(404).json({ error: "Notification not found" });
         }
 
-        // Send the populated notification back as the response
         return response.status(200).json(notification);
     } catch (error) {
         console.error("Error fetching notification:", error);

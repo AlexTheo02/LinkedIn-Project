@@ -3,9 +3,8 @@
     display: flex;
     align-self: baseline;
     align-items: center;
-    justify-content: space-between; /* Ensure space between content and image */
+    justify-content: space-between;
     background-color: #fff;
-    /* border: 1px solid #ddd; */
     border-radius: 10px;
     padding: 10px;
     margin: 10px 0;
@@ -74,7 +73,7 @@
 .postContainer {
     display: flex;
     align-items: center;
-    margin-left: 10px; /* Space between text and image */
+    margin-left: 10px;
 }
 
 .postPic {
