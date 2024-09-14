@@ -15,15 +15,14 @@ function CreatePost({userData}) {
     const { postDispatch } = usePostsContext()
     const {user} = useAuthContext()
 
-    const imgFileTypes = ["JPG", "PNG"];
-    const vidFileTypes = ["MP4", "MOV"];
-    const audFileTypes = ["MP3", "WAV"];
+    // const imgFileTypes = ["JPG", "PNG"];
+    // const vidFileTypes = ["MP4", "MOV"];
+    // const audFileTypes = ["MP3", "WAV"];
 
     // Caption control
     const [caption, setCaption] = useState("");
     const [commentsList, setCommentsList] = useState([]);
     const [likesList, setLikesList] = useState([]);
-    const [error, setError] = useState(null);
 
     // Multimedia control
     const [multimediaType, setMultimediaType] = useState(null);
@@ -57,7 +56,6 @@ function CreatePost({userData}) {
     const handlePublisButtonClick = async () => {
 
         if (!user){
-            setError("You must be logged in");
             return
         }
         // Check if post is not empty
@@ -81,10 +79,6 @@ function CreatePost({userData}) {
 
            const json = await response.json();
 
-            // Error publishing post
-            if (!response.ok){
-                setError(json.error);
-            }
             // Publish post completed successfully
             if (response.ok){
 
@@ -95,11 +89,8 @@ function CreatePost({userData}) {
                 setMultimediaType(null);
                 setCommentsList([]);
                 setLikesList([]);
-                
-                // Clear error mesasage
-                setError(null);
 
-                console.log("Post published successfully", json);
+                // console.log("Post published successfully", json);
 
                 postDispatch({type: 'CREATE_POST', payload: json});
 
@@ -110,6 +101,11 @@ function CreatePost({userData}) {
                     },
                     method: "PATCH",
                 });
+
+                if (!publishPostResponse.ok){
+                    const json = publishPostResponse.json()
+                    console.log(json)
+                }
             }
         }
     }
@@ -119,6 +115,9 @@ function CreatePost({userData}) {
     }
 
     const MultimediaComponent = useCallback(({multimediaType, multimedia, multimediaPreview, setMultimedia, setMultimediaPreview}) => {
+        const imgFileTypes = ["JPG", "PNG"];
+        const vidFileTypes = ["MP4", "MOV"];
+        const audFileTypes = ["MP3", "WAV"];
 
         const handleChange = (file) => {
             setMultimedia(file);

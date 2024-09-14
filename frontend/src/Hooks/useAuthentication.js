@@ -65,6 +65,7 @@ export const useAuthentication = () => {
         });
     
         const json = await response.json();
+        console.log(json)
     
         // Fail
         if (!response.ok){

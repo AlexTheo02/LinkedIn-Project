@@ -46,7 +46,7 @@ function ConversationsPage(){
         if (user){
             getRecentConversations();
         }
-    }, [user])
+    }, [user, conversationDispatch, fromProfile])
 
 
 

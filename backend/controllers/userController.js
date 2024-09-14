@@ -792,15 +792,15 @@ const loginUser = async (request, response) => {
     // Grab userData from the request body
     const userData = request.body
 
-    const adminUser = await Admin.login(userData);
-    if (adminUser){
-        const token = createToken(adminUser._id);
-
-        return response.status(200).json({ userId: adminUser._id, token: token, admin: true, interactionSource: false });
-    }
-
+    
     // Login the user
     try {
+        const adminUser = await Admin.login(userData);
+        if (adminUser){
+            const token = createToken(adminUser._id);
+    
+            return response.status(200).json({ userId: adminUser._id, token: token, admin: true, interactionSource: false });
+        }
         const user = await User.login(userData);
 
         const token = createToken(user._id);

@@ -10,8 +10,6 @@ function Message({message, receiver}){
     const timestampFormat = "EEE, dd MMM yyyy, HH:mm";
 
     const isReceived = user.userId === message.sender ? false : true;
-    
-    const sender_id = 0;
     if (isReceived)
         return (
         <div className={s.received_message_container}>

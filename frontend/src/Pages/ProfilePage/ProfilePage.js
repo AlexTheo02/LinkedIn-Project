@@ -62,6 +62,7 @@ function ProfilePage() {
     
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
+    const [loggedInUserData, setLoggedInUserData] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [connectButtonLoading, setConnectButtonLoading] = useState(false);
     const [isRequested, setIsRequested] = useState(false);
@@ -83,6 +84,15 @@ function ProfilePage() {
 
                 setIsConnected(data.network.includes(user.userId));
                 setIsRequested(data.linkUpRequests.includes(user.userId));
+
+                const loggedInUserResponse = await fetch(`/api/users/${user.userId}`,{
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                });
+
+                const loggedInData = await loggedInUserResponse.json();
+                setLoggedInUserData(loggedInData)
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -91,7 +101,7 @@ function ProfilePage() {
         fetchUserData();
     }, [id, user]);
 
-    if (!userData) {
+    if (!userData || !loggedInUserData) {
         return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
@@ -214,7 +224,7 @@ function ProfilePage() {
             {!isAdmin && <NavBar />}
             <div className={`${s.background_image} ${isAdmin ? s.admin : ''}`}>
                 { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
-                    <CommentsPopup userData={userData} commentsPopupHandler={commentsPopupHandler}/>
+                    <CommentsPopup userData={loggedInUserData} commentsPopupHandler={commentsPopupHandler}/>
                 }
                 <div className={s.row}>
                     <div className={s.profile}>
