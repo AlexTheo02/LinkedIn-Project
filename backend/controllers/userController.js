@@ -729,6 +729,7 @@ const updateUser = async (request, response) => {
         professionalExperience: JSON.parse(request.body.professionalExperience || "[]"),
         education: JSON.parse(request.body.education || "[]"),
         skills: JSON.parse(request.body.skills || "[]"),
+        privateDetails: JSON.parse(request.body.privateDetails || "[]")
     };
 
     const profilePicture = request.file ? await handleFileUpload(request.file) : null;

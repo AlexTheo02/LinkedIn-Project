@@ -45742,5 +45742,35 @@
     ],
     "createdAt": "2024-05-03T23:03:11.853Z",
     "updatedAt": "2024-09-11T11:06:59.716Z"
+  },
+  {
+    "_id": "66e57d31afba392650e6fcfb",
+    "author": "66e4a36bdb092893242a2d5c",
+    "title": "Criminal Lawyer",
+    "employer": "Morgan Lewis",
+    "location": "Athens, Greece",
+    "description": "Criminal Lawyer job, located in Athens, Greece. We need the best lawyers in the City!",
+    "requirements": [
+      "Legal Ethics",
+      "Legal Research",
+      "Mediation",
+      "Client Counseling"
+    ],
+    "benefits": [
+      "Coffee every morning",
+      "High paying salary",
+      "Enjoyable working environment"
+    ],
+    "responsibilities": [
+      "Interview witnesses",
+      "Investigate cases"
+    ],
+    "workingArrangement": 0,
+    "employmentType": 0,
+    "employeesRange": 5,
+    "applicants": [],
+    "createdAt": "2024-09-14T12:10:25.736Z",
+    "updatedAt": "2024-09-14T12:10:25.736Z",
+    "__v": 0
   }
 ]

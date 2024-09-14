@@ -8975,6 +8975,7 @@
     "multimediaURL": "https://storage.googleapis.com/linkedin_project_bucket/1726261272686-postMultimedia-Audio",
     "multimediaType": "Audio",
     "commentsList": [
+      "66e576bbafba392650e6f8ac",
       "66e4ac66db092893242a3560",
       "66e4ac68db092893242a36e6",
       "66e4ac6bdb092893242a39a1"
@@ -8988,10 +8989,12 @@
       "66e4a282db092893242a2a7a",
       "66e4a330db092893242a2c9f",
       "66e4a28adb092893242a2a94",
-      "66e4a346db092893242a2ce5"
+      "66e4a346db092893242a2ce5",
+      "66e4a36bdb092893242a2d5c"
     ],
     "createdAt": "2024-07-06T06:23:49.942Z",
-    "updatedAt": "2024-09-10T03:34:17.304Z"
+    "updatedAt": "2024-09-14T11:42:51.570Z",
+    "__v": 1
   },
   {
     "_id": "66e4a820db092893242a336a",
@@ -17026,5 +17029,19 @@
     ],
     "createdAt": "2024-04-26T05:28:00.876Z",
     "updatedAt": "2024-09-07T19:17:22.350Z"
+  },
+  {
+    "_id": "66e5782dafba392650e6fb3c",
+    "author": "66e4a36bdb092893242a2d5c",
+    "caption": "Hello people of Linkedin!",
+    "multimediaURL": "https://storage.googleapis.com/linkedin_project_bucket/1726314540282-C6apAJsXQAA_4t7.jpg",
+    "multimediaType": "image",
+    "commentsList": [
+      "66e57ab1fabf5a616fa3f499"
+    ],
+    "likesList": [],
+    "createdAt": "2024-09-14T11:49:01.220Z",
+    "updatedAt": "2024-09-14T11:59:46.000Z",
+    "__v": 1
   }
 ]

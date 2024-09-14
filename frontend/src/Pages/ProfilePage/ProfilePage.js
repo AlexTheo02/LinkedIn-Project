@@ -70,6 +70,8 @@ function ProfilePage() {
     const [isCommentsPopupVisible, setIsCommentsPopupVisible] = useState(false);
     
     const { conversationDispatch } = useConversationContext();
+    const isLoggedInUserProfile = id === user.userId;
+    const canView = isConnected || isAdmin || isLoggedInUserProfile;
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -85,14 +87,16 @@ function ProfilePage() {
                 setIsConnected(data.network.includes(user.userId));
                 setIsRequested(data.linkUpRequests.includes(user.userId));
 
-                const loggedInUserResponse = await fetch(`/api/users/${user.userId}`,{
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`
-                    }
-                });
-
-                const loggedInData = await loggedInUserResponse.json();
-                setLoggedInUserData(loggedInData)
+                if (!isLoggedInUserProfile){
+                    const loggedInUserResponse = await fetch(`/api/users/${user.userId}`,{
+                        headers: {
+                            'Authorization': `Bearer ${user.token}`
+                        }
+                    });
+    
+                    const loggedInData = await loggedInUserResponse.json();
+                    setLoggedInUserData(loggedInData)
+                }
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -101,7 +105,7 @@ function ProfilePage() {
         fetchUserData();
     }, [id, user]);
 
-    if (!userData || !loggedInUserData) {
+    if (!userData || (!isLoggedInUserProfile && !loggedInUserData)) {
         return <h1 className={s.loading_text}>Loading...</h1>;
     }
 
@@ -223,8 +227,8 @@ function ProfilePage() {
         <div>
             {!isAdmin && <NavBar />}
             <div className={`${s.background_image} ${isAdmin ? s.admin : ''}`}>
-                { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
-                    <CommentsPopup userData={loggedInUserData} commentsPopupHandler={commentsPopupHandler}/>
+                { canView && userData.publishedPosts.length > 0 &&
+                    <CommentsPopup userData={isLoggedInUserProfile ? userData : loggedInUserData} commentsPopupHandler={commentsPopupHandler}/>
                 }
                 <div className={s.row}>
                     <div className={s.profile}>
@@ -233,7 +237,7 @@ function ProfilePage() {
                                 <img src={userData.profilePicture} alt="Profile" />
                                 <h1>{userData.name} {userData.surname}</h1>
                                 <b>{userData.workingPosition} at {userData.employmentOrganization}</b>
-                                {!userData.privateDetails.includes("dateOfBirth") ? (
+                                {!userData.privateDetails.includes("dateOfBirth") || canView ? (
                                     <p>{calculateAge(userData.dateOfBirth)} years old</p>
                                 ) : null}
                                 <p>{userData.placeOfResidence}</p>
@@ -242,7 +246,7 @@ function ProfilePage() {
                                 <div className={s.buttons}>
                                     {!isAdmin &&
                                         <>
-                                        { userData._id !== user.userId ?
+                                        { !isLoggedInUserProfile ?
                                             <>
                                             { isConnected || isRequested ?
                                                 <button disabled={connectButtonLoading}
@@ -274,7 +278,7 @@ function ProfilePage() {
                                     }
                                 </div>
                                 <div className={s.contact_info}>
-                                    {!userData.privateDetails.includes("phoneNumber") || isConnected || isAdmin ? (
+                                    {!userData.privateDetails.includes("phoneNumber") || canView ? (
                                         <>
                                             <p>Phone Number:</p>
                                             <p>{userData.phoneNumber}</p>
@@ -288,26 +292,26 @@ function ProfilePage() {
                             <ExpandableText text={userData.bio}/>
                         </div>
                         }
-                        { userData.professionalExperience.length > 0 && (!userData.privateDetails.includes("professionalExperience") || isConnected || isAdmin) ? (
+                        { userData.professionalExperience.length > 0 && (!userData.privateDetails.includes("professionalExperience") || canView) ? (
                             <div className={s.container}>
                                 <h3>Professional Experience:</h3>
                                 <ExpandableText text={formatListWithNewlines(userData.professionalExperience)} />
                             </div>
                         ) : null}
-                        {userData.education.length > 0 && (!userData.privateDetails.includes("education") || isConnected || isAdmin) ? (
+                        {userData.education.length > 0 && (!userData.privateDetails.includes("education") || canView) ? (
                             <div className={s.container}>
                                 <h3>Educational Experience:</h3>
                                 <ExpandableText text={formatListWithNewlines(userData.education)} />
                             </div>
                         ) : null}
-                        {userData.skills.length > 0 && (!userData.privateDetails.includes("skills") || isConnected || isAdmin) ? (
+                        {userData.skills.length > 0 && (!userData.privateDetails.includes("skills") || canView) ? (
                             <div className={s.container}>
                                 <h3>Skills:</h3>
                                 <ExpandableText text={formatListWithNewlines(userData.skills)} />
                             </div>
                         ) : null}
                     </div>
-                    { (isConnected || isAdmin) &&
+                    { canView &&
                         <div className={s.network}>
                             <h2>Network:</h2>
                             {userData.network.length > 0 ? 
@@ -320,7 +324,7 @@ function ProfilePage() {
                         </div>
                     }
                 </div>
-                { (isConnected || isAdmin) && userData.publishedPosts.length > 0 &&
+                { canView && userData.publishedPosts.length > 0 &&
                     <div className={s.posts}>
                         <TimelinePosts commentsPopupHandler={commentsPopupHandler} comingFrom={'ProfilePage'} postsToGet={userData.publishedPosts} />
                     </div>

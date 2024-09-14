@@ -171,6 +171,8 @@ function PersonalDetails() {
             !isSkillsPublic && "skills"
         ].filter(Boolean)
 
+        console.log("Private: ", formDataPrivateDetails)
+
         const formData = new FormData();
         if (profilePicture !== userData.profilePicture){
             formData.append("file", profilePicture);
@@ -186,7 +188,7 @@ function PersonalDetails() {
         formData.append("education", JSON.stringify(educationList));
         formData.append("skills", JSON.stringify(skillsList));
         formData.append("dateOfBirth", new Date(`${month} ${day}, ${year} 00:00:00 GMT`));
-        formData.append("privateDetails", formDataPrivateDetails);
+        formData.append("privateDetails", JSON.stringify(formDataPrivateDetails));
 
         try {
             const response = await fetch(`/api/users/${user.userId}`, {
