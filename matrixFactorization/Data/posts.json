@@ -17043,5 +17043,21 @@
     "createdAt": "2024-09-14T11:49:01.220Z",
     "updatedAt": "2024-09-14T11:59:46.000Z",
     "__v": 1
+  },
+  {
+    "_id": "66e58a3425036b1df7cf43f9",
+    "author": "66e4a274db092893242a2a4f",
+    "caption": "Hello world! I need a financial advisor! DM me for collaborations!",
+    "multimediaURL": null,
+    "multimediaType": null,
+    "commentsList": [
+      "66e58a845a8fe59a4cc730cb"
+    ],
+    "likesList": [
+      "66e4a36bdb092893242a2d5c"
+    ],
+    "createdAt": "2024-09-14T13:05:56.811Z",
+    "updatedAt": "2024-09-14T13:07:22.359Z",
+    "__v": 1
   }
 ]

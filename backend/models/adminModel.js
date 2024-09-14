@@ -28,7 +28,7 @@ adminSchema.statics.login = async function(userData){
         throw error;
     }
 
-    const admin = await this.findOne({email: userData.email});
+    const admin = await this.findOne({email: userData.email.toLowerCase()});
 
     if (!admin) return null;
 

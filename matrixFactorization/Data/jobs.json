@@ -45768,9 +45768,11 @@
     "workingArrangement": 0,
     "employmentType": 0,
     "employeesRange": 5,
-    "applicants": [],
+    "applicants": [
+      "66e4a279db092893242a2a5e"
+    ],
     "createdAt": "2024-09-14T12:10:25.736Z",
-    "updatedAt": "2024-09-14T12:10:25.736Z",
-    "__v": 0
+    "updatedAt": "2024-09-14T13:11:40.215Z",
+    "__v": 1
   }
 ]

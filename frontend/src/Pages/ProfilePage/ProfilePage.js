@@ -103,7 +103,7 @@ function ProfilePage() {
         };
 
         fetchUserData();
-    }, [id, user]);
+    }, [id, user, isLoggedInUserProfile]);
 
     if (!userData || (!isLoggedInUserProfile && !loggedInUserData)) {
         return <h1 className={s.loading_text}>Loading...</h1>;
@@ -240,7 +240,9 @@ function ProfilePage() {
                                 {!userData.privateDetails.includes("dateOfBirth") || canView ? (
                                     <p>{calculateAge(userData.dateOfBirth)} years old</p>
                                 ) : null}
-                                <p>{userData.placeOfResidence}</p>
+                                {!userData.privateDetails.includes("placeOfResidence") || canView ? (
+                                    <p>{userData.placeOfResidence}</p>
+                                ) : null}
                             </div>
                             <div className={s.operations}>
                                 <div className={s.buttons}>
